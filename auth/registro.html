@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registrarse - VivaEventos</title>
+    <link rel="stylesheet" href="../assets/css/main.css">
+    <style>
+        .auth-page {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--color-bg) 0%, var(--color-bg-secondary) 100%);
+            padding: var(--space-4);
+        }
+        
+        .auth-header {
+            text-align: center;
+            margin-bottom: var(--space-8);
+        }
+        
+        .auth-header .logo {
+            display: inline-block;
+            margin-bottom: var(--space-4);
+        }
+        
+        .auth-header p {
+            color: var(--color-text-secondary);
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--space-4);
+        }
+        
+        .role-selector {
+            display: flex;
+            gap: var(--space-3);
+            margin-bottom: var(--space-6);
+        }
+        
+        .role-btn {
+            flex: 1;
+            padding: var(--space-3);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-lg);
+            background: var(--color-bg);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            font-size: var(--font-size-sm);
+            font-weight: var(--font-weight-medium);
+            color: var(--color-text-secondary);
+        }
+        
+        .role-btn:hover {
+            border-color: var(--color-primary);
+            color: var(--color-primary);
+        }
+        
+        .role-btn.active {
+            background: rgba(0, 151, 178, 0.1);
+            border-color: var(--color-primary);
+            color: var(--color-primary);
+        }
+        
+        .terms {
+            font-size: var(--font-size-sm);
+            color: var(--color-text-secondary);
+            line-height: 1.5;
+        }
+        
+        .terms a {
+            font-weight: var(--font-weight-semibold);
+        }
+        
+        @media (max-width: 480px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="auth-page">
+        <div class="form-card">
+            <div class="auth-header">
+                <div class="logo">VivaEventos</div>
+                <h3>Crear Cuenta</h3>
+                <p class="text-muted mt-2">Únete a la experiencia</p>
+            </div>
+            
+            <form id="registerForm">
+                <div class="role-selector">
+                    <button type="button" class="role-btn active" data-role="cliente">Cliente</button>
+                    <button type="button" class="role-btn" data-role="organizador">Organizador</button>
+                </div>
+                
+                <input type="hidden" id="role" name="role" value="cliente">
+                
+                <div class="form-row">
+                    <div class="input-group mb-4">
+                        <label for="nombre">Nombre</label>
+                        <input 
+                            type="text" 
+                            id="nombre" 
+                            name="nombre" 
+                            class="input w-full" 
+                            placeholder="Juan"
+                            required
+                        >
+                    </div>
+                    
+                    <div class="input-group mb-4">
+                        <label for="apellido">Apellido</label>
+                        <input 
+                            type="text" 
+                            id="apellido" 
+                            name="apellido" 
+                            class="input w-full" 
+                            placeholder="Pérez"
+                            required
+                        >
+                    </div>
+                </div>
+                
+                <div class="input-group mb-4">
+                    <label for="email">Correo electrónico</label>
+                    <input 
+                        type="email" 
+                        id="email" 
+                        name="email" 
+                        class="input w-full" 
+                        placeholder="tu@email.com"
+                        required
+                    >
+                </div>
+                
+                <div class="input-group mb-4">
+                    <label for="telefono">Teléfono</label>
+                    <input 
+                        type="tel" 
+                        id="telefono" 
+                        name="telefono" 
+                        class="input w-full" 
+                        placeholder="+57 300 123 4567"
+                        required
+                    >
+                </div>
+                
+                <div class="input-group mb-4">
+                    <label for="password">Contraseña</label>
+                    <input 
+                        type="password" 
+                        id="password" 
+                        name="password" 
+                        class="input w-full" 
+                        placeholder="••••••••"
+                        required
+                        minlength="8"
+                    >
+                </div>
+                
+                <div class="input-group mb-4">
+                    <label for="confirmPassword">Confirmar Contraseña</label>
+                    <input 
+                        type="password" 
+                        id="confirmPassword" 
+                        name="confirmPassword" 
+                        class="input w-full" 
+                        placeholder="••••••••"
+                        required
+                    >
+                </div>
+                
+                <p class="terms mb-4">
+                    Al registrarte, aceptas nuestros 
+                    <a href="#">Términos y Condiciones</a> y 
+                    <a href="#">Política de Privacidad</a>.
+                </p>
+                
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary btn-full">
+                        Crear Cuenta
+                    </button>
+                </div>
+            </form>
+            
+            <p class="text-center mt-6 text-muted text-sm">
+                ¿Ya tienes cuenta? 
+                <a href="login.html" class="text-primary">Iniciar Sesión</a>
+            </p>
+        </div>
+    </div>
+    
+    <script src="../assets/js/api.js"></script>
+    <script>
+        document.querySelectorAll('.role-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.role-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                document.getElementById('role').value = btn.dataset.role;
+            });
+        });
+        
+        document.getElementById('registerForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            
+            if (password !== confirmPassword) {
+                alert('Las contraseñas no coinciden');
+                return;
+            }
+            
+            const formData = {
+                nombre: document.getElementById('nombre').value,
+                apellido: document.getElementById('apellido').value,
+                email: document.getElementById('email').value,
+                telefono: document.getElementById('telefono').value,
+                password: password,
+                role: document.getElementById('role').value
+            };
+            
+            try {
+                const response = await fetch('/api/auth/v1/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(formData)
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    alert('Cuenta creada exitosamente');
+                    window.location.href = 'login.html';
+                } else {
+                    alert(data.message || 'Error al registrarse');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error de conexión');
+            }
+        });
+    </script>
+</body>
+</html>
