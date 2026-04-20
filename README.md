@@ -21,8 +21,8 @@ vivaeventos-proyecto/
 
 ## Documentos
 
-- [Documento de Arquitectura](../Documento%20de%20Arquitectura%20(1)%20(1).md)
-- [Multi-Repo](../MULTIREPO.md)
+- [Documento de Arquitectura](https://github.com/SebastianCastro-R/desarrollo-software-iii)
+- [Multi-Repo](https://github.com/Proyecto-Desarrollo-iii)
 
 ## Equipo
 
