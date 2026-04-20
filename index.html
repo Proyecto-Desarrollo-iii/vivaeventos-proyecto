@@ -1,13 +1,178 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VivaEventos - Experiencia de Eventos</title>
-    <link rel="stylesheet" href="assets/css/main.css">
+  <meta charset="UTF-8">
+  <title>VivaEventos</title>
+  <link rel="stylesheet" href="/assets/css/landingpage.css">
+  <link rel="stylesheet" href="/assets/css/main.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div id="app"></div>
-    <script src="assets/js/main.js"></script>
+
+<!-- NAVBAR -->
+<header class="navbar">
+  <div class="logo">
+    <img src="/assets/images/Logo.webp" alt="Logo VivaEventos">
+    <img class="logo-text" src="/assets/images/Titulo.webp" alt="VivaEventos">
+  </div>
+  <nav>
+    <a href="index.html" class="active">Eventos</a>
+    <a href="/auth/login.html">Ingresar/Registrarse</a>
+    <a href="#">Soporte</a>
+  </nav>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-text">
+    <span class="badge">EN VIVO AHORA</span>
+    <h1>DESCUBRE TU <span>PRÓXIMO</span> RITMO.</h1>
+    <p>
+      Explora los eventos más exclusivos de la ciudad.
+      Desde conciertos íntimos hasta festivales masivos.
+    </p>
+
+    <!-- BARRA DE BÚSQUEDA -->
+    <div class="search-bar">
+      <input type="text" id="searchInput" placeholder="Buscar artistas, eventos, lugares...">
+      <button class="search-btn">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"></circle>
+          <path d="m21 21-4.35-4.35"></path>
+        </svg>
+      </button>
+    </div>
+
+    <div class="buttons">
+      <button class="btn btn-primary">Explorar Eventos</button>
+      <button class="btn btn-secondary">Ver Calendario</button>
+    </div>
+  </div>
+
+  <div class="hero-image">
+    <img src="https://images.unsplash.com/photo-1507874457470-272b3c8d8ee2" alt="evento">
+    <div class="overlay-text">
+      <p>DESTACADO DE LA SEMANA</p>
+      <h3>Festival de Verano 2024</h3>
+    </div>
+  </div>
+</section>
+
+<!-- FILTROS -->
+<section class="filters">
+  <button class="active">Todos</button>
+  <button>Música</button>
+  <button>Arte</button>
+  <button>Deportes</button>
+  <button>Networking</button>
+</section>
+
+<!-- CARDS -->
+<section class="cards">
+
+  <div class="card">
+    <img src="https://images.unsplash.com/photo-1514525253161-7a46d19cd819">
+    <div class="card-content">
+      <span class="card-tag">Música</span>
+      <h3>Neon Pulse: Underground Sessions</h3>
+      <p>Una experiencia inmersiva con los mejores DJs.</p>
+      <div class="card-footer">
+        <button class="btn btn-sm">Ver más</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <img src="https://images.unsplash.com/photo-1540575467063-178a50c2df87">
+    <div class="card-content">
+      <span class="card-tag">Bienestar</span>
+      <h3>Mañanas Zen: Yoga & Té</h3>
+      <p>Relájate con sesiones de yoga al amanecer.</p>
+      <div class="card-footer">
+        <button class="btn btn-sm">Detalles</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <img src="https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f">
+    <div class="card-content">
+      <span class="card-tag">Música</span>
+      <h3>Rock en la Playa</h3>
+      <p>Las mejores bandas locales en vivo.</p>
+      <div class="card-footer">
+        <button class="btn btn-sm">Ver más</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="card highlight">
+    <h2>¿No encuentras lo que buscas?</h2>
+    <p>Personaliza tu feed y recibe recomendaciones.</p>
+    <button class="btn btn-primary">Personalizar</button>
+  </div>
+
+</section>
+
+<!-- NEWSLETTER -->
+<section class="newsletter">
+  <div class="newsletter-content">
+    <h2>No te pierdas nada</h2>
+    <p>Suscríbete para recibir las mejores ofertas y eventos en tu correo.</p>
+    <form class="newsletter-form">
+      <input type="email" placeholder="Tu correo electrónico">
+      <button type="submit" class="btn btn-primary">Suscribirse</button>
+    </form>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-content">
+    <div class="footer-brand">
+      <div class="logo">
+        <img src="/assets/images/Logo.webp" alt="Logo VivaEventos">
+        <span class="logo-text">VivaEventos</span>
+      </div>
+      <p>La mejor plataforma para descubrir y gestionar eventos en tu ciudad.</p>
+      <div class="social-links">
+        <a href="#" class="social-icon">📘</a>
+        <a href="#" class="social-icon">📸</a>
+        <a href="#" class="social-icon">🐦</a>
+        <a href="#" class="social-icon">📹</a>
+      </div>
+    </div>
+    
+    <div class="footer-links">
+      <div class="footer-column">
+        <h4>Explorar</h4>
+        <a href="#">Eventos</a>
+        <a href="#">Categorías</a>
+        <a href="#">Artistas</a>
+        <a href="#">Lugares</a>
+      </div>
+      <div class="footer-column">
+        <h4>Empresa</h4>
+        <a href="#">Sobre Nosotros</a>
+        <a href="#">Careers</a>
+        <a href="#">Prensa</a>
+        <a href="#">Blog</a>
+      </div>
+      <div class="footer-column">
+        <h4>Soporte</h4>
+        <a href="#">Ayuda</a>
+        <a href="#">Contacto</a>
+        <a href="#">Términos</a>
+        <a href="#">Privacidad</a>
+      </div>
+    </div>
+  </div>
+  
+  <div class="footer-bottom">
+    <p>&copy; 2024 VivaEventos. Todos los derechos reservados.</p>
+  </div>
+</footer>
+
+<script src="/assets/js/main.js"></script>
 </body>
 </html>
