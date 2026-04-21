@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>VivaEventos</title>
+  <link rel="icon" href="/assets/images/Logoblue.png">
   <link rel="stylesheet" href="/assets/css/landingpage.css">
   <link rel="stylesheet" href="/assets/css/main.css">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
@@ -12,13 +13,13 @@
 <!-- NAVBAR -->
 <header class="navbar">
   <div class="logo">
-    <img src="/assets/images/Logo.webp" alt="Logo VivaEventos">
+    <img src="/assets/images/Logoblue.png" alt="Logo VivaEventos">
     <img class="logo-text" src="/assets/images/Titulo.webp" alt="VivaEventos">
   </div>
   <nav>
     <a href="index.html" class="active">Eventos</a>
-    <a href="/auth/login.html">Ingresar/Registrarse</a>
-    <a href="#">Soporte</a>
+    <a href="/auth/login.html">Ingresar</a>
+    <a href="support.html">Soporte</a>
   </nav>
 </header>
 
@@ -49,69 +50,141 @@
     </div>
   </div>
 
-  <div class="hero-image">
-    <img src="https://images.unsplash.com/photo-1507874457470-272b3c8d8ee2" alt="evento">
-    <div class="overlay-text">
-      <p>DESTACADO DE LA SEMANA</p>
-      <h3>Festival de Verano 2024</h3>
+  <div class="hero-carousel">
+    <div class="hero-image" id="heroCard">
+      <div class="hero-image-inner">
+        <img src="/assets/images/concierto1.jpg" alt="evento">
+        <div class="overlay-text">
+          <p>DESTACADO DE LA SEMANA</p>
+          <h3>Festival de Verano 2024</h3>
+        </div>
+      </div>
+      <div class="hero-image-inner" style="display: none;">
+        <img src="https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f" alt="evento">
+        <div class="overlay-text">
+          <p>CONCIERTO EN VIVO</p>
+          <h3>Rock en la Playa 2024</h3>
+        </div>
+      </div>
+      <div class="hero-image-inner" style="display: none;">
+        <img src="https://images.unsplash.com/photo-1540575467063-178a50c2df87" alt="evento">
+        <div class="overlay-text">
+          <p>DEPORTE</p>
+          <h3>Maratón Urbana 2024</h3>
+        </div>
+      </div>
     </div>
+    
   </div>
 </section>
 
-<!-- FILTROS -->
-<section class="filters">
-  <button class="active">Todos</button>
-  <button>Música</button>
-  <button>Arte</button>
-  <button>Deportes</button>
-  <button>Networking</button>
+<!-- CATEGORÍAS Y FILTROS -->
+<section class="categories-section">
+  <h2 class="section-title">Categorías</h2>
+  <div class="filters">
+    <button class="filter-btn active" data-filter="todos">Todos</button>
+    <button class="filter-btn" data-filter="musica">Música</button>
+    <button class="filter-btn" data-filter="arte">Arte</button>
+    <button class="filter-btn" data-filter="deportes">Deportes</button>
+    <button class="filter-btn" data-filter="networking">Networking</button>
+    <button class="filter-btn" data-filter="bienestar">Bienestar</button>
+  </div>
 </section>
 
 <!-- CARDS -->
-<section class="cards">
+  <section class="cards">
+    <div class="card" data-category="musica">
+      <img src="https://images.unsplash.com/photo-1514525253161-7a46d19cd819">
+      <div class="card-content">
+        <span class="card-tag">Música</span>
+        <h3>Neon Pulse: Underground Sessions</h3>
+        <p>Una experiencia inmersiva con los mejores DJs.</p>
+        <div class="card-footer">
+          <button class="btn btn-sm">Ver más</button>
+        </div>
+      </div>
+    </div>
 
-  <div class="card">
-    <img src="https://images.unsplash.com/photo-1514525253161-7a46d19cd819">
-    <div class="card-content">
-      <span class="card-tag">Música</span>
-      <h3>Neon Pulse: Underground Sessions</h3>
-      <p>Una experiencia inmersiva con los mejores DJs.</p>
-      <div class="card-footer">
-        <button class="btn btn-sm">Ver más</button>
+    <div class="card" data-category="bienestar">
+      <img src="https://images.unsplash.com/photo-1540575467063-178a50c2df87">
+      <div class="card-content">
+        <span class="card-tag">Bienestar</span>
+        <h3>Mañanas Zen: Yoga & Té</h3>
+        <p>Relájate con sesiones de yoga al amanecer.</p>
+        <div class="card-footer">
+          <button class="btn btn-sm">Detalles</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" data-category="musica">
+      <img src="https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f">
+      <div class="card-content">
+        <span class="card-tag">Música</span>
+        <h3>Rock en la Playa</h3>
+        <p>Las mejores bandas locales en vivo.</p>
+        <div class="card-footer">
+          <button class="btn btn-sm">Ver más</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card highlight">
+      <h2>¿No encuentras lo que buscas?</h2>
+      <p>Personaliza tu feed y recibe recomendaciones.</p>
+      <button class="btn btn-primary">Personalizar</button>
+    </div>
+
+  </section>
+
+</section>
+
+<!-- CIUDADES -->
+<section class="cities-section">
+  <div class="inner">
+    <div class="section-header">
+      <div>
+        <h2 class="section-title">Eventos por ciudad</h2>
+        <p>Encuentra lo que pasa cerca de ti</p>
+      </div>
+      <a href="#" class="ver-todas">Ver todas las ciudades →</a>
+    </div>
+ 
+    <div class="cities-grid">
+ 
+      <div class="city-card featured">
+        <img src="https://images.unsplash.com/photo-1562883676-8c7feb83f09b?w=900&q=80" alt="Bogotá">
+        <div class="city-overlay">
+          <span class="city-name">Bogotá</span>
+          <span class="city-count">142 eventos</span>
+        </div>
+      </div>
+ 
+      <div class="city-card">
+        <img src="https://images.unsplash.com/photo-1598970605070-a38a6ccd3a2d?w=400&q=80" alt="Medellín">
+        <div class="city-overlay">
+          <span class="city-name">Medellín</span>
+          <span class="city-count">98 eventos</span>
+        </div>
+      </div>
+ 
+      <div class="city-card">
+        <img src="https://images.unsplash.com/photo-1596422846543-75c6fc197f07?w=400&q=80" alt="Cali">
+        <div class="city-overlay">
+          <span class="city-name">Cali</span>
+          <span class="city-count">74 eventos</span>
+        </div>
+      </div>
+ 
+      <div class="city-card">
+        <img src="https://images.unsplash.com/photo-1533282960533-51328aa49826?w=400&q=80" alt="Cartagena">
+        <div class="city-overlay">
+          <span class="city-name">Cartagena</span>
+          <span class="city-count">51 eventos</span>
+        </div>
       </div>
     </div>
   </div>
-
-  <div class="card">
-    <img src="https://images.unsplash.com/photo-1540575467063-178a50c2df87">
-    <div class="card-content">
-      <span class="card-tag">Bienestar</span>
-      <h3>Mañanas Zen: Yoga & Té</h3>
-      <p>Relájate con sesiones de yoga al amanecer.</p>
-      <div class="card-footer">
-        <button class="btn btn-sm">Detalles</button>
-      </div>
-    </div>
-  </div>
-
-  <div class="card">
-    <img src="https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f">
-    <div class="card-content">
-      <span class="card-tag">Música</span>
-      <h3>Rock en la Playa</h3>
-      <p>Las mejores bandas locales en vivo.</p>
-      <div class="card-footer">
-        <button class="btn btn-sm">Ver más</button>
-      </div>
-    </div>
-  </div>
-
-  <div class="card highlight">
-    <h2>¿No encuentras lo que buscas?</h2>
-    <p>Personaliza tu feed y recibe recomendaciones.</p>
-    <button class="btn btn-primary">Personalizar</button>
-  </div>
-
 </section>
 
 <!-- NEWSLETTER -->
@@ -126,24 +199,42 @@
   </div>
 </section>
 
-<!-- FOOTER -->
 <footer class="footer">
+
   <div class="footer-content">
+
+    <!-- BRAND -->
     <div class="footer-brand">
       <div class="logo">
-        <img src="/assets/images/Logo.webp" alt="Logo VivaEventos">
+        <img src="/assets/images/Logoblue.png" alt="Logo VivaEventos">
         <span class="logo-text">VivaEventos</span>
       </div>
-      <p>La mejor plataforma para descubrir y gestionar eventos en tu ciudad.</p>
+
+      <p>
+        Descubre, vive y comparte los mejores eventos en tu ciudad.
+      </p>
+
       <div class="social-links">
-        <a href="#" class="social-icon">📘</a>
-        <a href="#" class="social-icon">📸</a>
-        <a href="#" class="social-icon">🐦</a>
-        <a href="#" class="social-icon">📹</a>
+
+        <!-- ICONOS SVG (monotono 👇) -->
+        <a href="#">
+          <svg viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+        </a>
+
+        <a href="#">
+          <svg viewBox="0 0 24 24"><path d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5zm5 5a5 5 0 1 0 0 10 5 5 0 0 0 0-10zm6.5-.5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3z"/></svg>
+        </a>
+
+        <a href="#">
+          <svg viewBox="0 0 24 24"><path d="M22 4s-.8.4-1.6.6A2.8 2.8 0 0 0 16 7v1A6.6 6.6 0 0 1 3 4s-4 9 5 13a7 7 0 0 1-4 1c9 5 20 0 20-11v-.5A4.8 4.8 0 0 0 22 4z"/></svg>
+        </a>
+
       </div>
     </div>
-    
+
+    <!-- LINKS -->
     <div class="footer-links">
+
       <div class="footer-column">
         <h4>Explorar</h4>
         <a href="#">Eventos</a>
@@ -151,26 +242,30 @@
         <a href="#">Artistas</a>
         <a href="#">Lugares</a>
       </div>
+
       <div class="footer-column">
         <h4>Empresa</h4>
         <a href="#">Sobre Nosotros</a>
         <a href="#">Careers</a>
-        <a href="#">Prensa</a>
         <a href="#">Blog</a>
       </div>
+
       <div class="footer-column">
         <h4>Soporte</h4>
         <a href="#">Ayuda</a>
         <a href="#">Contacto</a>
-        <a href="#">Términos</a>
         <a href="#">Privacidad</a>
       </div>
+
     </div>
+
   </div>
-  
+
+  <!-- BOTTOM -->
   <div class="footer-bottom">
-    <p>&copy; 2024 VivaEventos. Todos los derechos reservados.</p>
+    <p>© 2024 VivaEventos — Todos los derechos reservados</p>
   </div>
+
 </footer>
 
 <script src="/assets/js/main.js"></script>

@@ -1,10 +1,77 @@
-// Filtros activos
-const buttons = document.querySelectorAll(".filters button");
+// Hero Carousel
+const heroCard = document.getElementById('heroCard');
+const heroInners = document.querySelectorAll('.hero-image-inner');
+let currentHeroIndex = 0;
+let isFlipping = false;
+const totalHeroCards = heroInners.length;
 
-buttons.forEach(btn => {
+function flipToNextCard() {
+  if (isFlipping || !heroCard) return;
+  isFlipping = true;
+  
+  const nextIndex = (currentHeroIndex + 1) % totalHeroCards;
+  
+  heroCard.classList.add('flipping');
+  
+  setTimeout(() => {
+    heroInners.forEach((inner, i) => {
+      inner.style.display = i === nextIndex ? 'block' : 'none';
+    });
+    
+    currentHeroIndex = nextIndex;
+    heroCard.classList.remove('flipping');
+    
+    setTimeout(() => {
+      isFlipping = false;
+    }, 800);
+  }, 400);
+}
+
+function flipToPrevCard() {
+  if (isFlipping || !heroCard) return;
+  isFlipping = true;
+  
+  const prevIndex = (currentHeroIndex - 1 + totalHeroCards) % totalHeroCards;
+  
+  heroCard.classList.add('flipping-back');
+  
+  setTimeout(() => {
+    heroInners.forEach((inner, i) => {
+      inner.style.display = i === prevIndex ? 'block' : 'none';
+    });
+    
+    currentHeroIndex = prevIndex;
+    heroCard.classList.remove('flipping-back');
+    
+    setTimeout(() => {
+      isFlipping = false;
+    }, 800);
+  }, 400);
+}
+
+if (heroCard && heroInners.length > 0) {
+  setInterval(flipToNextCard, 5000);
+}
+
+// Filtros de categorías
+const filterBtns = document.querySelectorAll(".filter-btn");
+const cards = document.querySelectorAll(".cards .card:not(.highlight)");
+
+filterBtns.forEach(btn => {
   btn.addEventListener("click", () => {
-    document.querySelector(".filters .active").classList.remove("active");
+    filterBtns.forEach(b => b.classList.remove("active"));
     btn.classList.add("active");
+
+    const filter = btn.dataset.filter;
+
+    cards.forEach(card => {
+      const category = card.dataset.category;
+      if (filter === "todos" || category === filter) {
+        card.classList.remove("hidden");
+      } else {
+        card.classList.add("hidden");
+      }
+    });
   });
 });
 
