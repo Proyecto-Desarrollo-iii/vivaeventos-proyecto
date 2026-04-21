@@ -1,0 +1,232 @@
+/* CONTENEDOR GLOBAL */
+.container {
+  max-width: 1100px;
+  margin: auto;
+  padding: 0 20px;
+}
+
+/* HERO */
+.support-hero {
+  background: linear-gradient(135deg, #0097A7 0%, #007a8a 100%);
+  color: white;
+  text-align: center;
+  padding: 80px 20px 60px;
+}
+
+.support-hero h1 {
+  font-size: 2.5rem;
+  margin-bottom: 30px;
+}
+
+/* BUSCADOR */
+.support-search {
+  display: flex;
+  max-width: 500px;
+  margin: auto;
+  background: white;
+  border-radius: 50px;
+  overflow: hidden;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+}
+
+.support-search input {
+  flex: 1;
+  padding: 15px 20px;
+  border: none;
+  outline: none;
+  font-size: 0.95rem;
+  color: #1e293b;
+}
+
+.support-search button {
+  background: white;
+  border: none;
+  color: #0097A7;
+  padding: 0 22px;
+  cursor: pointer;
+  transition: 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-left: 1px solid rgba(0, 151, 167, 0.15);
+  font-size: 1.1rem;
+}
+
+.support-search button:hover {
+  background: rgba(0, 151, 167, 0.08);
+}
+
+/* SEARCH ICON SVG */
+.support-search button svg {
+  width: 20px;
+  height: 20px;
+  stroke: #0097A7;
+  stroke-width: 2.2;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* CATEGORÍAS */
+.support-categories {
+  margin-top: 60px;
+  margin-bottom: 60px;
+}
+
+.support-categories h2 {
+  margin-bottom: 25px;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #1e293b;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+/* GRID */
+.categories-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+/* CARD — estilo lista horizontal como la imagen */
+.category-card {
+  background: white;
+  border-radius: 12px;
+  padding: 20px 22px;
+  border: 1.5px solid #e2e8f0;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  transition: all 0.25s ease;
+  cursor: pointer;
+  position: relative;
+}
+
+.category-card:hover {
+  border-color: #0097A7;
+  box-shadow: 0 4px 16px rgba(0, 151, 167, 0.12);
+  transform: translateY(-2px);
+}
+
+/* Icono contenedor */
+.category-card .icon-wrap {
+  flex-shrink: 0;
+  width: 48px;
+  height: 48px;
+  background: rgba(0, 151, 167, 0.08);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.category-card .icon-wrap svg {
+  width: 26px;
+  height: 26px;
+  stroke: #0097A7;
+  stroke-width: 1.8;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* Ocultar emoji icon antiguo si existe */
+.category-card .icon {
+  display: none;
+}
+
+/* Texto */
+.category-card .card-text {
+  flex: 1;
+}
+
+.category-card h3 {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 2px;
+  letter-spacing: -0.01em;
+}
+
+.category-card p {
+  color: #64748b;
+  font-size: 0.82rem;
+  line-height: 1.4;
+}
+
+/* Flecha derecha */
+.category-card .arrow {
+  flex-shrink: 0;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 1.5px solid #e2e8f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.25s ease;
+}
+
+.category-card:hover .arrow {
+  background: #0097A7;
+  border-color: #0097A7;
+}
+
+.category-card .arrow svg {
+  width: 14px;
+  height: 14px;
+  stroke: #94a3b8;
+  stroke-width: 2.5;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: stroke 0.25s ease;
+}
+
+.category-card:hover .arrow svg {
+  stroke: white;
+}
+
+/* CARD DESTACADA — Contáctanos */
+.category-card.highlight {
+  background: white;
+  border: 1.5px solid #e2e8f0;
+  color: #1e293b;
+  text-align: left;
+  flex-direction: row;
+  align-items: center;
+}
+
+.category-card.highlight:hover {
+  border-color: #0097A7;
+}
+
+.category-card.highlight .icon-wrap {
+  background: rgba(0, 151, 167, 0.08);
+}
+
+.category-card.highlight p {
+  color: #64748b;
+}
+
+.category-card.highlight button {
+  display: none; /* la flecha ya actúa como CTA */
+}
+
+/* RESPONSIVE */
+@media (max-width: 900px) {
+  .categories-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .support-hero h1 {
+    font-size: 2rem;
+  }
+
+  .categories-grid {
+    grid-template-columns: 1fr;
+  }
+}
