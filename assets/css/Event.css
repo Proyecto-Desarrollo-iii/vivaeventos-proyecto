@@ -1,0 +1,164 @@
+.event-detail {
+    max-width: 1100px;
+    margin: 40px auto;
+}
+
+/* HERO FULL WIDTH */
+.event-hero {
+    width: 100%;
+    height: 420px;
+    overflow: hidden;
+}
+
+.event-hero img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* 🔥 clave */
+    display: block;
+}
+
+/* INFO */
+.event-main-info {
+    text-align: center;
+    margin: 30px 0;
+}
+
+.event-main-info .btn {
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 13px;
+    max-width: 200px;
+}
+
+.event-main-info h1 {
+    padding-top: 25px;
+}
+
+/* NAV */
+.event-nav {
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+    border-bottom: 1px solid #e2e8f0;
+    padding-bottom: 12px;
+    margin-bottom: 30px;
+}
+
+.event-nav a {
+    text-decoration: none;
+    color: #64748b;
+    font-weight: 400;
+    position: relative;
+}
+
+.event-nav a:hover {
+    color: #0097b2;
+}
+
+.event-nav a::after {
+    content: "";
+    position: absolute;
+    bottom: -6px;
+    left: 0;
+    width: 0%;
+    height: 2px;
+    background: #0097b2;
+    transition: 0.3s;
+}
+
+.event-nav a:hover::after {
+    width: 100%;
+}
+
+/* SECCIONES */
+.event-section {
+    margin-bottom: 60px;
+    scroll-margin-top: 80px;
+}
+
+.event-section h2 {
+    color: #0097b2;
+    margin-bottom: 10px;
+}
+
+.event-map {
+    width: 100%;
+    border-radius: 12px;
+}
+
+/* SCROLL SUAVE */
+html {
+    scroll-behavior: smooth;
+}
+
+/* MAP CONTAINER */
+.map-container {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.map-iframe {
+    width: 100%;
+    height: 250px;
+    border-radius: 12px;
+    border: none;
+}
+
+.maps-link {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #f5f5f5;
+    padding: 12px 16px;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: background 0.2s;
+}
+
+.maps-link:hover {
+    background: #e8e8e8;
+}
+
+.maps-link .material-symbols-outlined {
+    color: #0097b2;
+    font-size: 24px;
+}
+
+#venue-name {
+    color: #1a1a1a;
+    font-weight: 500;
+    flex: 1;
+}
+
+.maps-link-text {
+    color: #0097b2;
+    font-size: 14px;
+}
+
+/* LISTEN & MAP ROW */
+.listen-map-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+}
+
+.listen-map-row .event-section {
+    margin-bottom: 0;
+}
+
+.spotify-embed-container iframe {
+    display: block;
+    width: 100%;
+    height: 380px;
+}
+
+@media (max-width: 768px) {
+    .listen-map-row {
+        grid-template-columns: 1fr;
+    }
+    
+    .spotify-embed-container iframe {
+        height: 300px;
+    }
+}
