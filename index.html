@@ -11,17 +11,7 @@
 <body>
 
 <!-- NAVBAR -->
-<header class="navbar">
-  <div class="logo">
-    <img src="/assets/images/Logoblue.png" alt="Logo VivaEventos">
-    <img class="logo-text" src="/assets/images/Titulo.webp" alt="VivaEventos">
-  </div>
-  <nav>
-    <a href="index.html" class="active">Eventos</a>
-    <a href="/auth/login.html">Ingresar</a>
-    <a href="/assets/support.html">Soporte</a>
-  </nav>
-</header>
+<div id="navbar-container"></div>
 
 <!-- HERO -->
 <section class="hero">
@@ -100,7 +90,7 @@
         <h3>Neon Pulse: Underground Sessions</h3>
         <p>Una experiencia inmersiva con los mejores DJs.</p>
         <div class="card-footer">
-          <button class="btn btn-sm">Ver más</button>
+          <a href="/assets/Event.html" class="btn btn-sm">Ver más</a>
         </div>
       </div>
     </div>
@@ -112,7 +102,7 @@
         <h3>Mañanas Zen: Yoga & Té</h3>
         <p>Relájate con sesiones de yoga al amanecer.</p>
         <div class="card-footer">
-          <button class="btn btn-sm">Detalles</button>
+          <a href="/events/Event.html" class="btn btn-sm">Ver más</a>
         </div>
       </div>
     </div>
@@ -124,7 +114,7 @@
         <h3>Rock en la Playa</h3>
         <p>Las mejores bandas locales en vivo.</p>
         <div class="card-footer">
-          <button class="btn btn-sm">Ver más</button>
+          <a href="/events/Event.html" class="btn btn-sm">Ver más</a>
         </div>
       </div>
     </div>
@@ -268,6 +258,8 @@
 
 </footer>
 
+<script src="/assets/js/auth.js"></script>
+<script src="/assets/js/navbar.js"></script>
 <script src="/assets/js/main.js"></script>
 </body>
 </html>

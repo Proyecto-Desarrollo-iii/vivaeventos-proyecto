@@ -36,7 +36,8 @@ const AuthService = {
     logout() {
         localStorage.removeItem('token');
         localStorage.removeItem('user');
-        window.location.href = '/auth/login.html';
+        //window.location.href = '/auth/login.html';
+        window.location.href = '/index.html';
     },
     
     getUser() {
@@ -91,3 +92,35 @@ const AuthService = {
 };
 
 window.AuthService = AuthService;
+
+// ============================================
+// NAVBAR - Gestión dinámica de navegación
+// ============================================
+
+function updateNavbar() {
+    const nav = document.querySelector('header.navbar nav');
+    if (!nav) return;
+
+    const user = AuthService.getUser();
+    const isAuth = AuthService.isAuthenticated();
+
+    if (isAuth && user) {
+        // Usuario logueado: Mis entradas, Mi cuenta, Soporte, Cerrar sesión
+        nav.innerHTML = `
+            <a href="/assets/Tickets.html">Mis entradas</a>
+            <a href="/assets/MyAccount.html">Mi cuenta</a>
+            <a href="/assets/support.html">Soporte</a>
+            <a href="#" id="logoutBtn">Cerrar sesión</a>
+        `;
+
+        // Agregar evento al botón de cerrar sesión
+        document.getElementById('logoutBtn').addEventListener('click', function(e) {
+            e.preventDefault();
+            AuthService.logout();
+        });
+    }
+    // Si no está logueado, mantener las opciones originales (ya definidas en el HTML)
+}
+
+// Actualizar navbar al cargar la página
+document.addEventListener('DOMContentLoaded', updateNavbar);

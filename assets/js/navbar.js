@@ -1,0 +1,73 @@
+/**
+ * Componente Navbar dinámico
+ * Renderiza el menú según el estado de autenticación
+ */
+const Navbar = {
+    getCurrentPage() {
+        const path = window.location.pathname;
+        if (path.includes('MyAccount.html')) return 'cuenta';
+        if (path.includes('Tickets.html')) return 'entradas';
+        if (path.includes('support.html')) return 'soporte';
+        if (path.includes('login.html') || path.includes('registro.html')) return 'auth';
+        return 'eventos';
+    },
+    
+    render() {
+        const isAuth = AuthService && AuthService.isAuthenticated();
+        const navbarContainer = document.getElementById('navbar-container');
+        const currentPage = this.getCurrentPage();
+        
+        if (!navbarContainer) return;
+
+        if (isAuth) {
+            // Navbar cuando hay sesión iniciada
+            navbarContainer.innerHTML = `
+                <header class="navbar">
+                    <div class="logo">
+                        <a href="/index.html">
+                            <img src="/assets/images/Logoblue.png" alt="Logo VivaEventos">
+                            <img class="logo-text" src="/assets/images/Titulo.webp" alt="VivaEventos">
+                        </a>
+                    </div>
+                    <nav>
+                        <a href="/index.html" class="${currentPage === 'eventos' ? 'active' : ''}">Eventos</a>
+                        <a href="/assets/Tickets.html" class="${currentPage === 'entradas' ? 'active' : ''}">Mis entradas</a>
+                        <a href="/assets/MyAccount.html" class="${currentPage === 'cuenta' ? 'active' : ''}">Mi cuenta</a>
+                        <a href="#" id="logoutBtn">Cerrar sesión</a>
+                    </nav>
+                </header>
+            `;
+        } else {
+            // Navbar público (sin sesión)
+            navbarContainer.innerHTML = `
+                <header class="navbar">
+                    <div class="logo">
+                        <a href="/index.html">
+                            <img src="/assets/images/Logoblue.png" alt="Logo VivaEventos">
+                            <img class="logo-text" src="/assets/images/Titulo.webp" alt="VivaEventos">
+                        </a>
+                    </div>
+                    <nav>
+                        <a href="/index.html" class="${currentPage === 'eventos' ? 'active' : ''}">Eventos</a>
+                        <a href="/auth/login.html" class="${currentPage === 'auth' ? 'active' : ''}">Ingresar</a>
+                        <a href="/assets/support.html" class="${currentPage === 'soporte' ? 'active' : ''}">Soporte</a>
+                    </nav>
+                </header>
+            `;
+        }
+
+        // Agregar evento de logout si existe el botón
+        const logoutBtn = document.getElementById('logoutBtn');
+        if (logoutBtn) {
+            logoutBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                if (window.AuthService) AuthService.logout();
+            });
+        }
+    }
+};
+
+// Auto-renderizar cuando el DOM esté listo
+document.addEventListener('DOMContentLoaded', () => {
+    Navbar.render();
+});
