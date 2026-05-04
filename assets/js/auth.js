@@ -1,6 +1,6 @@
 const AuthService = {
     async login(email, password) {
-        const response = await fetch('/api/auth/v1/login', {
+        const response = await fetch('/api/v1/auth/login', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email, password })
@@ -18,7 +18,7 @@ const AuthService = {
     },
     
     async register(userData) {
-        const response = await fetch('/api/auth/v1/register', {
+        const response = await fetch('/api/v1/auth/registro', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(userData)

@@ -8,27 +8,26 @@ const PORT = 5000;
 const AUTH_SERVICE = 'http://localhost:8083';
 
 app.use((req, res, next) => {
-    console.log('[' + new Date().toISOString() + '] ' + req.method + ' ' + req.url);
+    console.log('[Request]', req.method, req.url, 'Headers:', JSON.stringify(req.headers));
     next();
 });
 
 app.use('/assets', express.static(path.join(__dirname, 'assets')));
 
-app.options('/api/*', (req, res) => {
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS, PATCH');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-    res.setHeader('Access-Control-Max-Age', '3600');
-    res.sendStatus(200);
-});
-
 // http-proxy-middleware - keep /api prefix
 app.use('/api', createProxyMiddleware({
   target: AUTH_SERVICE,
   changeOrigin: true,
+  secure: false,
   onError: (err, req, res) => {
     console.error('[Proxy Error]', err.message);
     res.status(502).json({ error: 'Auth service unavailable' });
+  },
+  onProxyReq: (proxyReq, req, res) => {
+    console.log('[Proxy Request]', req.method, req.url, '->', AUTH_SERVICE + req.url);
+  },
+  onProxyRes: (proxyRes, req, res) => {
+    console.log('[Proxy Response]', proxyRes.statusCode, req.method, req.url);
   }
 }));
 
