@@ -1,6 +1,7 @@
 const event = {
     title: "Ed Sheeran",
     location: "Bogotá, Colombia",
+    date: "Oct 24 - 26, 2024",
     image: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819",
     description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
     spotify: "https://open.spotify.com/playlist/0C8qM17KlmoQCDApCbUSyC?si=afc1c3ab42f9411b",
@@ -13,6 +14,7 @@ const event = {
 function loadEvent(event) {
     document.getElementById('event-image').src = event.image;
     document.getElementById('event-title').textContent = event.title;
+    document.getElementById('event-date').textContent = event.date;
     document.getElementById('event-location').textContent = event.location;
     document.getElementById('event-description').textContent = event.description;
     

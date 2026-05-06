@@ -1,0 +1,152 @@
+.sidebar {
+    width: 240px;
+    height: 100vh;
+    position: fixed;
+    background: #fff;
+    border-right: 1px solid #e2e8f0;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.logo-text {
+    width: 200px;
+    height: 40px;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 600;
+    margin-bottom: 30px;
+}
+
+.logo img {
+    width: 150px;
+    height: 40px;
+}
+
+.sidebar nav {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.sidebar nav a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+    color: #64748b;
+    text-decoration: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.sidebar nav a:hover {
+    background: #f1f5f9;
+    color: #0097b2;
+}
+
+.sidebar nav a.active {
+    background: #e0f7fa;
+    color: #0097b2;
+    font-weight: 500;
+}
+
+.btn-create {
+    margin-top: auto;
+    background: #0097b2;
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.btn-create:hover {
+    background: #007c91;
+}
+
+.sidebar-user {
+    margin-top: auto;
+    padding-top: 20px;
+    border-top: 1px solid #e2e8f0;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.user-info img {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+}
+
+.logout-btn {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+    color: #64748b;
+    text-decoration: none;
+    border-radius: 8px;
+    font-size: 14px;
+}
+
+.logout-btn:hover {
+    background: #f1f5f9;
+    color: #ef4444;
+}
+
+
+main {
+    margin-left: 240px;
+    padding: 30px;
+    padding-top: 30px;
+}
+
+.cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+}
+
+.card {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.card-top {
+    display: flex;
+    justify-content: flex-start;
+}
+
+.icon {
+    background: #e0f7fa;
+    color: #0097b2;
+    padding: 10px;
+    border-radius: 8px;
+    font-size: 22px;
+}
+
+.card h3 {
+    color: #64748b;
+    font-size: 14px;
+}
+
+.card p {
+    font-size: 24px;
+    font-weight: 600;
+    color: #0097b2;
+}

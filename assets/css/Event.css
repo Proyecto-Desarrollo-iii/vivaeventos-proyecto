@@ -1,3 +1,78 @@
+body {
+    background: #f3f7f9; /* gris azulado como la imagen */
+}
+
+/* HERO FULL */
+.event-hero {
+    position: relative;
+    width: 100%;
+    height: 500px;
+    overflow: hidden;
+}
+
+.event-hero img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* OVERLAY OSCURO */
+.event-hero::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.7), transparent);
+}
+
+/* CONTENIDO SOBRE IMAGEN */
+.event-overlay {
+    position: absolute;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 1100px;
+    max-width: 90%;
+    color: white;
+    z-index: 2;
+}
+
+/* BADGE */
+.event-badge {
+    background: rgba(0, 151, 178, 0.2);
+    color: #00c2d6;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+    display: inline-block;
+    margin-bottom: 15px;
+}
+
+/* TITULO */
+.event-overlay h1 {
+    font-size: 48px;
+    font-weight: 700;
+    margin-bottom: 15px;
+}
+
+/* META INFO */
+.event-meta {
+    display: flex;
+    gap: 30px;
+    font-size: 14px;
+}
+
+.event-meta div {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.event-meta .material-symbols-outlined {
+    font-size: 20px;
+    color: #00c2d6;
+}
+
 .event-detail {
     max-width: 1100px;
     margin: 40px auto;
@@ -84,6 +159,214 @@
 .event-map {
     width: 100%;
     border-radius: 12px;
+}
+
+/* LAYOUT GENERAL */
+.event-layout {
+    display: grid;
+    grid-template-columns: 1.8fr 1.2fr;
+    gap: 40px;
+    max-width: 1100px;
+    margin: 40px auto;
+}
+
+/* SIDEBAR */
+.event-sidebar {
+    background: #f8fafc;
+    padding: 24px;
+    border-radius: 16px;
+    position: sticky;
+    top: 100px;
+    height: fit-content;
+}
+
+.event-sidebar h3 {
+    margin-bottom: 20px;
+}
+
+.ticket-panel {
+    background: #ffffff;
+    padding: 28px;
+    border-radius: 28px;
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.08);
+    position: sticky;
+    top: 100px;
+    height: fit-content;
+}
+
+.ticket-panel h3 {
+    margin-bottom: 24px;
+    font-size: 22px;
+    font-weight: 700;
+    color: #0f172a;
+}
+
+/* OPCIONES */
+.ticket-option {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    padding: 18px;
+    border-radius: 16px;
+    background: #f5f7f8;
+    margin-bottom: 12px;
+
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: 0.25s;
+}
+
+.ticket-option input {
+    display: none;
+}
+
+/* HOVER */
+.ticket-option:hover {
+    border-color: #0097b2;
+}
+
+/* SELECCIONADO */
+.ticket-option:has(input:checked) {
+    border-color: #0097b2;
+    background: #e6f7fb;
+}
+
+/* INFO */
+.ticket-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.ticket-info strong {
+    font-size: 16px;
+}
+
+.ticket-info span {
+    font-size: 13px;
+    color: #64748b;
+}
+
+/* PRECIO */
+.ticket-price {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 4px;
+}
+
+.ticket-price strong {
+    color: #0097b2;
+    font-size: 18px;
+}
+
+.ticket-price span {
+    font-size: 11px;
+    color: #94a3b8;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+/* PROMO */
+.ticket-promo {
+    margin-top: 20px;
+}
+
+.ticket-promo label {
+    font-size: 12px;
+    color: #64748b;
+    display: block;
+    margin-bottom: 6px;
+}
+
+.promo-input {
+    display: flex;
+    gap: 8px;
+}
+
+.promo-input input {
+    flex: 1;
+    padding: 12px;
+    border-radius: 10px;
+    border: none;
+    background: #eef2f3;
+}
+
+.promo-input button {
+    background: #64748b;
+    color: white;
+    border: none;
+    padding: 0 16px;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+/* SUMMARY */
+.ticket-summary {
+    margin-top: 25px;
+    border-top: 1px solid #e5e7eb;
+    padding-top: 15px;
+}
+
+/* QUANTITY */
+.quantity {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.qty-controls {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    background: #f1f5f9;
+    padding: 6px 10px;
+    border-radius: 50px;
+}
+
+.qty-controls button {
+    border: none;
+    background: white;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.qty-controls .plus {
+    background: #0097b2;
+    color: white;
+}
+
+/* TOTAL */
+.total {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-top: 15px;
+}
+
+.total h2 {
+    color: #0097b2;
+    font-size: 24px;
+}
+
+/* BOTON */
+.buy-btn {
+    margin-top: 20px;
+    width: 100%;
+    padding: 16px;
+    border-radius: 30px;
+    border: none;
+    background: linear-gradient(135deg, #0097b2, #00bcd4);
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.buy-btn:hover {
+    transform: scale(1.03);
 }
 
 /* SCROLL SUAVE */
