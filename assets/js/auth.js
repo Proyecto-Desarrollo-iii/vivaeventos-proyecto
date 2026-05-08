@@ -25,7 +25,8 @@ const AuthService = {
             this._removeItem('token');
             this._removeItem('user');
             const store = this._getStore(remember);
-            store.setItem('token', data.token);
+            const jwtToken = data.token && data.token.token ? data.token.token : data.token;
+            store.setItem('token', jwtToken);
             store.setItem('user', JSON.stringify(data.user));
             return { success: true, data };
         } else {

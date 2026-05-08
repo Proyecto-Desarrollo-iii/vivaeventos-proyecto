@@ -5,15 +5,19 @@ async function loadProfile() {
         const response = await fetch('/api/v1/auth/mi-perfil', {
             headers: { 'Authorization': 'Bearer ' + token }
         });
+        if (!response.ok) return;
         const data = await response.json();
         const user = data.usuario || data;
+        if (!user) return;
         if (user.fullName) {
-            const parts = user.fullName.split(' ');
-            document.getElementById('nombre').value = parts[0] || '';
-            document.getElementById('apellido').value = parts.slice(1).join(' ') || '';
+            const i = user.fullName.indexOf(' ');
+            document.getElementById('nombre').value = i > 0 ? user.fullName.slice(0, i) : user.fullName;
+            document.getElementById('apellido').value = i > 0 ? user.fullName.slice(i + 1) : '';
         }
         if (user.email) document.getElementById('email').value = user.email;
         if (user.phone) document.getElementById('telefono').value = user.phone;
+        if (user.documentType) document.getElementById('tipo-doc').value = user.documentType;
+        if (user.documentNumber) document.getElementById('doc').value = user.documentNumber;
     } catch (e) {
         console.error('Error al cargar perfil:', e);
     }
