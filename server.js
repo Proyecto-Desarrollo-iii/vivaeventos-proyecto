@@ -30,17 +30,20 @@ function validateJwt(req, res, next) {
     }
 
     const authHeader = req.headers.authorization;
-    console.log('[validateJwt] path:', fullPath, 'authHeader:', authHeader ? authHeader.substring(0, 30) + '...' : 'MISSING');
+    console.log('[validateJwt] path:', fullPath, 'hasAuthHeader:', !!authHeader, 'startsWithBearer:', authHeader ? authHeader.startsWith('Bearer ') : false);
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
         return res.status(401).json({ error: 'Token requerido' });
     }
 
+    const secretKey = Buffer.from(JWT_SECRET, 'base64');
     const token = authHeader.substring(7);
     try {
-        const decoded = jwt.verify(token, JWT_SECRET);
+        const decoded = jwt.verify(token, secretKey);
+        console.log('[validateJwt] JWT valido, user:', decoded.sub);
         req.user = decoded;
         next();
     } catch (err) {
+        console.log('[validateJwt] JWT invalido:', err.message);
         return res.status(401).json({ error: 'Token invalido o expirado' });
     }
 }
