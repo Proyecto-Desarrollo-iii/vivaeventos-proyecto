@@ -9,6 +9,7 @@ async function loadProfile() {
         const data = await response.json();
         const user = data.usuario || data;
         if (!user) return;
+        console.log('API response user:', JSON.stringify(user));
         if (user.fullName) {
             const i = user.fullName.indexOf(' ');
             document.getElementById('nombre').value = i > 0 ? user.fullName.slice(0, i) : user.fullName;
