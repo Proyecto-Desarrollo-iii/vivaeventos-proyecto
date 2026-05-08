@@ -30,6 +30,7 @@ function validateJwt(req, res, next) {
     }
 
     const authHeader = req.headers.authorization;
+    console.log('[validateJwt] path:', fullPath, 'authHeader:', authHeader ? authHeader.substring(0, 30) + '...' : 'MISSING');
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
         return res.status(401).json({ error: 'Token requerido' });
     }
