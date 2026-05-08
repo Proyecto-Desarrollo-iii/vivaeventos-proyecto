@@ -454,6 +454,13 @@
             </nav>
         </div>
 
+    <script src="/assets/js/auth.js"></script>
+    <script>
+        document.querySelector('.logout-btn')?.addEventListener('click', function(e) {
+            e.preventDefault();
+            AuthService.logout();
+        });
+    </script>
     </body>
 
 </html>

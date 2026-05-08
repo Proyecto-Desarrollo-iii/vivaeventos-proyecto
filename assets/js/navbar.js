@@ -59,9 +59,9 @@ const Navbar = {
         // Agregar evento de logout si existe el botón
         const logoutBtn = document.getElementById('logoutBtn');
         if (logoutBtn) {
-            logoutBtn.addEventListener('click', function(e) {
+            logoutBtn.addEventListener('click', async function(e) {
                 e.preventDefault();
-                if (window.AuthService) AuthService.logout();
+                if (window.AuthService) await AuthService.logout();
             });
         }
     }

@@ -71,49 +71,17 @@
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
             
-            // ============================================
-            // MODO DE PRUEBA: Login sin servidor
-            // ============================================
-            console.log('⚠️ Modo de prueba: Simulando login...');
-            
-            const mockUser = {
-                id: 1,
-                name: 'Usuario de Prueba',
-                email: email,
-                role: 'usuario'
-            };
-            localStorage.setItem('token', 'mock-token-12345');
-            localStorage.setItem('user', JSON.stringify(mockUser));
-            
-            alert('Login simulado exitoso. Redirigiendo...');
-            window.location.href = '/index.html';
-            // ============================================
-            // FIN MODO DE PRUEBA
-            // ============================================
-            
-            /* 
-            // Código original (descomenta cuando tengas servidor):
             try {
-                const response = await fetch('/api/v1/auth/login', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ email, password })
-                });
-                
-                const data = await response.json();
-                
-                if (response.ok) {
-                    localStorage.setItem('token', data.token);
-                    localStorage.setItem('user', JSON.stringify(data.user));
-                    window.location.href = '/index.html';
+                const result = await AuthService.login(email, password);
+                if (result.success) {
+                    AuthService.redirectByRole();
                 } else {
-                    alert(data.message || 'Error al iniciar sesión');
+                    alert(result.message || 'Error al iniciar sesión');
                 }
             } catch (error) {
                 console.error('Error:', error);
-                alert('Error de conexión');
+                alert('Error de conexión con el servidor');
             }
-            */
         });
     </script>
 </body>

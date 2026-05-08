@@ -215,11 +215,12 @@
                 return;
             }
             
+            const nombre = document.getElementById('nombre').value;
+            const apellido = document.getElementById('apellido').value;
             const formData = {
-                nombre: document.getElementById('nombre').value,
-                apellido: document.getElementById('apellido').value,
+                fullName: nombre + ' ' + apellido,
                 email: document.getElementById('email').value,
-                telefono: document.getElementById('telefono').value,
+                phone: document.getElementById('telefono').value,
                 password: password,
                 role: document.getElementById('role').value
             };

@@ -33,10 +33,14 @@ const AuthService = {
         }
     },
     
-    logout() {
+    async logout() {
+        try {
+            await fetch('/api/v1/auth/logout', { method: 'POST', headers: { 'Authorization': 'Bearer ' + this.getToken() } });
+        } catch (e) {
+            console.warn('Error al cerrar sesion en el servidor', e);
+        }
         localStorage.removeItem('token');
         localStorage.removeItem('user');
-        //window.location.href = '/auth/login.html';
         window.location.href = '/index.html';
     },
     
@@ -77,16 +81,19 @@ const AuthService = {
             return;
         }
         
-        switch (user.role) {
-            case 'admin':
-            case 'organizador':
-                window.location.href = '/admin/dashboard.html';
+        const role = (user.role || '').toUpperCase();
+        switch (role) {
+            case 'ADMIN':
+            case 'ORGANIZER':
+            case 'ORGANIZADOR':
+                window.location.href = '/assets/DashboardOrganizador.html';
                 break;
-            case 'logistica':
+            case 'LOGISTICS':
+            case 'LOGISTICA':
                 window.location.href = '/validator/validar.html';
                 break;
             default:
-                window.location.href = '/events/catalogo.html';
+                window.location.href = '/index.html';
         }
     }
 };
