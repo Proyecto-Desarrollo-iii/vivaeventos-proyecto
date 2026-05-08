@@ -1,68 +1,84 @@
 const AuthService = {
-    async login(email, password) {
+    _getStore(remember) {
+        return remember ? localStorage : sessionStorage;
+    },
+
+    _getItem(key) {
+        return localStorage.getItem(key) || sessionStorage.getItem(key);
+    },
+
+    _removeItem(key) {
+        localStorage.removeItem(key);
+        sessionStorage.removeItem(key);
+    },
+
+    async login(email, password, remember) {
         const response = await fetch('/api/v1/auth/login', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email, password })
         });
-        
+
         const data = await response.json();
-        
+
         if (response.ok) {
-            localStorage.setItem('token', data.token);
-            localStorage.setItem('user', JSON.stringify(data.user));
+            this._removeItem('token');
+            this._removeItem('user');
+            const store = this._getStore(remember);
+            store.setItem('token', data.token);
+            store.setItem('user', JSON.stringify(data.user));
             return { success: true, data };
         } else {
             return { success: false, message: data.message || 'Error al iniciar sesión' };
         }
     },
-    
+
     async register(userData) {
         const response = await fetch('/api/v1/auth/registro', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(userData)
         });
-        
+
         const data = await response.json();
-        
+
         if (response.ok) {
             return { success: true, data };
         } else {
             return { success: false, message: data.message || 'Error al registrarse' };
         }
     },
-    
+
     async logout() {
         try {
             await fetch('/api/v1/auth/logout', { method: 'POST', headers: { 'Authorization': 'Bearer ' + this.getToken() } });
         } catch (e) {
             console.warn('Error al cerrar sesion en el servidor', e);
         }
-        localStorage.removeItem('token');
-        localStorage.removeItem('user');
+        this._removeItem('token');
+        this._removeItem('user');
         window.location.href = '/index.html';
     },
-    
+
     getUser() {
-        const user = localStorage.getItem('user');
+        const user = this._getItem('user');
         return user ? JSON.parse(user) : null;
     },
-    
+
     getToken() {
-        return localStorage.getItem('token');
+        return this._getItem('token');
     },
-    
+
     isAuthenticated() {
         return !!this.getToken();
     },
-    
+
     requireAuth(allowedRoles = []) {
         if (!this.isAuthenticated()) {
             window.location.href = '/auth/login.html';
             return false;
         }
-        
+
         if (allowedRoles.length > 0) {
             const user = this.getUser();
             if (!allowedRoles.includes(user.role)) {
@@ -70,30 +86,22 @@ const AuthService = {
                 return false;
             }
         }
-        
+
         return true;
     },
-    
+
     redirectByRole() {
         const user = this.getUser();
         if (!user) {
             window.location.href = '/auth/login.html';
             return;
         }
-        
+
         const role = (user.role || '').toUpperCase();
-        switch (role) {
-            case 'ADMIN':
-            case 'ORGANIZER':
-            case 'ORGANIZADOR':
-                window.location.href = '/assets/DashboardOrganizador.html';
-                break;
-            case 'LOGISTICS':
-            case 'LOGISTICA':
-                window.location.href = '/validator/validar.html';
-                break;
-            default:
-                window.location.href = '/index.html';
+        if (role === 'ADMIN' || role === 'ORGANIZER' || role === 'ORGANIZADOR') {
+            window.location.href = '/assets/DashboardOrganizador.html';
+        } else {
+            window.location.href = '/index.html';
         }
     }
 };

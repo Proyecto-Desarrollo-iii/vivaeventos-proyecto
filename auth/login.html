@@ -70,9 +70,10 @@
             
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
+            const remember = document.querySelector('[name="remember"]').checked;
             
             try {
-                const result = await AuthService.login(email, password);
+                const result = await AuthService.login(email, password, remember);
                 if (result.success) {
                     AuthService.redirectByRole();
                 } else {

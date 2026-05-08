@@ -7,13 +7,13 @@
   <script>
     (function() {
       try {
-        var user = JSON.parse(localStorage.getItem('user'));
+        var raw = localStorage.getItem('user') || sessionStorage.getItem('user');
+        if (!raw) return;
+        var user = JSON.parse(raw);
         if (user) {
           var role = (user.role || '').toUpperCase();
           if (role === 'ORGANIZER' || role === 'ORGANIZADOR' || role === 'ADMIN') {
             window.location.replace('/assets/DashboardOrganizador.html');
-          } else if (role === 'LOGISTICS' || role === 'LOGISTICA') {
-            window.location.replace('/validator/validar.html');
           }
         }
       } catch(e) {}

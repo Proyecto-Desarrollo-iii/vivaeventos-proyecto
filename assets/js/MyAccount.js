@@ -1,3 +1,26 @@
+async function loadProfile() {
+    try {
+        const token = AuthService.getToken();
+        if (!token) return;
+        const response = await fetch('/api/v1/auth/mi-perfil', {
+            headers: { 'Authorization': 'Bearer ' + token }
+        });
+        const data = await response.json();
+        const user = data.usuario || data;
+        if (user.fullName) {
+            const parts = user.fullName.split(' ');
+            document.getElementById('nombre').value = parts[0] || '';
+            document.getElementById('apellido').value = parts.slice(1).join(' ') || '';
+        }
+        if (user.email) document.getElementById('email').value = user.email;
+        if (user.phone) document.getElementById('telefono').value = user.phone;
+    } catch (e) {
+        console.error('Error al cargar perfil:', e);
+    }
+}
+
+document.addEventListener('DOMContentLoaded', loadProfile);
+
 const menuLinks = document.querySelectorAll('.account-sidebar a');
 const sections = document.querySelectorAll('.account-section');
 
