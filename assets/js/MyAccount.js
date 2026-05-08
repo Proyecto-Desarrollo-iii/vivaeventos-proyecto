@@ -1,25 +1,30 @@
 async function loadProfile() {
+    const user = AuthService.getUser();
+    if (!user) return;
+    if (user.fullName) {
+        const i = user.fullName.indexOf(' ');
+        document.getElementById('nombre').value = i > 0 ? user.fullName.slice(0, i) : user.fullName;
+        document.getElementById('apellido').value = i > 0 ? user.fullName.slice(i + 1) : '';
+    }
+    if (user.email) document.getElementById('email').value = user.email;
     try {
         const token = AuthService.getToken();
         if (!token) return;
         const response = await fetch('/api/v1/auth/mi-perfil', {
             headers: { 'Authorization': 'Bearer ' + token }
         });
-        if (!response.ok) return;
-        const data = await response.json();
-        const user = data.usuario || data;
-        if (!user) return;
-        if (user.fullName) {
-            const i = user.fullName.indexOf(' ');
-            document.getElementById('nombre').value = i > 0 ? user.fullName.slice(0, i) : user.fullName;
-            document.getElementById('apellido').value = i > 0 ? user.fullName.slice(i + 1) : '';
+        if (!response.ok) {
+            console.warn('No se pudo obtener perfil completo desde el servidor');
+            return;
         }
-        if (user.email) document.getElementById('email').value = user.email;
-        if (user.phone) document.getElementById('telefono').value = user.phone;
-        if (user.documentType) document.getElementById('tipo-doc').value = user.documentType;
-        if (user.documentNumber) document.getElementById('doc').value = user.documentNumber;
+        const data = await response.json();
+        const profile = data.usuario || data;
+        if (!profile) return;
+        if (profile.phone) document.getElementById('telefono').value = profile.phone;
+        if (profile.documentType) document.getElementById('tipo-doc').value = profile.documentType;
+        if (profile.documentNumber) document.getElementById('doc').value = profile.documentNumber;
     } catch (e) {
-        console.error('Error al cargar perfil:', e);
+        console.warn('Error al cargar datos adicionales del perfil:', e);
     }
 }
 
