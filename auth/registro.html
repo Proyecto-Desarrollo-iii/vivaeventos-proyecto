@@ -238,7 +238,7 @@
                     alert('Cuenta creada exitosamente');
                     window.location.href = 'login.html';
                 } else {
-                    alert(data.message || 'Error al registrarse');
+                    alert(data.error || data.message || 'Error al registrarse');
                 }
             } catch (error) {
                 console.error('Error:', error);
