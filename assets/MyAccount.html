@@ -81,9 +81,9 @@
                     <div class="form-row">
                         <div class="form-group">
                             <label for="email">E-Mail</label>
-                            <input type="email" id="email" placeholder="email@example.com">
+                            <input type="email" id="email" placeholder="email@example.com" readonly>
                             <small class="input-hint">
-                                e-mail para notificaciones y recuperación de password.
+                                El correo no se puede modificar.
                             </small>
                         </div>
                     </div>
@@ -166,23 +166,23 @@
                     <h2>Contraseña</h2>
                 </div>
 
-                <form class="password-form">
+                <form id="password-form" class="password-form">
 
                     <div class="form-group full-width">
-                        <label>Contraseña actual</label>
-                        <input type="password">
+                        <label for="password-actual">Contraseña actual</label>
+                        <input type="password" id="password-actual">
                         <a href="#" class="forgot-link">¿Olvidaste tu contraseña?</a>
                     </div>
 
                     <div class="form-row">
                         <div class="form-group">
-                            <label>Contraseña nueva</label>
-                            <input type="password">
+                            <label for="nueva-password">Contraseña nueva</label>
+                            <input type="password" id="nueva-password">
                         </div>
 
                         <div class="form-group">
-                            <label>Repetir contraseña</label>
-                            <input type="password">
+                            <label for="confirmar-password">Repetir contraseña</label>
+                            <input type="password" id="confirmar-password">
                         </div>
                     </div>
 
@@ -192,7 +192,7 @@
                     </div>
 
                     <div class="form-actions">
-                        <button type="button" class="btn-secondary">Cancelar</button>
+                        <button type="button" class="btn-secondary" id="cancel-password">Cancelar</button>
                         <button type="submit" class="btn btn-primary btn-sm">Cambiar contraseña</button>
                     </div>
 
@@ -304,9 +304,9 @@
         console.log('Tipo:', typeof _t);
         console.log('Longitud:', _t ? _t.length : 0);
     </script>
-    <script src="/assets/js/auth.js?v=3"></script>
-    <script src="/assets/js/navbar.js?v=3"></script>
-    <script src="/assets/js/MyAccount.js?v=3"></script>
+    <script src="/assets/js/auth.js?v=5"></script>
+    <script src="/assets/js/navbar.js?v=5"></script>
+    <script src="/assets/js/MyAccount.js?v=5"></script>
 </body>
 
 </html>

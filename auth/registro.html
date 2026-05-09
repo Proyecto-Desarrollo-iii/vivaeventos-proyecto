@@ -137,18 +137,78 @@
                     >
                 </div>
                 
-                <div class="input-group mb-4">
-                    <label for="telefono">Teléfono</label>
-                    <input 
-                        type="tel" 
-                        id="telefono" 
-                        name="telefono" 
-                        class="input w-full" 
-                        placeholder="+57 300 123 4567"
-                        required
-                    >
+                <div class="form-row">
+                    <div class="input-group mb-4">
+                        <label for="caracteristica">Prefijo</label>
+                        <select id="caracteristica" class="input w-full" required>
+                            <option value="">Selecciona</option>
+                            <option value="+57">+57</option>
+                            <option value="+52">+52</option>
+                            <option value="+54">+54</option>
+                            <option value="+56">+56</option>
+                            <option value="+1">+1</option>
+                            <option value="+34">+34</option>
+                        </select>
+                    </div>
+                    <div class="input-group mb-4">
+                        <label for="telefono">Teléfono</label>
+                        <input 
+                            type="tel" 
+                            id="telefono" 
+                            name="telefono" 
+                            class="input w-full" 
+                            placeholder="300 123 4567"
+                            required
+                        >
+                    </div>
                 </div>
                 
+                <div class="form-row">
+                    <div class="input-group mb-4">
+                        <label for="tipo-doc">Tipo de documento</label>
+                        <select id="tipo-doc" class="input w-full">
+                            <option value="">Selecciona</option>
+                            <option value="CC">C.C</option>
+                            <option value="CE">C.E</option>
+                            <option value="TI">T.I</option>
+                            <option value="Pasaporte">Pasaporte</option>
+                        </select>
+                    </div>
+                    <div class="input-group mb-4">
+                        <label for="doc">Número de documento</label>
+                        <input 
+                            type="text" 
+                            id="doc" 
+                            name="doc" 
+                            class="input w-full" 
+                            placeholder="110567890"
+                        >
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="input-group mb-4">
+                        <label for="pais">País de residencia</label>
+                        <select id="pais" class="input w-full">
+                            <option value="">Selecciona tu país</option>
+                            <option value="Colombia">Colombia</option>
+                            <option value="México">México</option>
+                            <option value="Argentina">Argentina</option>
+                            <option value="Chile">Chile</option>
+                            <option value="Otro">Otro</option>
+                        </select>
+                    </div>
+                    <div class="input-group mb-4">
+                        <label for="fecha-nac">Fecha de nacimiento</label>
+                        <input 
+                            type="date" 
+                            id="fecha-nac" 
+                            name="fecha-nac" 
+                            class="input w-full"
+                        >
+                    </div>
+                </div>
+
                 <div class="input-group mb-4">
                     <label for="password">Contraseña</label>
                     <input 
@@ -194,7 +254,7 @@
         </div>
     </div>
     
-    <script src="../assets/js/api.js"></script>
+    <script src="../assets/js/api.js?v=4"></script>
     <script>
         document.querySelectorAll('.role-btn').forEach(btn => {
             btn.addEventListener('click', () => {
@@ -220,7 +280,12 @@
             const formData = {
                 fullName: nombre + ' ' + apellido,
                 email: document.getElementById('email').value,
+                phonePrefix: document.getElementById('caracteristica').value,
                 phone: document.getElementById('telefono').value,
+                documentType: document.getElementById('tipo-doc').value,
+                documentNumber: document.getElementById('doc').value,
+                country: document.getElementById('pais').value,
+                birthDate: document.getElementById('fecha-nac').value || null,
                 password: password,
                 role: document.getElementById('role').value
             };
