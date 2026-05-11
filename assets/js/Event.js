@@ -11,6 +11,14 @@ const event = {
     
 };
 
+const precios = {
+    general: 89000,
+    vip: 159000
+};
+
+let tipoSeleccionado = 'general';
+let cantidad = 1;
+
 function loadEvent(event) {
     document.getElementById('event-image').src = event.image;
     document.getElementById('event-title').textContent = event.title;
@@ -26,7 +34,49 @@ function loadEvent(event) {
     document.getElementById('maps-link').href = event.mapsLink;
     document.getElementById('venue-name').textContent = event.venue;
 
-    document.getElementById('event-detail').classList.remove('hidden');
+    const eventDetail = document.getElementById('event-detail');
+    if (eventDetail) {
+        eventDetail.classList.remove('hidden');
+    }
 }
 
-loadEvent(event);
+function actualizarTotal() {
+    const total = precios[tipoSeleccionado] * cantidad;
+    document.querySelector('.total h2').textContent = '$' + total.toLocaleString();
+    document.querySelector('.qty-controls span').textContent = cantidad;
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    loadEvent(event);
+    actualizarTotal();
+
+    // Event listeners para tipo de ticket
+    document.querySelectorAll('input[name="ticket"]').forEach(radio => {
+        radio.addEventListener('change', (e) => {
+            tipoSeleccionado = e.target.value;
+            actualizarTotal();
+        });
+    });
+
+    // Event listeners para cantidad
+    const btnMenos = document.querySelector('.qty-controls button:first-child');
+    const btnMas = document.querySelector('.qty-controls button:last-child');
+
+    btnMenos.addEventListener('click', () => {
+        if (cantidad > 1) {
+            cantidad--;
+            actualizarTotal();
+        }
+    });
+
+    btnMas.addEventListener('click', () => {
+        cantidad++;
+        actualizarTotal();
+    });
+
+    // Event listener para comprar
+    document.querySelector('.buy-btn').addEventListener('click', () => {
+        const total = precios[tipoSeleccionado] * cantidad;
+        window.location.href = `payment.html?tipo=${tipoSeleccionado}&cantidad=${cantidad}&total=${total}`;
+    });
+});

@@ -108,41 +108,38 @@
 
             <!-- Desktop Side Navigation -->
             <aside class="sidebar">
-                <div class="logo">
+                <div class="logo flex items-center gap-3">
+                    <img src="/assets/images/Logoblue.png" alt="Icono" class="logo-icon">
                     <img class="logo-text" src="/assets/images/Titulo.webp" alt="VivaEventos">
                 </div>
 
                 <nav>
-                    <a class="active">
+                    <a href="#" class="active" data-section="dashboard">
                         <span class="material-symbols-outlined">dashboard</span>
                         Dashboard
                     </a>
 
-                    <a>
+                    <a href="#" data-section="events">
                         <span class="material-symbols-outlined">event</span>
                         Eventos
                     </a>
 
-                    <a>
+                    <a href="#" data-section="analytics">
                         <span class="material-symbols-outlined">analytics</span>
                         Estadísticas
                     </a>
 
-                    <a>
+                    <a href="#" data-section="settings">
                         <span class="material-symbols-outlined">settings</span>
                         Configuración
                     </a>
                 </nav>
 
-                <a href="/assets/newEvent.html" class="btn-create" style="text-decoration: none; display: block; text-align: center;">
-                    + Crear evento
-                </a>
-
                 <div class="sidebar-user">
-                    <div class="user-info">
+                    <a href="/assets/MyAccount.html" class="user-info" style="text-decoration: none; cursor: pointer;">
                         <img src="https://i.pravatar.cc/40" alt="Usuario">
                         <span>Organizador</span>
-                    </div>
+                    </a>
                     <a href="#" class="logout-btn">
                         <span class="material-symbols-outlined">logout</span>
                         Cerrar sesión
@@ -152,7 +149,7 @@
             </aside>
             <!-- Main Content Canvas -->
             <main class="pb-28 md:pb-12 px-6 min-h-screen">
-                <div class="max-w-7xl mx-auto space-y-12">
+                <div id="dashboard-panel" class="max-w-7xl mx-auto space-y-12">
                     <!-- Hero Section / Dynamic Headline -->
                     <section class="space-y-2">
                         <span
@@ -290,6 +287,8 @@
                             <h4 class="font-headline text-3xl font-black">Active
                                 Inventory</h4>
                             <button
+                                type="button"
+                                id="view-events-button"
                                 class="text-primary font-bold flex items-center gap-2 hover:underline">
                                 View All Events <span
                                     class="material-symbols-outlined"
@@ -415,6 +414,184 @@
                         </div>
                     </section>
                 </div>
+                <div id="events-panel" class="max-w-7xl mx-auto space-y-12 hidden">
+                    <section class="space-y-2">
+                        <span class="font-label text-xs uppercase tracking-[0.2em] text-primary font-bold">Eventos</span>
+                        <h2 class="font-headline text-5xl md:text-6xl font-black text-on-surface leading-none tracking-tight">Administrar eventos</h2>
+                        <p class="max-w-3xl text-secondary">Edita, cancela o elimina eventos desde un único panel. Mantén tu calendario organizado y gestionado con controles claros.</p>
+                    </section>
+                    <section class="space-y-6">
+                        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                            <div>
+                                <p class="text-secondary">Usa los botones de acción para actualizar el estado de cada evento.</p>
+                            </div>
+                            <a href="/assets/newEvent.html" class="inline-flex items-center gap-2 px-5 py-3 rounded-full bg-primary text-on-primary font-bold hover:bg-[#007c91] transition-all">
+                                <span class="material-symbols-outlined">add</span>
+                                Nuevo evento
+                            </a>
+                        </div>
+                        <div class="overflow-x-auto bg-white rounded-[2.5rem] shadow-[0_20px_40px_rgba(0,0,0,0.06)]">
+                            <table class="w-full min-w-[920px] border-separate border-spacing-y-4">
+                                <thead class="text-left text-outline uppercase font-label text-[10px] tracking-[0.2em]">
+                                    <tr>
+                                        <th class="px-6 py-4">Evento</th>
+                                        <th class="px-6 py-4">Estado</th>
+                                        <th class="px-6 py-4 text-center">Asistentes</th>
+                                        <th class="px-6 py-4 text-center">Progreso</th>
+                                        <th class="px-6 py-4 text-right">Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="bg-surface-container-lowest editorial-shadow rounded-3xl transition-transform hover:scale-[1.01]">
+                                        <td class="px-6 py-5 rounded-l-[2rem]">
+                                            <div class="flex items-center gap-4">
+                                                <div class="w-14 h-14 rounded-2xl overflow-hidden">
+                                                    <img alt="Neon Nights Music Festival" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDaq0L26yU5vPjZLyYFAnnDL7vOUuVHXH-u8WSB3sVbmvO_9gb_DYeaYvQNiPujaNFAAgutvy5wV5Njuse0UOZ4afGgt4YDPBk-Q_o-MqQ7PNUVtrxAbYdIRr6zheTWCdh366YwJO9UJC8kUIyxjC_k_jb1gAOo23BB2nyOaofSVv0nqc_mu3gg7KG6BOrX8_Z6UOOdBA8Y_ZKzJsoF9OEpqsnko8MtBwXX6wPH9Pd2TWm11FArE6nLF0YmueqbJ1CnFB1P6IWJqPU" />
+                                                </div>
+                                                <div>
+                                                    <p class="font-bold text-on-surface">Neon Nights Festival</p>
+                                                    <p class="text-xs text-secondary">July 24, 2024 • Arena Central</p>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-5">
+                                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary-fixed/40 text-primary-container text-xs font-bold uppercase">
+                                                <span class="w-1.5 h-1.5 bg-primary rounded-full kinetic-pulse"></span>
+                                                On Sale
+                                            </span>
+                                        </td>
+                                        <td class="px-6 py-5 text-center">
+                                            <p class="font-bold text-primary">2,450</p>
+                                            <p class="text-[10px] text-outline uppercase font-label">82% ocupación</p>
+                                        </td>
+                                        <td class="px-6 py-5 text-center">
+                                            <div class="w-full bg-surface-container-high h-2 rounded-full overflow-hidden">
+                                                <div class="bg-primary h-full rounded-full" style="width: 82%"></div>
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-5 text-right">
+                                            <div class="flex flex-wrap justify-end gap-2">
+                                                <button class="px-3 py-2 rounded-full bg-surface-container-high text-secondary text-xs font-semibold hover:bg-primary-fixed transition-colors">Editar</button>
+                                                <button class="px-3 py-2 rounded-full bg-amber-500 text-white text-xs font-semibold hover:bg-amber-600 transition-colors">Cancelar</button>
+                                                <button class="px-3 py-2 rounded-full bg-red-600 text-white text-xs font-semibold hover:bg-red-700 transition-colors">Eliminar</button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr class="bg-surface-container-lowest editorial-shadow rounded-3xl transition-transform hover:scale-[1.01]">
+                                        <td class="px-6 py-5 rounded-l-[2rem]">
+                                            <div class="flex items-center gap-4">
+                                                <div class="w-14 h-14 rounded-2xl overflow-hidden">
+                                                    <img alt="Future-Tech Summit" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuByRUs1dh2o-vdA02812xcD5aHrTrPBE_rK3u8EmrCBov_b5hdfbSjRAO4kZvg0BbUKjZW6ohla0R4J7MdK8N1Y9C5ZITAhFlbgKJKUhNkXHfw9VGQDYxiDoihWCcXPz4zpAZylWzlZrXuskGKjPeJO2P-WrKT6uFT1pCVwlWVHRx4EemPSkT-loZf9mnVsytisZjdGyBukDraYsOGFn73PrBBDGE2JBuTajp2dGb-Vj0Hs7gFWg4vn31DNfunPLmqa80g7PQNhSc0" />
+                                                </div>
+                                                <div>
+                                                    <p class="font-bold text-on-surface">Future-Tech Summit</p>
+                                                    <p class="text-xs text-secondary">Aug 12, 2024 • Innovation Hub</p>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-5">
+                                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-tertiary-fixed/40 text-tertiary text-xs font-bold uppercase">
+                                                <span class="w-1.5 h-1.5 bg-tertiary rounded-full"></span>
+                                                Waitlist
+                                            </span>
+                                        </td>
+                                        <td class="px-6 py-5 text-center">
+                                            <p class="font-bold text-tertiary">490</p>
+                                            <p class="text-[10px] text-outline uppercase font-label">98% ocupación</p>
+                                        </td>
+                                        <td class="px-6 py-5 text-center">
+                                            <div class="w-full bg-surface-container-high h-2 rounded-full overflow-hidden">
+                                                <div class="bg-tertiary h-full rounded-full" style="width: 98%"></div>
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-5 text-right">
+                                            <div class="flex flex-wrap justify-end gap-2">
+                                                <button class="px-3 py-2 rounded-full bg-surface-container-high text-secondary text-xs font-semibold hover:bg-primary-fixed transition-colors">Editar</button>
+                                                <button class="px-3 py-2 rounded-full bg-amber-500 text-white text-xs font-semibold hover:bg-amber-600 transition-colors">Cancelar</button>
+                                                <button class="px-3 py-2 rounded-full bg-red-600 text-white text-xs font-semibold hover:bg-red-700 transition-colors">Eliminar</button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </section>
+                </div>
+                <div id="analytics-panel" class="max-w-7xl mx-auto space-y-12 hidden">
+                    <section class="space-y-2">
+                        <span class="font-label text-xs uppercase tracking-[0.2em] text-primary font-bold">Estadísticas</span>
+                        <h2 class="font-headline text-5xl md:text-6xl font-black text-on-surface leading-none tracking-tight">Panel de estadísticas</h2>
+                        <p class="max-w-3xl text-secondary">Filtra por tipo de evento y fechas, y genera informes claros para tu equipo.</p>
+                    </section>
+                    <section class="bg-white rounded-[2.5rem] shadow-[0_20px_40px_rgba(0,0,0,0.06)] p-8 space-y-8">
+                        <div class="grid gap-4 xl:grid-cols-[1.5fr_auto] items-center">
+                            <div class="grid gap-4 md:grid-cols-3">
+                                <div class="bg-surface-container-high rounded-3xl p-5">
+                                    <label class="text-[11px] uppercase tracking-[0.2em] text-outline">Tipo de evento</label>
+                                    <select id="analytics-event-type" class="mt-3 w-full rounded-[1.25rem] border border-surface-container-highest bg-white px-4 py-3 text-sm text-on-surface outline-none focus:border-primary focus:ring-2 focus:ring-primary/10">
+                                        <option>Todos</option>
+                                        <option>Concierto</option>
+                                        <option>Feria</option>
+                                        <option>Conferencia</option>
+                                        <option>Workshop</option>
+                                    </select>
+                                </div>
+                                <div class="bg-surface-container-high rounded-3xl p-5">
+                                    <label class="text-[11px] uppercase tracking-[0.2em] text-outline">Fecha inicio</label>
+                                    <input id="analytics-date-start" type="date" class="mt-3 w-full rounded-[1.25rem] border border-surface-container-highest bg-white px-4 py-3 text-sm text-on-surface outline-none focus:border-primary focus:ring-2 focus:ring-primary/10" />
+                                </div>
+                                <div class="bg-surface-container-high rounded-3xl p-5">
+                                    <label class="text-[11px] uppercase tracking-[0.2em] text-outline">Fecha fin</label>
+                                    <input id="analytics-date-end" type="date" class="mt-3 w-full rounded-[1.25rem] border border-surface-container-highest bg-white px-4 py-3 text-sm text-on-surface outline-none focus:border-primary focus:ring-2 focus:ring-primary/10" />
+                                </div>
+                            </div>
+                            <button id="generate-report-button" type="button" class="inline-flex items-center justify-center gap-2 rounded-full bg-primary text-on-primary px-6 py-3 text-sm font-bold hover:bg-[#007c91] transition-all">Generar informe<span class="material-symbols-outlined">file_download</span></button>
+                        </div>
+                        <div class="grid gap-6 xl:grid-cols-2">
+                            <div class="bg-surface-container-low rounded-[2rem] p-6">
+                                <div class="flex items-center justify-between mb-5">
+                                    <div>
+                                        <p class="text-xs uppercase tracking-[0.2em] text-outline">Ingresos totales</p>
+                                        <h3 class="mt-3 text-3xl font-bold">$142,850</h3>
+                                    </div>
+                                    <span class="material-symbols-outlined text-primary text-3xl">show_chart</span>
+                                </div>
+                                <div class="h-64 rounded-[2rem] bg-surface-container-high"></div>
+                            </div>
+                            <div class="bg-surface-container-low rounded-[2rem] p-6">
+                                <div class="flex items-center justify-between mb-5">
+                                    <div>
+                                        <p class="text-xs uppercase tracking-[0.2em] text-outline">Ventas por tipo</p>
+                                        <h3 class="mt-3 text-3xl font-bold">+18%</h3>
+                                    </div>
+                                    <span class="material-symbols-outlined text-primary text-3xl">pie_chart</span>
+                                </div>
+                                <div class="h-64 rounded-[2rem] bg-surface-container-high"></div>
+                            </div>
+                        </div>
+                        <div class="grid gap-6 lg:grid-cols-3">
+                            <div class="bg-surface-container-low rounded-[2rem] p-6">
+                                <p class="text-xs uppercase tracking-[0.2em] text-outline">Eventos activos</p>
+                                <p class="mt-4 text-4xl font-bold">14</p>
+                            </div>
+                            <div class="bg-surface-container-low rounded-[2rem] p-6">
+                                <p class="text-xs uppercase tracking-[0.2em] text-outline">Eventos cancelados</p>
+                                <p class="mt-4 text-4xl font-bold">2</p>
+                            </div>
+                            <div class="bg-surface-container-low rounded-[2rem] p-6">
+                                <p class="text-xs uppercase tracking-[0.2em] text-outline">Informe generado</p>
+                                <p class="mt-4 text-4xl font-bold">Hoy</p>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+                <div id="settings-panel" class="max-w-7xl mx-auto space-y-12 hidden">
+                    <section class="space-y-2">
+                        <span class="font-label text-xs uppercase tracking-[0.2em] text-primary font-bold">Configuración</span>
+                        <h2 class="font-headline text-5xl md:text-6xl font-black text-on-surface leading-none tracking-tight">Próximamente</h2>
+                        <p class="max-w-3xl text-secondary">Aquí podrás administrar las opciones y ajustes de tu Dashboard.</p>
+                    </section>
+                </div>
             </main>
             <!-- Mobile Navigation Bar -->
             <nav
@@ -459,6 +636,43 @@
         document.querySelector('.logout-btn')?.addEventListener('click', function(e) {
             e.preventDefault();
             AuthService.logout();
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const navLinks = document.querySelectorAll('.sidebar nav a[data-section]');
+            const panels = {
+                dashboard: document.getElementById('dashboard-panel'),
+                events: document.getElementById('events-panel'),
+                analytics: document.getElementById('analytics-panel'),
+                settings: document.getElementById('settings-panel')
+            };
+
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const target = this.dataset.section;
+                    navLinks.forEach(nav => nav.classList.remove('active'));
+                    this.classList.add('active');
+                    Object.values(panels).forEach(panel => panel?.classList.add('hidden'));
+                    panels[target]?.classList.remove('hidden');
+                });
+            });
+
+            document.getElementById('view-events-button')?.addEventListener('click', function(e) {
+                e.preventDefault();
+                navLinks.forEach(nav => nav.classList.remove('active'));
+                const eventsLink = document.querySelector('.sidebar nav a[data-section="events"]');
+                eventsLink?.classList.add('active');
+                Object.values(panels).forEach(panel => panel?.classList.add('hidden'));
+                panels.events?.classList.remove('hidden');
+            });
+
+            document.getElementById('generate-report-button')?.addEventListener('click', function() {
+                const eventType = document.getElementById('analytics-event-type')?.value || 'Todos';
+                const startDate = document.getElementById('analytics-date-start')?.value || 'Inicio';
+                const endDate = document.getElementById('analytics-date-end')?.value || 'Fin';
+                alert(`Informe generado para ${eventType} desde ${startDate} hasta ${endDate}`);
+            });
         });
     </script>
     </body>

@@ -22,6 +22,11 @@
     margin-bottom: 30px;
 }
 
+.logo-icon {
+  width: 10px;
+  height: 40px;
+}
+
 .logo img {
     width: 150px;
     height: 40px;
@@ -80,6 +85,17 @@
     align-items: center;
     gap: 10px;
     margin-bottom: 10px;
+    padding: 10px;
+    color: #64748b;
+    text-decoration: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.user-info:hover {
+    background: #f1f5f9;
+    color: #0097b2;
 }
 
 .user-info img {

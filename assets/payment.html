@@ -7,6 +7,7 @@
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
     <link rel="stylesheet" href="/assets/css/payment.css">
     <title>Pagar</title>
+    <link rel="icon" href="/assets/images/Logoblue.png">
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com" rel="preconnect" />
     <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
@@ -100,12 +101,11 @@
             <img class="logo-text" src="/assets/images/Titulo.webp" alt="VivaEventos">
         </div>
 
-        <div class="flex items-center gap-6">
-            <button class="text-secondary font-semibold text-sm hover:text-primary transition-colors">Cancel
-                Order</button>
-            <div class="h-8 w-8 rounded-full bg-surface-container-high flex items-center justify-center">
-                <span class="material-symbols-outlined text-outline" data-icon="help">help</span>
-            </div>
+        <div class="flex items-center gap-4">
+            <span class="text-secondary font-semibold text-sm">Cancel Order</span>
+            <a href="/assets/Event.html" class="h-10 w-10 rounded-full bg-surface-container-high flex items-center justify-center text-secondary hover:text-primary transition-colors" aria-label="Cerrar y volver a Event">
+                <span class="material-symbols-outlined">close</span>
+            </a>
         </div>
     </header>
     <main class="pt-24 pb-12 px-6 max-w-7xl mx-auto min-h-screen">
@@ -357,6 +357,21 @@
             <span class="font-['Manrope'] text-[10px] font-semibold uppercase tracking-wider mt-1">Profile</span>
         </div>
     </nav>
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const tipo = urlParams.get('tipo') || 'general';
+        const cantidad = parseInt(urlParams.get('cantidad')) || 1;
+        const total = parseInt(urlParams.get('total')) || 89000;
+        const precios = { general: 89000, vip: 159000 };
+        const precioUnitario = precios[tipo];
+        const tipoTexto = tipo === 'vip' ? 'VIP Experience' : 'General Admission';
+
+        // Actualizar el resumen
+        const resumenItems = document.querySelectorAll('.pt-6.border-t .flex.justify-between.items-center');
+        resumenItems[0].querySelector('span:first-child').textContent = `${tipoTexto} (x${cantidad})`;
+        resumenItems[0].querySelector('span:last-child').textContent = `$${precioUnitario.toLocaleString()}`;
+        resumenItems[2].querySelector('span:last-child').textContent = `$${total.toLocaleString()}`;
+    </script>
 </body>
 
 </html>

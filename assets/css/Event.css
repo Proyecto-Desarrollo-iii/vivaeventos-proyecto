@@ -445,3 +445,59 @@ html {
         height: 300px;
     }
 }
+
+/* VIP and Safe Entry Section */
+.vip-safe-section {
+    margin-bottom: 60px;
+}
+
+.vip-safe-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.vip-safe-card {
+    padding: 32px;
+    border-radius: 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    transition: transform 0.3s;
+}
+
+.vip-safe-card:hover {
+    transform: scale(1.02);
+}
+
+.secure-entry {
+    background: #f8fafc;
+}
+
+.vip-access {
+    background: #0097b2;
+    color: white;
+}
+
+.icon {
+    font-size: 48px;
+    color: #0097b2;
+}
+
+.vip-access .icon {
+    color: white;
+}
+
+.vip-safe-card h3 {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.vip-safe-card p {
+    font-size: 14px;
+    color: #64748b;
+}
+
+.vip-access p {
+    color: rgba(255, 255, 255, 0.8);
+}

@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+
+<html class="light" lang="es"><head>
+        <meta charset="utf-8" />
+        <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+        <title>Gerente Admin Hub - VivaEventos</title>
+        <link rel="icon" href="/assets/images/Logoblue.png">
+        <link
+            href="https://fonts.googleapis.com/css2?family=Epilogue:wght@400;700;800;900&amp;family=Manrope:wght@400;500;600;700&amp;display=swap"
+            rel="stylesheet" />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+            rel="stylesheet" />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+            rel="stylesheet" />
+        <link rel="stylesheet" href="/assets/css/Organizador.css" />
+        <script
+            src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+        <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "tertiary-fixed": "#ffdcc0",
+                        "outline": "#6d797d",
+                        "inverse-primary": "#66d5f1",
+                        "on-surface": "#171c1e",
+                        "primary-fixed-dim": "#66d5f1",
+                        "on-primary": "#ffffff",
+                        "surface-variant": "#dfe3e5",
+                        "primary-fixed": "#aeecff",
+                        "surface-tint": "#00687b",
+                        "inverse-surface": "#2c3133",
+                        "surface-container-lowest": "#ffffff",
+                        "tertiary-container": "#a96418",
+                        "primary": "#006578",
+                        "error": "#ba1a1a",
+                        "on-primary-container": "#f9fdff",
+                        "tertiary": "#8a4d00",
+                        "on-error-container": "#93000a",
+                        "background": "#f6fafc",
+                        "primary-container": "#008097",
+                        "on-tertiary-fixed-variant": "#6b3b00",
+                        "secondary-fixed-dim": "#a6cdd9",
+                        "on-primary-fixed-variant": "#004e5d",
+                        "tertiary-fixed-dim": "#ffb877",
+                        "outline-variant": "#bdc8cd",
+                        "on-secondary-fixed-variant": "#264c56",
+                        "on-tertiary-container": "#fffbff",
+                        "on-tertiary-fixed": "#2e1600",
+                        "on-background": "#171c1e",
+                        "surface": "#f6fafc",
+                        "secondary-fixed": "#c2e9f6",
+                        "on-secondary": "#ffffff",
+                        "surface-container-high": "#e4e9eb",
+                        "secondary-container": "#c2e9f6",
+                        "on-tertiary": "#ffffff",
+                        "surface-dim": "#d6dbdd",
+                        "surface-container-highest": "#dfe3e5",
+                        "inverse-on-surface": "#edf1f3",
+                        "on-surface-variant": "#3d494c",
+                        "error-container": "#ffdad6",
+                        "on-primary-fixed": "#001f26",
+                        "on-secondary-container": "#456a75",
+                        "surface-container-low": "#f0f4f6",
+                        "on-secondary-fixed": "#001f26",
+                        "surface-bright": "#f6fafc",
+                        "secondary": "#3f646e",
+                        "on-error": "#ffffff",
+                        "surface-container": "#eaeff1"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "fontFamily": {
+                        "headline": ["Epilogue"],
+                        "body": ["Manrope"],
+                        "label": ["Manrope"]
+                    }
+                }
+            }
+        }
+    </script>
+        <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .editorial-shadow { box-shadow: 0 20px 40px rgba(0, 101, 120, 0.08); }
+        .kinetic-pulse {
+            animation: kinetic-pulse 3s infinite;
+        }
+        @keyframes kinetic-pulse {
+            0% { transform: scale(1); opacity: 0.8; }
+            50% { transform: scale(1.05); opacity: 1; }
+            100% { transform: scale(1); opacity: 0.8; }
+        }
+    </style>
+    </head>
+    <body
+        class="bg-surface font-body text-on-surface antialiased overflow-x-hidden">
+
+        <div class="layout">
+
+            <!-- Desktop Side Navigation -->
+            <aside class="sidebar">
+                <div class="logo flex items-center gap-3">
+                    <img src="/assets/images/Logoblue.png" alt="Icono" class="logo-icon">
+                    <img class="logo-text" src="/assets/images/Titulo.webp" alt="VivaEventos">
+                </div>
+
+                <nav>
+                    <a href="#" class="active" data-section="dashboard">
+                        <span class="material-symbols-outlined">dashboard</span>
+                        Dashboard
+                    </a>
+
+                    <a href="#" data-section="events">
+                        <span class="material-symbols-outlined">calendar_today</span>
+                        Eventos
+                    </a>
+
+                    <a href="#" data-section="organizers">
+                        <span class="material-symbols-outlined">groups</span>
+                        Organizadores
+                    </a>
+
+                    <a href="#" data-section="revenue">
+                        <span class="material-symbols-outlined">payments</span>
+                        Ingresos
+                    </a>
+
+                    <a href="#" data-section="analytics">
+                        <span class="material-symbols-outlined">analytics</span>
+                        Estadísticas
+                    </a>
+
+                    <a href="#" data-section="settings">
+                        <span class="material-symbols-outlined">settings</span>
+                        Configuración
+                    </a>
+                </nav>
+
+                <div class="sidebar-user">
+                    <a href="/assets/MyAccount.html" class="user-info" style="text-decoration: none; cursor: pointer;">
+                        <img src="https://i.pravatar.cc/40" alt="Usuario">
+                        <span>Gerente Admin</span>
+                    </a>
+                    <a href="#" class="logout-btn">
+                        <span class="material-symbols-outlined">logout</span>
+                        Cerrar sesión
+                    </a>
+                </div>
+
+            </aside>
+            <!-- Main Content Canvas -->
+            <main class="pb-28 md:pb-12 px-6 min-h-screen">
+                <div id="dashboard-panel" class="max-w-7xl mx-auto space-y-12">
+                    <!-- Hero Section / Dynamic Headline -->
+                    <section class="space-y-2">
+                        <span
+                            class="font-label text-xs uppercase tracking-[0.2em] text-primary font-bold">Mayo
+                            2024 • En Vivo</span>
+                        <h2
+                            class="font-headline text-5xl md:text-6xl font-black text-on-surface leading-none tracking-tight">Momentum
+                            <br /><span
+                                class="text-primary-container">Global
+                                Today.</span></h2>
+                    </section>
+
+                    <!-- Global KPIs Section -->
+                    <section class="cards">
+                        <div class="card">
+                            <div class="card-top">
+                                <span
+                                    class="material-symbols-outlined icon">trending_up</span>
+                            </div>
+                            <h3>Total GMV (Bruto)</h3>
+                            <p>$2.4M</p>
+                            <span
+                                class="inline-block mt-2 bg-primary-fixed text-on-primary-fixed px-2 py-1 rounded-full text-[10px] font-bold">+18.5% vs mes anterior</span>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-top">
+                                <span
+                                    class="material-symbols-outlined icon">event</span>
+                            </div>
+                            <h3>Eventos Activos</h3>
+                            <p>1,284</p>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-top">
+                                <span
+                                    class="material-symbols-outlined icon">groups</span>
+                            </div>
+                            <h3>Nuevos Organizadores</h3>
+                            <p>42</p>
+                            <span class="inline-block mt-2 text-xs text-on-surface-variant font-medium">12 pendientes</span>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-top">
+                                <span
+                                    class="material-symbols-outlined icon">account_balance_wallet</span>
+                            </div>
+                            <h3>Comisión Plataforma</h3>
+                            <p>$192.5k</p>
+                            <span class="inline-block mt-2 text-xs text-on-surface-variant font-medium">8% fee promedio</span>
+                        </div>
+                    </section>
+
+                    <!-- Main Content Area -->
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                        <!-- Pending Approvals -->
+                        <div
+                            class="lg:col-span-2 bg-surface-container-low p-8 rounded-[2.5rem] space-y-6">
+                            <div class="flex justify-between items-end">
+                                <div>
+                                    <h4
+                                        class="font-headline text-2xl font-bold">Solicitudes
+                                        de Organizadores</h4>
+                                    <p class="text-secondary text-sm">Nuevas
+                                        empresas buscando unirse al ecosistema.</p>
+                                </div>
+                                <button
+                                    class="text-primary font-bold flex items-center gap-2 hover:underline">
+                                    Ver Todo <span
+                                        class="material-symbols-outlined"
+                                        data-icon="arrow_forward">arrow_forward</span>
+                                </button>
+                            </div>
+                            <div class="space-y-4">
+                                <div
+                                    class="flex items-center justify-between p-5 bg-surface-container-lowest rounded-3xl editorial-shadow hover:scale-[1.01] transition-transform">
+                                    <div class="flex items-center gap-4">
+                                        <div
+                                            class="w-14 h-14 rounded-2xl bg-surface-container-high flex items-center justify-center font-headline font-black text-primary text-xl">SP</div>
+                                        <div>
+                                            <p
+                                                class="font-bold text-on-surface">Sonic
+                                                Productions</p>
+                                            <p
+                                                class="text-xs text-secondary">Ciudad
+                                                de México • Conciertos</p>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center gap-3">
+                                        <button
+                                            class="px-4 py-2 rounded-full bg-surface-container-high text-secondary text-xs font-semibold hover:bg-primary-fixed transition-colors">Revisar</button>
+                                        <button
+                                            class="px-4 py-2 rounded-full bg-primary text-on-primary text-xs font-semibold hover:bg-[#007c91] transition-colors">Aprobar</button>
+                                    </div>
+                                </div>
+                                <div
+                                    class="flex items-center justify-between p-5 bg-surface-container-lowest rounded-3xl editorial-shadow hover:scale-[1.01] transition-transform">
+                                    <div class="flex items-center gap-4">
+                                        <div
+                                            class="w-14 h-14 rounded-2xl bg-surface-container-high flex items-center justify-center font-headline font-black text-primary text-xl">GE</div>
+                                        <div>
+                                            <p
+                                                class="font-bold text-on-surface">GastroEvents
+                                                Int.</p>
+                                            <p
+                                                class="text-xs text-secondary">Bogotá
+                                                • Ferias Gastronómicas</p>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center gap-3">
+                                        <button
+                                            class="px-4 py-2 rounded-full bg-surface-container-high text-secondary text-xs font-semibold hover:bg-primary-fixed transition-colors">Revisar</button>
+                                        <button
+                                            class="px-4 py-2 rounded-full bg-primary text-on-primary text-xs font-semibold hover:bg-[#007c91] transition-colors">Aprobar</button>
+                                    </div>
+                                </div>
+                                <div
+                                    class="flex items-center justify-between p-5 bg-surface-container-lowest rounded-3xl editorial-shadow hover:scale-[1.01] transition-transform">
+                                    <div class="flex items-center gap-4">
+                                        <div
+                                            class="w-14 h-14 rounded-2xl bg-surface-container-high flex items-center justify-center font-headline font-black text-primary text-xl">TT</div>
+                                        <div>
+                                            <p
+                                                class="font-bold text-on-surface">TechTomorrow</p>
+                                            <p
+                                                class="text-xs text-secondary">Madrid
+                                                • Congresos</p>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center gap-3">
+                                        <button
+                                            class="px-4 py-2 rounded-full bg-surface-container-high text-secondary text-xs font-semibold hover:bg-primary-fixed transition-colors">Revisar</button>
+                                        <button
+                                            class="px-4 py-2 rounded-full bg-primary text-on-primary text-xs font-semibold hover:bg-[#007c91] transition-colors">Aprobar</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Platform Health & Quick Actions -->
+                        <div class="space-y-8">
+                            <div
+                                class="bg-surface-container-low p-8 rounded-[2.5rem] space-y-6">
+                                <div class="flex items-center justify-between">
+                                    <h4
+                                        class="font-headline text-xl font-bold">Platform
+                                        Health</h4>
+                                    <div class="flex items-center gap-1">
+                                        <span
+                                            class="w-2 h-2 rounded-full bg-[#10b981] kinetic-pulse"></span>
+                                        <span
+                                            class="text-[10px] font-bold text-[#10b981] uppercase tracking-tighter">Estable</span>
+                                    </div>
+                                </div>
+                                <div class="space-y-4">
+                                    <div
+                                        class="flex items-center justify-between">
+                                        <div class="flex items-center gap-3">
+                                            <span
+                                                class="material-symbols-outlined text-primary">api</span>
+                                            <p
+                                                class="text-sm font-semibold text-on-surface">API
+                                                Status</p>
+                                        </div>
+                                        <span
+                                            class="text-xs font-bold text-primary">99.98%</span>
+                                    </div>
+                                    <div
+                                        class="flex items-center justify-between">
+                                        <div class="flex items-center gap-3">
+                                            <span
+                                                class="material-symbols-outlined text-primary">account_balance</span>
+                                            <p
+                                                class="text-sm font-semibold text-on-surface">Payment
+                                                Gateway</p>
+                                        </div>
+                                        <span
+                                            class="text-xs font-bold text-secondary">Normal</span>
+                                    </div>
+                                    <div
+                                        class="flex items-center justify-between">
+                                        <div class="flex items-center gap-3">
+                                            <span
+                                                class="material-symbols-outlined text-primary">dns</span>
+                                            <p
+                                                class="text-sm font-semibold text-on-surface">Database
+                                                Load</p>
+                                        </div>
+                                        <span
+                                            class="text-xs font-bold text-primary">14%
+                                            Avg</span>
+                                    </div>
+                                </div>
+                                <div
+                                    class="p-5 bg-primary-fixed/30 rounded-2xl border-l-4 border-primary">
+                                    <p
+                                        class="text-[10px] font-bold text-primary uppercase mb-1">Alerta
+                                        del Sistema</p>
+                                    <p
+                                        class="text-xs text-on-surface-variant">Mantenimiento
+                                        programado para el Domingo a las 02:00 AM
+                                        UTC.</p>
+                                </div>
+                            </div>
+
+                            <div
+                                class="bg-primary-container text-on-primary-container p-8 rounded-[2.5rem] editorial-shadow relative overflow-hidden group">
+                                <div class="relative z-10 space-y-6">
+                                    <h4
+                                        class="font-headline text-2xl font-black leading-tight">Análisis
+                                        Predictivo</h4>
+                                    <p
+                                        class="text-primary-fixed opacity-80 text-sm">Se
+                                        proyecta un crecimiento del 24% en registros
+                                        para el Q3.</p>
+                                    <button
+                                        class="w-full py-4 bg-white text-primary font-black rounded-full flex items-center justify-center gap-3 transition-transform hover:scale-105 active:scale-95">
+                                        <span class="material-symbols-outlined"
+                                            data-icon="file_download">file_download</span>
+                                        Descargar Reporte
+                                    </button>
+                                </div>
+                                <div
+                                    class="absolute -bottom-10 -right-10 w-48 h-48 bg-white/10 rounded-full blur-3xl group-hover:scale-150 transition-transform duration-700"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Top Performing Events -->
+                    <section class="space-y-6">
+                        <div class="flex justify-between items-center">
+                            <h4 class="font-headline text-3xl font-black">Eventos
+                                Destacados</h4>
+                            <p
+                                class="font-label text-xs uppercase tracking-[0.2em] text-on-surface-variant font-medium">Ordenado
+                                por Revenue Mensual</p>
+                        </div>
+                        <div
+                            class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                            <div
+                                class="bg-surface-container-lowest rounded-[2.5rem] overflow-hidden editorial-shadow group cursor-pointer hover:scale-[1.02] transition-transform">
+                                <div
+                                    class="h-48 bg-surface-container-highest relative">
+                                    <img alt="ElectroPulse 2024"
+                                        class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700"
+                                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuA2qgmEfSRuRX9wx8bO87txPdF1z9bY1FKH7qBIxzJp5ulBR3kc3e_WXxKMEfeAbyrv5pK29-NEb5JU8klZcjTZd2n3SZDHkcqY1_vnyez2B0XOiCk9IdU71gXjy3uSpbssTYSWbjP_vJaq-1magOeqK5Cno-WAAoPh11kGycdr6WX6xUcqiZVcbR2ayiFzE4E2JcqGtfN2Q7xVfIYdImDh_CM0_axXiX0h_4D3rLGRoSGB7vHNi7KlRO3yf0bVEmWJg7MAFjKkSx4" />
+                                    <div
+                                        class="absolute top-4 left-4 bg-primary px-3 py-1 rounded-full text-[10px] font-bold text-white uppercase tracking-widest">Premium</div>
+                                </div>
+                                <div class="p-6">
+                                    <h4
+                                        class="font-headline font-black text-xl text-on-surface mb-1">ElectroPulse
+                                        2024</h4>
+                                    <p
+                                        class="text-xs text-secondary mb-4">Organizador:
+                                        Kinetic Labs</p>
+                                    <div
+                                        class="flex justify-between items-end border-t border-surface-container pt-4">
+                                        <div>
+                                            <p
+                                                class="text-[10px] font-bold text-outline uppercase">Revenue</p>
+                                            <p
+                                                class="font-headline font-black text-xl text-primary">$450,200</p>
+                                        </div>
+                                        <div class="text-right">
+                                            <p
+                                                class="text-[10px] font-bold text-outline uppercase">Ventas</p>
+                                            <p
+                                                class="font-headline font-bold text-on-surface">94%</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div
+                                class="bg-surface-container-lowest rounded-[2.5rem] overflow-hidden editorial-shadow group cursor-pointer hover:scale-[1.02] transition-transform">
+                                <div
+                                    class="h-48 bg-surface-container-highest relative">
+                                    <img alt="Global Tech Summit"
+                                        class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700"
+                                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuD_filVb7V_viueGt1vh6a-wYxzUcD5P_zueBgEwLtWb0PsCtMfd7UN6zwbMUqUFrC4IkjVd2I3HVecLM7FpgLJqjcQbyzjQA3NLAxiQ6B_Uw9n669KTq5Ypxpa5eCKrvCGki2Qg7AZej8g5wYhPccZt9vHqBgrRSqkkgEhKSoG5ExYih-sX0rgOIktfmVwyTlQmdIndzkDWoV5368k3c402pEUm0sNFJdAaxQZPbSzFjoYf36bZF2zjpcvf3kveTGdNd9oSUr7Kmc" />
+                                    <div
+                                        class="absolute top-4 left-4 bg-tertiary px-3 py-1 rounded-full text-[10px] font-bold text-white uppercase tracking-widest">Congreso</div>
+                                </div>
+                                <div class="p-6">
+                                    <h4
+                                        class="font-headline font-black text-xl text-on-surface mb-1">Global
+                                        Tech Summit</h4>
+                                    <p
+                                        class="text-xs text-secondary mb-4">Organizador:
+                                        Innovation Hub</p>
+                                    <div
+                                        class="flex justify-between items-end border-t border-surface-container pt-4">
+                                        <div>
+                                            <p
+                                                class="text-[10px] font-bold text-outline uppercase">Revenue</p>
+                                            <p
+                                                class="font-headline font-black text-xl text-primary">$312,900</p>
+                                        </div>
+                                        <div class="text-right">
+                                            <p
+                                                class="text-[10px] font-bold text-outline uppercase">Ventas</p>
+                                            <p
+                                                class="font-headline font-bold text-on-surface">82%</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div
+                                class="bg-surface-container-lowest rounded-[2.5rem] overflow-hidden editorial-shadow group cursor-pointer hover:scale-[1.02] transition-transform">
+                                <div
+                                    class="h-48 bg-surface-container-highest relative">
+                                    <img alt="Gourmet Night CDMX"
+                                        class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700"
+                                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuDQcYNltslbmBIcbQQNzdNQReNW-sQXPj783Nsy5WbIZ998JJSvv-3BgTbmdzTOKOiVI4RScB3w2-QyjpkgE8A9B2JYbd9OZnVFTczsAHWMhUBWF4apM5nwBGOoQzGOUXpE0gHxPVUs6Q3FU47pB1rLjoman6PFN6jKKdSzzExD1BTXie7OPDkOdKZoyeEZgmEXwaVEvh9ep5pmkJUC7gbQ371hmxP0mmjFWeoQmDOii0YqpwgFRzXL0jWlDB2uhNuJeIdno_nZ4S0" />
+                                    <div
+                                        class="absolute top-4 left-4 bg-secondary px-3 py-1 rounded-full text-[10px] font-bold text-white uppercase tracking-widest">Social</div>
+                                </div>
+                                <div class="p-6">
+                                    <h4
+                                        class="font-headline font-black text-xl text-on-surface mb-1">Gourmet
+                                        Night CDMX</h4>
+                                    <p
+                                        class="text-xs text-secondary mb-4">Organizador:
+                                        Epicurean Co.</p>
+                                    <div
+                                        class="flex justify-between items-end border-t border-surface-container pt-4">
+                                        <div>
+                                            <p
+                                                class="text-[10px] font-bold text-outline uppercase">Revenue</p>
+                                            <p
+                                                class="font-headline font-black text-xl text-primary">$188,400</p>
+                                        </div>
+                                        <div class="text-right">
+                                            <p
+                                                class="text-[10px] font-bold text-outline uppercase">Ventas</p>
+                                            <p
+                                                class="font-headline font-bold text-on-surface">100%</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+
+                <div id="events-panel" class="max-w-7xl mx-auto space-y-12 hidden">
+                    <section class="space-y-2">
+                        <span class="font-label text-xs uppercase tracking-[0.2em] text-primary font-bold">Eventos</span>
+                        <h2 class="font-headline text-5xl md:text-6xl font-black text-on-surface leading-none tracking-tight">Próximamente</h2>
+                        <p class="max-w-3xl text-secondary">Gestión de eventos próximamente.</p>
+                    </section>
+                </div>
+
+                <div id="organizers-panel" class="max-w-7xl mx-auto space-y-12 hidden">
+                    <section class="space-y-2">
+                        <span class="font-label text-xs uppercase tracking-[0.2em] text-primary font-bold">Organizadores</span>
+                        <h2 class="font-headline text-5xl md:text-6xl font-black text-on-surface leading-none tracking-tight">Próximamente</h2>
+                        <p class="max-w-3xl text-secondary">Gestión de organizadores próximamente.</p>
+                    </section>
+                </div>
+
+                <div id="revenue-panel" class="max-w-7xl mx-auto space-y-12 hidden">
+                    <section class="space-y-2">
+                        <span class="font-label text-xs uppercase tracking-[0.2em] text-primary font-bold">Ingresos</span>
+                        <h2 class="font-headline text-5xl md:text-6xl font-black text-on-surface leading-none tracking-tight">Próximamente</h2>
+                        <p class="max-w-3xl text-secondary">Análisis de ingresos próximamente.</p>
+                    </section>
+                </div>
+
+                <div id="analytics-panel" class="max-w-7xl mx-auto space-y-12 hidden">
+                    <section class="space-y-2">
+                        <span class="font-label text-xs uppercase tracking-[0.2em] text-primary font-bold">Estadísticas</span>
+                        <h2 class="font-headline text-5xl md:text-6xl font-black text-on-surface leading-none tracking-tight">Próximamente</h2>
+                        <p class="max-w-3xl text-secondary">Análisis avanzado próximamente.</p>
+                    </section>
+                </div>
+
+                <div id="settings-panel" class="max-w-7xl mx-auto space-y-12 hidden">
+                    <section class="space-y-2">
+                        <span class="font-label text-xs uppercase tracking-[0.2em] text-primary font-bold">Configuración</span>
+                        <h2 class="font-headline text-5xl md:text-6xl font-black text-on-surface leading-none tracking-tight">Próximamente</h2>
+                        <p class="max-w-3xl text-secondary">Aquí podrás administrar las opciones y ajustes de tu Dashboard.</p>
+                    </section>
+                </div>
+            </main>
+            <!-- Mobile Navigation Bar -->
+            <nav
+                class="md:hidden fixed bottom-0 left-0 w-full flex justify-around items-center px-4 pb-6 pt-2 bg-surface/90 backdrop-blur-lg z-50 rounded-t-3xl shadow-2xl no-border">
+                <a
+                    class="flex flex-col items-center justify-center bg-cyan-100 text-primary rounded-full px-5 py-2 animate-pulse-subtle scale-110 active:scale-90"
+                    href="#">
+                    <span class="material-symbols-outlined"
+                        data-icon="dashboard">dashboard</span>
+                    <span
+                        class="font-label text-[10px] font-semibold uppercase tracking-wider">Dashboard</span>
+                </a>
+                <a
+                    class="flex flex-col items-center justify-center text-slate-500 px-4 py-2 hover:text-primary transition-colors"
+                    href="#">
+                    <span class="material-symbols-outlined"
+                        data-icon="event">event</span>
+                    <span
+                        class="font-label text-[10px] font-semibold uppercase tracking-wider">Eventos</span>
+                </a>
+                <a
+                    class="flex flex-col items-center justify-center text-slate-500 px-4 py-2 hover:text-primary transition-colors"
+                    href="#">
+                    <span class="material-symbols-outlined"
+                        data-icon="groups">groups</span>
+                    <span
+                        class="font-label text-[10px] font-semibold uppercase tracking-wider">Organizadores</span>
+                </a>
+                <a
+                    class="flex flex-col items-center justify-center text-slate-500 px-4 py-2 hover:text-primary transition-colors"
+                    href="#">
+                    <span class="material-symbols-outlined"
+                        data-icon="person">person</span>
+                    <span
+                        class="font-label text-[10px] font-semibold uppercase tracking-wider">Profile</span>
+                </a>
+            </nav>
+        </div>
+
+    <script src="/assets/js/auth.js"></script>
+    <script>
+        document.querySelector('.logout-btn')?.addEventListener('click', function(e) {
+            e.preventDefault();
+            AuthService.logout();
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const navLinks = document.querySelectorAll('.sidebar nav a[data-section]');
+            const panels = {
+                dashboard: document.getElementById('dashboard-panel'),
+                events: document.getElementById('events-panel'),
+                organizers: document.getElementById('organizers-panel'),
+                revenue: document.getElementById('revenue-panel'),
+                analytics: document.getElementById('analytics-panel'),
+                settings: document.getElementById('settings-panel')
+            };
+
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const target = this.dataset.section;
+                    navLinks.forEach(nav => nav.classList.remove('active'));
+                    this.classList.add('active');
+                    Object.values(panels).forEach(panel => panel?.classList.add('hidden'));
+                    panels[target]?.classList.remove('hidden');
+                });
+            });
+        });
+    </script>
+    </body>
+
+</html>
