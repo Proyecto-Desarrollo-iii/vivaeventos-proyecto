@@ -100,7 +100,7 @@ const AuthService = {
 
         const role = (user.role || '').toUpperCase();
         if (role === 'ADMIN' || role === 'ORGANIZER' || role === 'ORGANIZADOR') {
-            window.location.href = '/assets/DashboardOrganizador.html';
+            window.location.href = '/assets/DashboardOrganizer.html';
         } else {
             window.location.href = '/index.html';
         }

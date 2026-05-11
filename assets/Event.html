@@ -131,71 +131,34 @@
             <div class="ticket-panel">
 
                 <h3>Seleccionar entradas</h3>
-
-                <!-- OPCION 1 -->
-                <label class="ticket-option">
-                    <input type="radio" name="ticket" checked>
-
-                    <div class="ticket-info">
-                        <strong>General Admission</strong>
-                        <span>Acceso completo</span>
-                    </div>
-
-                    <div class="ticket-price">
-                        <strong>$89.000</strong>
-                        <span>Por ticket</span>
-                    </div>
-                </label>
-
-                <!-- OPCION 2 -->
-                <label class="ticket-option">
-                    <input type="radio" name="ticket">
-
-                    <div class="ticket-info">
-                        <strong>VIP Experience</strong>
-                        <span>Entrada + Lounge</span>
-                    </div>
-
-                    <div class="ticket-price">
-                        <strong>$159.000</strong>
-                        <span>Por ticket</span>
-                    </div>
-                </label>
-
-                <!-- PROMO -->
-                <div class="ticket-promo">
-                    <label>Promo code</label>
-                    <div class="promo-input">
-                        <input type="text" placeholder="Ingresa código">
-                        <button>Aplicar</button>
-                    </div>
-                </div>
+                <div id="tickets-container"></div>
 
                 <!-- RESUMEN -->
                 <div class="ticket-summary">
                     <div class="quantity">
                         <span>Cantidad</span>
                         <div class="qty-controls">
-                            <button>-</button>
-                            <span>1</span>
-                            <button class="plus">+</button>
+                            <button id="qty-minus">-</button>
+                            <span id="ticket-quantity">1</span>
+                            <button class="plus" id="qty-plus">+</button>
                         </div>
                     </div>
 
                     <div class="total">
                         <span>Total</span>
-                        <h2>$89.000</h2>
+                        <h2 id="ticket-total">$0</h2>
                     </div>
                 </div>
 
-                <button class="buy-btn">
+                <button class="buy-btn" id="buy-btn">
                     Comprar boletas
                 </button>
 
             </div>
 
-        </section>
+        </div>
 
+        <script src="/assets/js/api.js"></script>
         <script src="/assets/js/auth.js"></script>
         <script src="/assets/js/navbar.js"></script>
         <script src="/assets/js/Event.js"></script>

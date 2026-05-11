@@ -1,82 +1,142 @@
-const event = {
-    title: "Ed Sheeran",
-    location: "Bogotá, Colombia",
-    date: "Oct 24 - 26, 2024",
-    image: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819",
-    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-    spotify: "https://open.spotify.com/playlist/0C8qM17KlmoQCDApCbUSyC?si=afc1c3ab42f9411b",
-    venue: "Estadio El Campín",
-    mapsEmbed: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d39798.47379149456!2d-74.09061337783464!3d4.6483249422246895!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8e3f5c4c1e2b1f1b%3A0x8c2b1d5f9e8b1f1b!2sEstadio%20El%20Camp%C3%ADn!5e0!3m2!1ses!2sco!4v1672531200000!5m2!1ses!2sco",
-    mapsLink: "https://www.google.com/maps/search/?api=1&query=Estadio+El+Campin+Bogota"
-    
-};
-
-const precios = {
-    general: 89000,
-    vip: 159000
-};
-
-let tipoSeleccionado = 'general';
+let currentEvent = null;
+let selectedTicketId = null;
 let cantidad = 1;
 
-function loadEvent(event) {
-    document.getElementById('event-image').src = event.image;
-    document.getElementById('event-title').textContent = event.title;
-    document.getElementById('event-date').textContent = event.date;
-    document.getElementById('event-location').textContent = event.location;
-    document.getElementById('event-description').textContent = event.description;
-    
-    const spotifyEmbed = document.getElementById('spotify-embed');
-    const playlistId = event.spotify.split('/').pop().split('?')[0];
-    spotifyEmbed.src = `https://open.spotify.com/embed/playlist/${playlistId}`;
+document.addEventListener('DOMContentLoaded', () => {
+    const params = new URLSearchParams(window.location.search);
+    const eventId = params.get('id');
+    if (eventId) {
+        loadEvent(eventId);
+    } else {
+        document.getElementById('event-title').textContent = 'Evento no encontrado';
+    }
 
-    document.getElementById('event-map-iframe').src = event.mapsEmbed;
-    document.getElementById('maps-link').href = event.mapsLink;
-    document.getElementById('venue-name').textContent = event.venue;
+    document.getElementById('qty-minus')?.addEventListener('click', () => {
+        if (cantidad > 1) { cantidad--; actualizarTotal(); }
+    });
+    document.getElementById('qty-plus')?.addEventListener('click', () => {
+        cantidad++; actualizarTotal();
+    });
+    document.getElementById('buy-btn')?.addEventListener('click', comprar);
+});
 
-    const eventDetail = document.getElementById('event-detail');
-    if (eventDetail) {
-        eventDetail.classList.remove('hidden');
+async function loadEvent(eventId) {
+    try {
+        const result = await Events.getById(eventId);
+        const event = result.evento;
+        if (!event) return;
+        currentEvent = event;
+
+        document.getElementById('event-image').src = event.bannerUrl || 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819';
+        document.getElementById('event-title').textContent = event.name || 'Sin nombre';
+        document.getElementById('event-date').textContent = event.eventDateTime ? new Date(event.eventDateTime).toLocaleDateString('es-CO', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : '';
+        document.getElementById('event-location').textContent = [event.city, event.location].filter(Boolean).join(', ') || 'Ubicación no especificada';
+        document.getElementById('event-description').textContent = event.description || '';
+
+        const venueName = document.getElementById('venue-name');
+        if (venueName) venueName.textContent = event.venueName || '';
+
+        const mapsIframe = document.getElementById('event-map-iframe');
+        if (mapsIframe && event.mapsEmbedUrl) {
+            mapsIframe.src = event.mapsEmbedUrl;
+            mapsIframe.parentElement.style.display = '';
+        } else if (mapsIframe) {
+            mapsIframe.parentElement.style.display = 'none';
+        }
+
+        const mapsLink = document.getElementById('maps-link');
+        if (mapsLink && event.mapsLinkUrl) {
+            mapsLink.href = event.mapsLinkUrl;
+        }
+
+        const spotifyEmbed = document.getElementById('spotify-embed');
+        if (spotifyEmbed && event.spotifyUrl) {
+            const playlistId = event.spotifyUrl.split('/').pop()?.split('?')[0];
+            if (playlistId) {
+                spotifyEmbed.src = `https://open.spotify.com/embed/playlist/${playlistId}`;
+            }
+            spotifyEmbed.parentElement.style.display = '';
+        } else if (spotifyEmbed) {
+            spotifyEmbed.parentElement.style.display = 'none';
+        }
+
+        renderTickets(event.tickets || []);
+    } catch (err) {
+        console.error('Error loading event:', err);
+        document.getElementById('event-title').textContent = 'Error al cargar evento';
     }
 }
 
-function actualizarTotal() {
-    const total = precios[tipoSeleccionado] * cantidad;
-    document.querySelector('.total h2').textContent = '$' + total.toLocaleString();
-    document.querySelector('.qty-controls span').textContent = cantidad;
-}
+function renderTickets(tickets) {
+    const container = document.getElementById('tickets-container');
+    if (!container) return;
+    if (tickets.length === 0) {
+        container.innerHTML = '<p class="text-secondary">No hay entradas disponibles</p>';
+        return;
+    }
+    container.innerHTML = tickets.map((t, i) => `
+        <label class="ticket-option">
+            <input type="radio" name="ticket" value="${t.id}" ${i === 0 ? 'checked' : ''}>
+            <div class="ticket-info">
+                <strong>${t.type}</strong>
+                <span>${t.description || ''}</span>
+            </div>
+            <div class="ticket-price">
+                <strong>$${(t.price || 0).toLocaleString()}</strong>
+                <span>${t.capacity - t.soldCount} disponibles</span>
+            </div>
+        </label>
+    `).join('');
 
-document.addEventListener('DOMContentLoaded', () => {
-    loadEvent(event);
-    actualizarTotal();
-
-    // Event listeners para tipo de ticket
-    document.querySelectorAll('input[name="ticket"]').forEach(radio => {
-        radio.addEventListener('change', (e) => {
-            tipoSeleccionado = e.target.value;
+    container.querySelectorAll('input[name="ticket"]').forEach(radio => {
+        radio.addEventListener('change', () => {
+            selectedTicketId = radio.value;
             actualizarTotal();
         });
     });
 
-    // Event listeners para cantidad
-    const btnMenos = document.querySelector('.qty-controls button:first-child');
-    const btnMas = document.querySelector('.qty-controls button:last-child');
+    const firstRadio = container.querySelector('input[name="ticket"]');
+    if (firstRadio) {
+        firstRadio.checked = true;
+        selectedTicketId = firstRadio.value;
+    }
+    actualizarTotal();
+}
 
-    btnMenos.addEventListener('click', () => {
-        if (cantidad > 1) {
-            cantidad--;
-            actualizarTotal();
-        }
-    });
+function actualizarTotal() {
+    if (!currentEvent || !currentEvent.tickets) return;
+    const ticket = currentEvent.tickets.find(t => t.id === selectedTicketId);
+    if (!ticket) return;
+    const total = (ticket.price || 0) * cantidad;
+    document.getElementById('ticket-total').textContent = '$' + total.toLocaleString();
+    document.getElementById('ticket-quantity').textContent = cantidad;
+}
 
-    btnMas.addEventListener('click', () => {
-        cantidad++;
-        actualizarTotal();
-    });
+function comprar() {
+    const user = AuthService.getUser();
+    if (!user) {
+        window.location.href = '/auth/login.html';
+        return;
+    }
+    if (!selectedTicketId || !currentEvent) {
+        showToast('Selecciona un tipo de entrada', 'error');
+        return;
+    }
+    const ticket = currentEvent.tickets.find(t => t.id === selectedTicketId);
+    if (!ticket) return;
+    window.location.href = `/assets/payment.html?eventId=${currentEvent.id}&ticketId=${selectedTicketId}&type=${encodeURIComponent(ticket.type)}&cantidad=${cantidad}&total=${(ticket.price * cantidad).toFixed(2)}`;
+}
 
-    // Event listener para comprar
-    document.querySelector('.buy-btn').addEventListener('click', () => {
-        const total = precios[tipoSeleccionado] * cantidad;
-        window.location.href = `payment.html?tipo=${tipoSeleccionado}&cantidad=${cantidad}&total=${total}`;
-    });
-});
+function showToast(message, type) {
+    const colors = { success: 'bg-green-600', error: 'bg-red-600', info: 'bg-primary' };
+    const toast = document.createElement('div');
+    toast.className = `fixed top-4 right-4 z-[9999] ${colors[type] || colors.info} text-white px-6 py-3 rounded-full shadow-2xl font-bold text-sm transition-all duration-300`;
+    toast.style.transform = 'translateX(120%)';
+    toast.textContent = message;
+    document.body.appendChild(toast);
+    requestAnimationFrame(() => { toast.style.transform = 'translateX(0)'; });
+    setTimeout(() => {
+        toast.style.transform = 'translateX(120%)';
+        setTimeout(() => toast.remove(), 300);
+    }, 4000);
+}

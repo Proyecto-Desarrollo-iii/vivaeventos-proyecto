@@ -93,8 +93,8 @@
                 <span
                     class="text-sm font-semibold tracking-wider text-secondary uppercase font-label">Guardar
                     borrador</span>
-                <button
-                    class="kinetic-gradient text-on-primary px-8 py-2 rounded-full font-bold transition-transform hover:scale-105 active:scale-95 shadow-lg">Publicar
+                <button id="saveEventBtn" type="button"
+                    class="kinetic-gradient text-on-primary px-8 py-2 rounded-full font-bold transition-transform hover:scale-105 active:scale-95 shadow-lg">Guardar
                     Evento</button>
             </div>
         </header>
@@ -135,25 +135,26 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div class="col-span-2 space-y-2">
                             <label>Nombre del Evento</label>
-                            <input placeholder="Ej: Festival de Verano 2024"
+                            <input id="eventName" placeholder="Ej: Festival de Verano 2024"
                                 type="text" />
                         </div>
                         <div class="space-y-2">
                             <label>Categoría</label>
-                            <select>
-                                <option>Concierto</option>
-                                <option>Taller</option>
-                                <option>Feria</option>
-                                <option>Conferencia</option>
+                            <select id="eventCategory">
+                                <option value="">Seleccionar...</option>
+                                <option value="Concierto">Concierto</option>
+                                <option value="Taller">Taller</option>
+                                <option value="Feria">Feria</option>
+                                <option value="Conferencia">Conferencia</option>
                             </select>
                         </div>
                         <div class="space-y-2">
                             <label>Fecha y Hora</label>
-                            <input type="datetime-local" />
+                            <input id="eventDate" type="datetime-local" />
                         </div>
                         <div class="col-span-2 space-y-2">
                             <label>Descripción</label>
-                            <textarea
+                            <textarea id="eventDescription"
                                 placeholder="Describe los detalles, el ambiente y por qué nadie debería perdérselo..."
                                 rows="4"></textarea>
                         </div>
@@ -164,9 +165,9 @@
                                 Visual</h3>
                             <p class="text-secondary font-body">Sube el banner
                                 principal y la miniatura para tu evento.</p>
-                            <div
+                            <div id="bannerPreview"
                                 class="aspect-[21/9] w-full rounded-2xl overflow-hidden bg-surface-container-high relative group cursor-pointer border-2 border-dashed border-outline hover:border-primary transition-all">
-                                <img
+                                <img id="bannerImage"
                                     class="w-full h-full object-cover opacity-60 group-hover:scale-105 transition-transform duration-700"
                                     data-alt="Banner del evento"
                                     src="https://lh3.googleusercontent.com/aida/ADBb0uhq-zRvOBT9hMbN6lh8kY26tgGNh7XH3s-wMZaZcKYtRVtiIwC0AiNL-Rh1--JG7VfxJt1gaqzczM5yfWYMD05Ns6PyPXMszTLl8z65TsA18qvC0uUE_gsZMUj2XWKLewFgu8XfdiabWuuiBz0ll9SmhVoKbo-IEeo5sc-4GTFxD8qXhwCQuSkEAR_We6g2fmVcqi2MBt3t3pE0DFoMc06QSW1ba__BOYgVKY-34MN256xIJr73W9sMEtBHVyxbuc7uqi4frSAGNA" />
@@ -178,6 +179,7 @@
                                         Principal (1920x820)</span>
                                 </div>
                             </div>
+                            <input id="eventBannerUrl" type="hidden" />
                             <div class="flex items-start gap-6">
                                 <div class="w-48 flex-shrink-0">
                                     <h4
@@ -214,7 +216,7 @@
                                 diferentes tipos de acceso para tus
                                 asistentes.</p>
                         </div>
-                        <button
+                        <button id="addTicketBtn" type="button"
                             class="flex items-center gap-2 text-primary font-bold hover:bg-primary-fixed/30 px-4 py-2 rounded-full transition-all">
                             <span
                                 class="material-symbols-outlined">add_circle</span>
@@ -222,50 +224,25 @@
                         </button>
                     </div>
                     <div class="space-y-4">
-                        <!-- Ticket Card 1 -->
-                        <div
-                            class="grid grid-cols-1 md:grid-cols-4 gap-4 p-6 bg-surface-container-low rounded-xl relative overflow-hidden group">
-                            <div
-                                class="absolute left-0 top-0 bottom-0 w-1 bg-primary group-hover:w-2 transition-all"></div>
-                            <div class="space-y-2">
-                                <label>Tipo</label>
-                                <input type="text" value="General" />
-                            </div>
-                            <div class="space-y-2">
-                                <label>Precio (€)</label>
-                                <input type="number" value="25.00" />
-                            </div>
-                            <div class="space-y-2">
-                                <label>Capacidad</label>
-                                <input type="number" value="500" />
-                            </div>
-                            <div class="flex items-center justify-end gap-4">
-                                <span
-                                    class="material-symbols-outlined text-secondary cursor-pointer hover:text-error transition-colors">delete</span>
-                                <span
-                                    class="material-symbols-outlined text-secondary cursor-pointer">settings</span>
-                            </div>
-                        </div>
-                        <!-- Ticket Card 2 -->
-                        <div
-                            class="grid grid-cols-1 md:grid-cols-4 gap-4 p-6 bg-surface-container-low rounded-xl relative overflow-hidden group border-2 border-dashed border-outline-variant">
-                            <div class="space-y-2">
-                                <label>Tipo</label>
-                                <input placeholder="Ej: VIP Experience"
-                                    type="text" />
-                            </div>
-                            <div class="space-y-2">
-                                <label>Precio (€)</label>
-                                <input placeholder="0.00" type="number" />
-                            </div>
-                            <div class="space-y-2">
-                                <label>Capacidad</label>
-                                <input placeholder="100" type="number" />
-                            </div>
-                            <div class="flex items-center justify-end">
-                                <button
-                                    class="text-sm font-bold text-primary px-4 py-2 hover:bg-primary-fixed/20 rounded-lg">Guardar
-                                    Ticket</button>
+                        <div id="ticketsContainer" class="space-y-4">
+                            <!-- Ticket Card 1 -->
+                            <div class="ticket-row grid grid-cols-1 md:grid-cols-4 gap-4 p-6 bg-surface-container-low rounded-xl relative overflow-hidden group">
+                                <div class="absolute left-0 top-0 bottom-0 w-1 bg-primary group-hover:w-2 transition-all"></div>
+                                <div class="space-y-2">
+                                    <label>Tipo</label>
+                                    <input class="ticket-type" type="text" value="General" />
+                                </div>
+                                <div class="space-y-2">
+                                    <label>Precio</label>
+                                    <input class="ticket-price" type="number" value="25.00" step="0.01" />
+                                </div>
+                                <div class="space-y-2">
+                                    <label>Capacidad</label>
+                                    <input class="ticket-capacity" type="number" value="500" />
+                                </div>
+                                <div class="flex items-center justify-end gap-4">
+                                    <span class="material-symbols-outlined text-secondary cursor-pointer hover:text-error transition-colors delete-ticket">delete</span>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -283,13 +260,18 @@
                     <div class="space-y-4">
                         <div class="space-y-2">
                             <label>Recinto / Venue</label>
-                            <input placeholder="Ej: Palacio de Congresos"
+                            <input id="eventVenue" placeholder="Ej: Palacio de Congresos"
                                 type="text" />
                         </div>
                         <div class="space-y-2">
                             <label>Dirección</label>
-                            <input data-location="Madrid, Spain"
+                            <input id="eventAddress" data-location="Madrid, Spain"
                                 placeholder="Calle Ejemplo, 123, Madrid"
+                                type="text" />
+                        </div>
+                        <div class="space-y-2">
+                            <label>Ciudad</label>
+                            <input id="eventCity" placeholder="Ej: Madrid"
                                 type="text" />
                         </div>
                     </div>
@@ -311,14 +293,14 @@
                             class="flex items-center gap-3 bg-surface-container-high p-4 rounded-xl">
                             <span
                                 class="material-symbols-outlined text-[#1DB954]">brand_awareness</span>
-                            <input placeholder="Enlace de Spotify del Artista"
+                            <input id="eventSpotify" placeholder="Enlace de Spotify del Artista"
                                 type="text" />
                         </div>
                         <div
                             class="flex items-center gap-3 bg-surface-container-high p-4 rounded-xl">
                             <span
                                 class="material-symbols-outlined text-primary">public</span>
-                            <input placeholder="Instagram / X (Twitter)"
+                            <input id="eventInstagram" placeholder="Instagram / X (Twitter)"
                                 type="text" />
                         </div>
                         <div
@@ -377,7 +359,10 @@
             </div>
         </nav>
 
-        <script>
+    <script src="/assets/js/auth.js"></script>
+    <script src="/assets/js/api.js"></script>
+    <script src="/assets/js/newEvent.js"></script>
+    <script>
 // Step-by-step form navigation
 document.addEventListener('DOMContentLoaded', function() {
     const navItems = document.querySelectorAll('.nav-item');
@@ -387,18 +372,12 @@ document.addEventListener('DOMContentLoaded', function() {
         item.addEventListener('click', function() {
             const targetSection = this.getAttribute('data-section');
 
-            // Remove active class from all nav items and sections
-            navItems.forEach(nav => {
-                nav.classList.remove('active');
-            });
+            navItems.forEach(nav => nav.classList.remove('active'));
             sections.forEach(section => section.classList.remove('active'));
 
-            // Add active class to clicked nav item and corresponding section
             this.classList.add('active');
             const target = document.getElementById(targetSection);
-            if (target) {
-                target.classList.add('active');
-            }
+            if (target) target.classList.add('active');
         });
     });
 });
