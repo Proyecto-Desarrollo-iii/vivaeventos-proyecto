@@ -22,6 +22,8 @@
         href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
         rel="stylesheet" />
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script src="/assets/js/auth.js"></script>
+    <script src="/assets/js/api.js"></script>
     <script id="tailwind-config">
         tailwind.config = {
             darkMode: "class",
@@ -287,7 +289,7 @@
                         </div>
                     </div>
                     <!-- Kinetic Action Button -->
-                    <button
+                    <button id="purchase-btn"
                         class="w-full kinetic-gradient text-on-primary py-5 rounded-full font-headline font-extrabold text-lg flex items-center justify-center gap-3 hover:scale-105 active:scale-95 transition-transform soft-pulse">
                         Complete Purchase
                         <span class="material-symbols-outlined" data-icon="arrow_forward">arrow_forward</span>
@@ -298,9 +300,8 @@
                 </div>
             </div>
         </div>
-        <!-- Success Modal/State Representation (Hidden Layout Element for Success Visual) -->
-        <div class="mt-20 hidden">
-            <!-- This section represents Step 3 after purchase -->
+        <!-- Success State (shown after purchase) -->
+        <div id="success-section" class="mt-20 hidden">
             <div
                 class="max-w-2xl mx-auto bg-surface-container-lowest rounded-[2rem] p-12 text-center shadow-2xl relative overflow-hidden">
                 <div class="absolute top-0 left-0 w-2 h-full bg-primary-fixed"></div>
@@ -310,27 +311,18 @@
                         style="font-variation-settings: 'FILL' 1;">check_circle</span>
                 </div>
                 <h2 class="font-headline text-4xl font-black tracking-tighter mb-4">Booking Confirmed!</h2>
-                <p class="text-secondary mb-12 text-lg">Your tickets are ready. See you at Electronic Pulse 2024.</p>
-                <!-- QR Ticket Component -->
-                <div class="bg-surface-container rounded-2xl p-8 mb-8 inline-block mx-auto">
-                    <div class="bg-white p-4 rounded-xl mb-4">
-                        <img alt="QR Code Ticket" class="w-48 h-48"
-                            data-alt="A clean high-contrast QR code for digital ticket entry on a white square background with soft shadows"
-                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuAzGvoO9YZumxGQCutoehuaqdpeDC4374bS2fUVtld19RxTh7EmWhKqKpzG7b2hw2-6jmTKROM2SkE4XwX-hR7Um9d2o4jIcFtJb1M5wc0eBHLgR3I0MaruhNQvPTadyErCzwJZIKiEmPkrvEzIPycS97JBDZHu0ZjYrpw09iWEjJhFDLGWYLyStDW7QEks7IpKeEJEo049IpP05Sinbr_9QyCrgzWVoGVEDi-HHkfcslrCCB5RWMdbZ3gMx4aYHv51bAaUFJxUcAw" />
-                    </div>
-                    <p class="font-headline font-bold text-on-surface">ORDER ID: VE-998210</p>
-                    <p class="text-xs text-secondary mt-1 font-mono">Present this at the entrance</p>
-                </div>
-                <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                    <button
+                <p class="text-secondary mb-4 text-lg" id="success-message">Your tickets are ready.</p>
+                <p class="font-headline font-bold text-on-surface" id="order-id-display"></p>
+                <div class="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
+                    <a href="/assets/Tickets.html"
                         class="kinetic-gradient text-white px-8 py-4 rounded-full font-bold flex items-center gap-2">
-                        <span class="material-symbols-outlined" data-icon="download">download</span>
-                        Download PDF
-                    </button>
-                    <button
+                        <span class="material-symbols-outlined" data-icon="confirmation_number">confirmation_number</span>
+                        Ver Mis Entradas
+                    </a>
+                    <a href="/index.html"
                         class="bg-surface-container-high text-on-surface px-8 py-4 rounded-full font-bold hover:bg-surface-container-highest transition-colors">
-                        Add to Apple Wallet
-                    </button>
+                        Volver al inicio
+                    </a>
                 </div>
             </div>
         </div>
@@ -359,18 +351,112 @@
     </nav>
     <script>
         const urlParams = new URLSearchParams(window.location.search);
-        const tipo = urlParams.get('tipo') || 'general';
+        const eventId = urlParams.get('eventId');
+        const ticketId = urlParams.get('ticketId');
+        const tipo = urlParams.get('type') || 'General';
         const cantidad = parseInt(urlParams.get('cantidad')) || 1;
-        const total = parseInt(urlParams.get('total')) || 89000;
-        const precios = { general: 89000, vip: 159000 };
-        const precioUnitario = precios[tipo];
-        const tipoTexto = tipo === 'vip' ? 'VIP Experience' : 'General Admission';
+        const total = parseFloat(urlParams.get('total')) || 0;
+        const user = AuthService.getUser();
 
-        // Actualizar el resumen
-        const resumenItems = document.querySelectorAll('.pt-6.border-t .flex.justify-between.items-center');
-        resumenItems[0].querySelector('span:first-child').textContent = `${tipoTexto} (x${cantidad})`;
-        resumenItems[0].querySelector('span:last-child').textContent = `$${precioUnitario.toLocaleString()}`;
-        resumenItems[2].querySelector('span:last-child').textContent = `$${total.toLocaleString()}`;
+        if (!user) {
+            window.location.href = '/auth/login.html';
+        }
+
+        async function loadPaymentPage() {
+            if (!eventId) return;
+
+            try {
+                const result = await Events.getById(eventId);
+                const event = result.evento;
+                if (!event) return;
+
+                const ticket = event.tickets?.find(t => t.id === ticketId);
+                const unitPrice = ticket ? parseFloat(ticket.price) : (total / cantidad);
+
+                document.querySelector('.h-48 img').src = event.bannerUrl || document.querySelector('.h-48 img').src;
+                document.querySelector('.h-48 h3').textContent = event.name || 'Evento';
+                document.querySelector('.flex.items-center.gap-3.text-secondary.text-sm span:first-child').closest('.flex').querySelector('span:last-child').textContent =
+                    event.eventDateTime ? new Date(event.eventDateTime).toLocaleDateString('es-CO', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : '';
+                document.querySelectorAll('.flex.items-center.gap-3.text-secondary.text-sm')[1].querySelector('span:last-child').textContent =
+                    [event.city, event.venueName].filter(Boolean).join(', ') || 'Ubicación no especificada';
+
+                const summaryItem = document.querySelector('.pt-6.border-t .flex.justify-between.items-center');
+                if (summaryItem) {
+                    summaryItem.querySelector('span:first-child').textContent = `${tipo} (x${cantidad})`;
+                    summaryItem.querySelector('span:last-child').textContent = `$${(unitPrice * cantidad).toLocaleString()}`;
+                }
+                const totalItem = document.querySelectorAll('.pt-6.border-t .flex.justify-between.items-center');
+                if (totalItem.length >= 2) {
+                    totalItem[totalItem.length - 1].querySelector('span:last-child').textContent = `$${(unitPrice * cantidad).toLocaleString()}`;
+                }
+
+                if (user) {
+                    const nameInput = document.querySelector('input[placeholder="John Doe"]');
+                    const emailInput = document.querySelector('input[placeholder="john@example.com"]');
+                    if (nameInput && user.nombre) nameInput.value = user.nombre;
+                    if (emailInput && user.email) emailInput.value = user.email;
+                }
+
+                document.getElementById('purchase-btn').addEventListener('click', () => completePurchase(event.id, ticket?.id || ticketId, unitPrice));
+            } catch (err) {
+                console.error('Error loading event:', err);
+            }
+        }
+
+        async function completePurchase(eventId, ticketTypeId, unitPrice) {
+            const btn = document.getElementById('purchase-btn');
+            btn.disabled = true;
+            btn.innerHTML = '<span class="material-symbols-outlined animate-spin">refresh</span> Processing...';
+
+            try {
+                const orderData = {
+                    userId: user.id,
+                    eventId: eventId,
+                    items: [{
+                        eventId: eventId,
+                        ticketTypeId: ticketTypeId,
+                        ticketTypeName: tipo,
+                        quantity: cantidad,
+                        unitPrice: unitPrice
+                    }],
+                    clientIp: ''
+                };
+
+                const result = await Orders.create(orderData);
+
+                if (result.ok) {
+                    const order = result.data;
+                    document.querySelector('.grid-cols-1.lg\\:grid-cols-12').classList.add('hidden');
+                    document.getElementById('success-section').classList.remove('hidden');
+                    document.getElementById('success-message').textContent = `Tus entradas para el evento están listas.`;
+                    document.getElementById('order-id-display').textContent = `Orden: ${order.id || order.orden?.id || 'Confirmada'}`;
+                } else {
+                    showToast(result.data?.error || 'Error al procesar la orden', 'error');
+                    btn.disabled = false;
+                    btn.innerHTML = 'Complete Purchase <span class="material-symbols-outlined">arrow_forward</span>';
+                }
+            } catch (err) {
+                showToast('Error de conexión al procesar la orden', 'error');
+                btn.disabled = false;
+                btn.innerHTML = 'Complete Purchase <span class="material-symbols-outlined">arrow_forward</span>';
+            }
+        }
+
+        function showToast(message, type) {
+            const colors = { success: 'bg-green-600', error: 'bg-red-600', info: 'bg-primary' };
+            const toast = document.createElement('div');
+            toast.className = `fixed top-4 right-4 z-[9999] ${colors[type] || colors.info} text-white px-6 py-3 rounded-full shadow-2xl font-bold text-sm transition-all duration-300`;
+            toast.style.transform = 'translateX(120%)';
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            requestAnimationFrame(() => { toast.style.transform = 'translateX(0)'; });
+            setTimeout(() => {
+                toast.style.transform = 'translateX(120%)';
+                setTimeout(() => toast.remove(), 300);
+            }, 4000);
+        }
+
+        document.addEventListener('DOMContentLoaded', loadPaymentPage);
     </script>
 </body>
 

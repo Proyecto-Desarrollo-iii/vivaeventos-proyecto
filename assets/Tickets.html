@@ -22,8 +22,79 @@
         </div>
     </section>
 
+    <section class="orders-container" style="max-width: 900px; margin: 2rem auto; padding: 0 1.5rem;">
+        <div id="orders-loading" style="text-align: center; padding: 3rem; color: #666;">
+            <span class="material-symbols-outlined" style="font-size: 3rem;">sync</span>
+            <p style="margin-top: 1rem;">Cargando tus entradas...</p>
+        </div>
+        <div id="orders-empty" class="hidden" style="text-align: center; padding: 3rem;">
+            <span class="material-symbols-outlined" style="font-size: 3rem; color: #666;">confirmation_number</span>
+            <p style="margin-top: 1rem; font-size: 1.1rem;">No tienes entradas aún.</p>
+            <a href="/index.html" style="display: inline-block; margin-top: 1rem; padding: 0.75rem 2rem; background: #0097A7; color: white; border-radius: 999px; font-weight: 700; text-decoration: none;">Explorar Eventos</a>
+        </div>
+        <div id="orders-list" class="hidden" style="display: flex; flex-direction: column; gap: 1rem;"></div>
+    </section>
+
     <script src="/assets/js/auth.js"></script>
+    <script src="/assets/js/api.js"></script>
     <script src="/assets/js/navbar.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const user = AuthService.getUser();
+            if (!user) {
+                window.location.href = '/auth/login.html';
+                return;
+            }
+
+            try {
+                const result = await Orders.getByUser(user.id);
+                const orders = Array.isArray(result) ? result : (result.ordenes || []);
+
+                document.getElementById('orders-loading').classList.add('hidden');
+
+                if (orders.length === 0) {
+                    document.getElementById('orders-empty').classList.remove('hidden');
+                    return;
+                }
+
+                const container = document.getElementById('orders-list');
+                container.classList.remove('hidden');
+
+                orders.forEach(order => {
+                    const card = document.createElement('div');
+                    card.style.cssText = 'background: #fff; border-radius: 1rem; padding: 1.5rem; box-shadow: 0 4px 12px rgba(0,0,0,0.06); display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 1rem;';
+                    const items = order.items || [];
+                    const itemInfo = items.map(i => `${i.ticketTypeName || 'Entrada'} x${i.quantity}`).join(', ') || 'Entrada(s)';
+
+                    card.innerHTML = `
+                        <div style="flex: 1; min-width: 200px;">
+                            <p style="font-weight: 700; font-size: 1.1rem; margin-bottom: 0.25rem;">${order.eventName || 'Evento'}</p>
+                            <p style="color: var(--text-secondary); font-size: 0.9rem;">${itemInfo}</p>
+                            <p style="color: var(--text-secondary); font-size: 0.85rem; margin-top: 0.25rem;">
+                                ${order.createdAt ? new Date(order.createdAt).toLocaleDateString('es-CO') : ''}
+                            </p>
+                        </div>
+                        <div style="text-align: right;">
+                            <span style="display: inline-block; padding: 0.25rem 0.75rem; border-radius: 999px; font-size: 0.8rem; font-weight: 700; text-transform: uppercase;
+                                ${order.status === 'PAID' ? 'background: #d1fae5; color: #065f46;' :
+                                  order.status === 'PENDING' ? 'background: #fef3c7; color: #92400e;' :
+                                  order.status === 'CANCELLED' ? 'background: #fee2e2; color: #991b1b;' :
+                                  'background: #e5e7eb; color: #374151;'}">
+                                ${order.status || 'PENDING'}
+                            </span>
+                            <p style="font-weight: 800; font-size: 1.1rem; margin-top: 0.5rem;">$${(order.total || 0).toLocaleString()}</p>
+                        </div>
+                    `;
+                    container.appendChild(card);
+                });
+            } catch (err) {
+                console.error('Error loading orders:', err);
+                document.getElementById('orders-loading').classList.add('hidden');
+                document.getElementById('orders-empty').classList.remove('hidden');
+                document.getElementById('orders-empty').querySelector('p').textContent = 'Error al cargar tus entradas. Intenta de nuevo.';
+            }
+        });
+    </script>
 </body>
 
 </html>

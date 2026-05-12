@@ -105,7 +105,7 @@ async function saveEvent() {
     const eventData = {
         name,
         category,
-        eventDateTime: new Date(date).toISOString(),
+        eventDateTime: new Date(date).toISOString().split('.')[0],
         description: description || '',
         venueName: venue || '',
         address: address || '',
