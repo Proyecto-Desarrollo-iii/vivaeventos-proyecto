@@ -6,6 +6,7 @@
     <title>Registrarse - VivaEventos</title>
     <link rel="icon" href="/assets/images/Logoblue.png">
     <link rel="stylesheet" href="../assets/css/main.css">
+    <link rel="stylesheet" href="../assets/css/toast.css">
     <style>
         .auth-page {
             min-height: 100vh;
@@ -256,6 +257,7 @@
     </div>
     
     <script src="../assets/js/api.js?v=4"></script>
+    <script src="../assets/js/toast.js"></script>
     <script>
         document.querySelectorAll('.role-btn').forEach(btn => {
             btn.addEventListener('click', () => {
@@ -272,7 +274,7 @@
             const confirmPassword = document.getElementById('confirmPassword').value;
             
             if (password !== confirmPassword) {
-                alert('Las contraseñas no coinciden');
+                Toast.warning('Contraseñas no coinciden', 'Las contraseñas ingresadas son diferentes');
                 return;
             }
             
@@ -301,14 +303,14 @@
                 const data = await response.json();
                 
                 if (response.ok) {
-                    alert('Cuenta creada exitosamente');
-                    window.location.href = 'login.html';
+                    Toast.success('Cuenta creada', 'Tu cuenta se creó exitosamente. Ahora inicia sesión.');
+                    setTimeout(() => window.location.href = 'login.html', 1500);
                 } else {
-                    alert(data.error || data.message || 'Error al registrarse');
+                    Toast.error('Error de registro', data.error || data.message || 'Error al registrarse');
                 }
             } catch (error) {
                 console.error('Error:', error);
-                alert('Error de conexión');
+                Toast.error('Error de conexión', 'No se pudo conectar con el servidor');
             }
         });
     </script>

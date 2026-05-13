@@ -22,16 +22,40 @@ const AuthService = {
         const data = await response.json();
 
         if (response.ok) {
+            if (data.twoFactorRequired) {
+                return { success: false, twoFactorRequired: true, tempToken: data.tempToken, userId: data.userId };
+            }
             this._removeItem('token');
             this._removeItem('user');
             const store = this._getStore(remember);
             const jwtToken = data.token && data.token.token ? data.token.token : data.token;
             store.setItem('token', jwtToken);
-            store.setItem('user', JSON.stringify(data.user));
+            const userData = data.user || (data.token ? data.token : null);
+            if (userData) store.setItem('user', JSON.stringify(userData));
             return { success: true, data };
         } else {
             return { success: false, message: data.message || 'Error al iniciar sesión' };
         }
+    },
+
+    async verify2fa(tempToken, code, remember) {
+        const response = await fetch('/api/v1/auth/2fa/authenticate', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ tempToken, code })
+        });
+        const data = await response.json();
+        if (response.ok) {
+            this._removeItem('token');
+            this._removeItem('user');
+            const store = this._getStore(remember);
+            const jwtToken = data.token && data.token.token ? data.token.token : data.token;
+            store.setItem('token', jwtToken);
+            const userData = data.user || data.token;
+            if (userData) store.setItem('user', JSON.stringify(userData));
+            return { success: true, data };
+        }
+        return { success: false, message: data.error || 'Código inválido' };
     },
 
     async register(userData) {

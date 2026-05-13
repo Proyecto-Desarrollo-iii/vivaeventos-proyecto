@@ -7,7 +7,8 @@
     <link rel="icon" href="/assets/images/Logoblue.png">
     <link rel="stylesheet" href="/assets/css/landingpage.css">
     <link rel="stylesheet" href="/assets/css/main.css">
-    <link rel="stylesheet" href="/assets/css/Myaccount.css">
+    <link rel="stylesheet" href="/assets/css/MyAccount.css">
+    <link rel="stylesheet" href="/assets/css/toast.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
 </head>
@@ -16,7 +17,7 @@
     <!-- NAVBAR SIMPLE -->
     <header style="position: fixed; top: 0; left: 0; right: 0; z-index: 50; background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-bottom: 1px solid rgba(0,0,0,0.05); display: flex; justify-content: space-between; align-items: center; padding: 15px 40px;">
         <div style="display: flex; align-items: center; gap: 20px;">
-            <a href="/assets/DashboardOrganizer.html" style="display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 50%; color: #006578; text-decoration: none; transition: all 0.3s">
+            <a id="back-btn" href="/" style="display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 50%; color: #006578; text-decoration: none; transition: all 0.3s">
                 <span class="material-symbols-outlined" style="font-size: 24px;">arrow_back</span>
             </a>
             <img src="/assets/images/Titulo.webp" alt="VivaEventos" style="width: 150px;">
@@ -215,38 +216,64 @@
 
                 <div class="security-container">
 
-                    <!-- Texto superior -->
                     <div class="security-intro">
-                        <h4>Protege tu cuenta</h4>
-                        <p>Toma los recaudos necesarios para proteger tu cuenta</p>
+                        <h4>Autenticación de dos factores (2FA)</h4>
+                        <p>Añade una capa extra de seguridad a tu cuenta.</p>
+                        <p>Estado: <strong id="twofa-status">Cargando...</strong> | Método: <strong id="twofa-method">-</strong></p>
                     </div>
 
-                    <!-- Opción 1 -->
-                    <div class="security-card">
-                        <div class="security-card-top">
-                            <div class="security-left">
-                                <span class="material-symbols-outlined">mail</span>
-                                <span>Recibir código en mi email - 2FA</span>
-                            </div>
-                            <div class="radio"></div>
-                        </div>
-                        <div class="security-desc">
-                            Si alguien obtiene acceso a tu email, podría ingresar a tu cuenta.
+                    <div style="margin-bottom: 20px;">
+                        <p style="font-weight: 500; margin-bottom: 8px;">Elige tu método 2FA:</p>
+                        <div id="twofa-method-selector" style="display: flex; gap: 12px;">
+                            <button id="method-app" class="role-btn active" style="flex: 1; padding: 12px; border: 2px solid #0097b2; border-radius: 10px; background: rgba(0,151,178,0.08); cursor: pointer;">
+                                <span class="material-symbols-outlined" style="display: block; font-size: 28px; margin-bottom: 4px;">verified_user</span>
+                                App de autenticación
+                            </button>
+                            <button id="method-email" class="role-btn" style="flex: 1; padding: 12px; border: 2px solid #e2e8f0; border-radius: 10px; background: #fff; cursor: pointer;">
+                                <span class="material-symbols-outlined" style="display: block; font-size: 28px; margin-bottom: 4px;">mail</span>
+                                Código por email
+                            </button>
                         </div>
                     </div>
 
-                    <!-- Opción 2 (activa) -->
-                    <div class="security-card active">
-                        <div class="security-card-top">
-                            <div class="security-left">
-                                <span class="material-symbols-outlined">verified_user</span>
-                                <span>App de autenticación - 2FA</span>
+                    <!-- Setup 2FA con App -->
+                    <div id="twofa-setup-area" style="display: none;">
+                        <button id="twofa-setup-btn" class="btn btn-primary">Configurar 2FA</button>
+
+                        <div id="twofa-qr-area" style="display: none; margin-top: 20px;">
+                            <p>Escanea este código QR con tu app de autenticación (Google Authenticator, Authy, etc.):</p>
+                            <img id="twofa-qr-img" src="" alt="QR Code" style="margin: 16px auto; display: block; max-width: 200px;">
+                            <p style="text-align: center; font-size: 14px; color: #666;">
+                                O ingresa manualmente el secreto: <code id="twofa-secret" style="background: #f4f4f4; padding: 4px 8px; border-radius: 4px;"></code>
+                            </p>
+                        </div>
+
+                        <div id="twofa-verify-area" style="display: none; margin-top: 20px;">
+                            <div class="form-group" style="max-width: 250px;">
+                                <label for="twofa-verify-code">Código de verificación</label>
+                                <input type="text" id="twofa-verify-code" placeholder="000000" maxlength="6" style="font-size: 1.3rem; letter-spacing: 6px; text-align: center;">
                             </div>
-                            <div class="radio active"></div>
+                            <button id="twofa-verify-btn" class="btn btn-primary" style="margin-top: 12px;">Verificar y activar</button>
                         </div>
-                        <div class="security-desc">
-                            Utiliza una aplicación de autenticación para validar tu acceso.
+                    </div>
+
+                    <!-- Setup 2FA con Email -->
+                    <div id="twofa-email-setup-area" style="display: none;">
+                        <p style="margin-bottom: 12px;">Se enviará un código de verificación a tu correo electrónico.</p>
+                        <button id="twofa-email-setup-btn" class="btn btn-primary">Enviar código de verificación</button>
+                        <div id="twofa-email-verify-area" style="display: none; margin-top: 16px;">
+                            <div class="form-group" style="max-width: 250px;">
+                                <label for="twofa-email-code">Código recibido por email</label>
+                                <input type="text" id="twofa-email-code" placeholder="000000" maxlength="6" style="font-size: 1.3rem; letter-spacing: 6px; text-align: center;">
+                            </div>
+                            <button id="twofa-email-verify-btn" class="btn btn-primary" style="margin-top: 12px;">Verificar y activar</button>
                         </div>
+                    </div>
+
+                    <!-- Disable 2FA -->
+                    <div id="twofa-disable-area" style="display: none;">
+                        <p style="margin-bottom: 8px;">2FA activo con <strong id="twofa-active-method">App</strong></p>
+                        <button id="twofa-disable-btn" class="btn btn-secondary" style="border-color: #dc3545; color: #dc3545;">Deshabilitar 2FA</button>
                     </div>
 
                 </div>
@@ -311,9 +338,10 @@
         console.log('Tipo:', typeof _t);
         console.log('Longitud:', _t ? _t.length : 0);
     </script>
-    <script src="/assets/js/auth.js?v=5"></script>
-    <script src="/assets/js/navbar.js?v=5"></script>
-    <script src="/assets/js/MyAccount.js?v=5"></script>
+    <script src="/assets/js/toast.js"></script>
+    <script src="/assets/js/auth.js?v=7"></script>
+    <script src="/assets/js/navbar.js?v=7"></script>
+    <script src="/assets/js/MyAccount.js?v=7"></script>
 </body>
 
 </html>

@@ -130,7 +130,7 @@ if (searchBtn) {
     if (query) {
       console.log('Buscando:', query);
       // Aquí puedes agregar la lógica de búsqueda
-      alert('Búsqueda: ' + query);
+      Toast.info('Búsqueda', 'Buscando: ' + query);
     }
   });
 }
@@ -141,7 +141,7 @@ if (searchInput) {
       const query = searchInput.value.trim();
       if (query) {
         console.log('Buscando:', query);
-        alert('Búsqueda: ' + query);
+        Toast.info('Búsqueda', 'Buscando: ' + query);
       }
     }
   });

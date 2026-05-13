@@ -15,6 +15,7 @@
             href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
             rel="stylesheet" />
         <link rel="stylesheet" href="/assets/css/Organizador.css" />
+        <link rel="stylesheet" href="/assets/css/toast.css" />
         <script
             src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
         <script id="tailwind-config">
@@ -674,10 +675,11 @@
                 const eventType = document.getElementById('analytics-event-type')?.value || 'Todos';
                 const startDate = document.getElementById('analytics-date-start')?.value || 'Inicio';
                 const endDate = document.getElementById('analytics-date-end')?.value || 'Fin';
-                alert(`Informe generado para ${eventType} desde ${startDate} hasta ${endDate}`);
+                Toast.success('Informe generado', `${eventType} desde ${startDate} hasta ${endDate}`);
             });
         });
     </script>
+    <script src="/assets/js/toast.js"></script>
     </body>
 
 </html>

@@ -6,41 +6,26 @@
     <title>Iniciar Sesión - VivaEventos</title>
     <link rel="icon" href="/assets/images/Logoblue.png">
     <link rel="stylesheet" href="../assets/css/main.css">
+    <link rel="stylesheet" href="../assets/css/toast.css">
 </head>
 <body>
     <div class="auth-page">
-        <div class="form-card">
+        <div class="form-card" id="loginFormCard">
             <div class="auth-header">
                 <div class="logo">VivaEventos</div>
-                <h3>Iniciar Sesión</h3>
-                <p class="text-muted mt-2">Bienvenido de nuevo</p>
+                <h3 id="formTitle">Iniciar Sesión</h3>
+                <p class="text-muted mt-2" id="formSubtitle">Bienvenido de nuevo</p>
             </div>
             
             <form id="loginForm">
                 <div class="input-group mb-4">
                     <label for="email">Correo electrónico</label>
-                    <input 
-                        type="email" 
-                        id="email" 
-                        name="email" 
-                        class="input w-full" 
-                        placeholder="tu@email.com"
-                        required
-                    >
+                    <input type="email" id="email" class="input w-full" placeholder="tu@email.com" required>
                 </div>
-                
                 <div class="input-group mb-4">
                     <label for="password">Contraseña</label>
-                    <input 
-                        type="password" 
-                        id="password" 
-                        name="password" 
-                        class="input w-full" 
-                        placeholder="••••••••"
-                        required
-                    >
+                    <input type="password" id="password" class="input w-full" placeholder="••••••••" required>
                 </div>
-                
                 <div class="flex justify-between items-center mb-4">
                     <label class="flex items-center gap-2" style="cursor: pointer;">
                         <input type="checkbox" name="remember">
@@ -48,27 +33,39 @@
                     </label>
                     <a href="#" class="text-sm text-primary">¿Olvidaste tu contraseña?</a>
                 </div>
-                
                 <div class="form-actions">
-                    <button type="submit" class="btn btn-primary btn-full">
-                        Iniciar Sesión
-                    </button>
+                    <button type="submit" class="btn btn-primary btn-full">Iniciar Sesión</button>
                 </div>
             </form>
+
+            <div id="twofaSection" style="display: none;">
+                <p class="text-center text-muted mb-4" id="twofaPrompt">Ingresa el código de 6 dígitos de tu app de autenticación</p>
+                <div class="input-group mb-4">
+                    <input type="text" id="twofaCode" class="input w-full text-center" placeholder="000000" maxlength="6" inputmode="numeric" pattern="[0-9]*" style="font-size: 1.5rem; letter-spacing: 8px;">
+                </div>
+                <div class="form-actions" style="flex-direction: column; gap: 8px;">
+                    <button id="verify2faBtn" class="btn btn-primary btn-full">Verificar código</button>
+                    <button id="sendEmailCodeBtn" class="btn btn-secondary btn-full" style="display: none;">Enviar código a mi correo</button>
+                </div>
+                <p class="text-center mt-3">
+                    <a href="#" id="backToLogin" class="text-sm text-primary">Volver al inicio de sesión</a>
+                </p>
+            </div>
             
-            <p class="text-center mt-6 text-muted text-sm">
+            <p class="text-center mt-6 text-muted text-sm" id="loginFooter">
                 ¿No tienes cuenta? 
                 <a href="registro.html" class="text-primary">Regístrate</a>
             </p>
         </div>
     </div>
     
-    <script src="../assets/js/api.js?v=2"></script>
-    <script src="../assets/js/auth.js?v=2"></script>
+    <script src="../assets/js/api.js?v=3"></script>
+    <script src="../assets/js/auth.js?v=3"></script>
     <script>
+        let pending2fa = {};
+
         document.getElementById('loginForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
             const remember = document.querySelector('[name="remember"]').checked;
@@ -77,14 +74,73 @@
                 const result = await AuthService.login(email, password, remember);
                 if (result.success) {
                     AuthService.redirectByRole();
+                } else if (result.twoFactorRequired) {
+                    pending2fa = { tempToken: result.tempToken, remember, method: result.twoFactorMethod || 'APP' };
+                    document.getElementById('loginForm').style.display = 'none';
+                    document.getElementById('loginFooter').style.display = 'none';
+                    document.getElementById('twofaSection').style.display = 'block';
+                    document.getElementById('formTitle').textContent = 'Autenticación de dos factores';
+                    if (pending2fa.method === 'EMAIL') {
+                        document.getElementById('twofaPrompt').textContent = 'Se envió un código a tu correo electrónico. Ingrésalo aquí:';
+                        document.getElementById('sendEmailCodeBtn').style.display = 'block';
+                    } else {
+                        document.getElementById('twofaPrompt').textContent = 'Ingresa el código de 6 dígitos de tu app de autenticación';
+                        document.getElementById('sendEmailCodeBtn').style.display = 'none';
+                    }
                 } else {
-                    alert(result.message || 'Error al iniciar sesión');
+                    Toast.error('Error de inicio de sesión', result.message || 'Credenciales inválidas');
                 }
             } catch (error) {
                 console.error('Error:', error);
-                alert('Error de conexión con el servidor');
+                Toast.error('Error de conexión', 'No se pudo conectar con el servidor');
             }
         });
+
+        document.getElementById('verify2faBtn').addEventListener('click', async () => {
+            const code = document.getElementById('twofaCode').value.trim();
+            if (code.length !== 6) {
+                Toast.warning('Código requerido', 'Ingresa el código de 6 dígitos');
+                return;
+            }
+            try {
+                const result = await AuthService.verify2fa(pending2fa.tempToken, code, pending2fa.remember);
+                if (result.success) {
+                    AuthService.redirectByRole();
+                } else {
+                    Toast.error('Código inválido', result.message || 'El código ingresado no es correcto');
+                }
+            } catch (error) {
+                Toast.error('Error de conexión', 'No se pudo conectar con el servidor');
+            }
+        });
+
+        document.getElementById('sendEmailCodeBtn').addEventListener('click', async () => {
+            try {
+                const res = await fetch('/api/v1/auth/2fa/send-code', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ tempToken: pending2fa.tempToken })
+                });
+                if (res.ok) {
+                    Toast.info('Código enviado', 'Revisa tu correo electrónico y la consola del servidor');
+                } else {
+                    Toast.error('Error', 'No se pudo enviar el código');
+                }
+            } catch (e) {
+                Toast.error('Error de conexión', 'No se pudo conectar con el servidor');
+            }
+        });
+
+        document.getElementById('backToLogin').addEventListener('click', (e) => {
+            e.preventDefault();
+            document.getElementById('loginForm').style.display = 'block';
+            document.getElementById('loginFooter').style.display = 'block';
+            document.getElementById('twofaSection').style.display = 'none';
+            document.getElementById('formTitle').textContent = 'Iniciar Sesión';
+            document.getElementById('formSubtitle').textContent = 'Bienvenido de nuevo';
+            document.getElementById('twofaCode').value = '';
+        });
     </script>
+    <script src="../assets/js/toast.js"></script>
 </body>
 </html>

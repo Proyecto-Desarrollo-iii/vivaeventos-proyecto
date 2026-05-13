@@ -4,6 +4,8 @@
 
 .account-section.active {
     display: block;
+    min-height: 300px;
+    padding-bottom: 60px;
 }
 
 .account-header {
@@ -411,6 +413,11 @@
     font-size: 0.8rem;
     color: #64748b;
     padding-left: 28px;
+}
+
+.role-btn.active {
+    border-color: #0097b2 !important;
+    background: rgba(0,151,178,0.08) !important;
 }
 
 /* Responsive */

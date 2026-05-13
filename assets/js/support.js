@@ -6,9 +6,9 @@ document.querySelector(".support-search").addEventListener("submit", (e) => {
   const value = document.querySelector(".support-search input").value;
 
   if (value.trim() === "") {
-    alert("Escribe algo para buscar");
+    Toast.warning('Búsqueda vacía', 'Escribe algo para buscar');
     return;
   }
 
-  alert("Buscando: " + value);
+  Toast.info('Buscando', 'Resultados para: ' + value);
 });
