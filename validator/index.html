@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Validador de boletas | VivaEventos</title>
+    <link rel="icon" href="/assets/images/Logoblue.png">
+    <link rel="stylesheet" href="/assets/css/Organizador.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            font-family: 'Manrope', 'Poppins', system-ui, sans-serif;
+            background: #f6fafc !important;
+            min-height: 100vh;
+            color: #171c1e;
+            padding: 0;
+        }
+        .validator-shell {
+            margin-left: 240px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 2.5rem 1rem;
+            min-height: 100vh;
+        }
+        @media (max-width: 768px) {
+            .validator-shell { margin-left: 0; }
+        }
+        h1 {
+            font-size: 1.75rem;
+            font-weight: 800;
+            margin: 0 0 0.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #171c1e;
+        }
+        .subtitle {
+            margin: 0 0 1.5rem;
+            color: #3d494c;
+            font-size: 0.95rem;
+        }
+        .card {
+            background: #ffffff;
+            border: 1px solid #bdc8cd;
+            border-radius: 1.25rem;
+            padding: 1.5rem;
+            width: 100%;
+            max-width: 480px;
+            box-shadow: 0 20px 40px rgba(0, 101, 120, 0.08);
+        }
+        label {
+            display: block;
+            font-size: 0.8rem;
+            color: #3d494c;
+            margin-bottom: 0.35rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+        input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border-radius: 0.6rem;
+            border: 1px solid #bdc8cd;
+            background: #f6fafc;
+            color: #171c1e;
+            font-size: 0.95rem;
+            font-family: monospace;
+            outline: none;
+            margin-bottom: 1rem;
+            transition: border-color 0.15s, box-shadow 0.15s;
+        }
+        input:focus {
+            border-color: #006578;
+            box-shadow: 0 0 0 3px rgba(0, 101, 120, 0.15);
+        }
+        button {
+            width: 100%;
+            padding: 0.85rem 1rem;
+            border-radius: 999px;
+            border: none;
+            background: #006578;
+            color: #ffffff;
+            font-weight: 700;
+            font-size: 0.95rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            transition: background 0.15s, transform 0.1s;
+        }
+        button:hover:not(:disabled) { background: #008097; }
+        button:active:not(:disabled) { transform: scale(0.98); }
+        button:disabled { opacity: 0.5; cursor: not-allowed; }
+        button.secondary {
+            background: transparent;
+            color: #006578;
+            border: 1px solid #006578;
+            margin-top: 0.5rem;
+        }
+        button.secondary:hover:not(:disabled) {
+            background: #aeecff;
+            color: #004e5d;
+        }
+
+        .result {
+            margin-top: 1.5rem;
+            padding: 1.25rem;
+            border-radius: 0.75rem;
+            font-weight: 600;
+            display: none;
+        }
+        .result.show { display: block; }
+        .result.ok { background: #d1fae5; border: 1px solid #10b981; color: #065f46; }
+        .result.warn { background: #fef3c7; border: 1px solid #f59e0b; color: #92400e; }
+        .result.err { background: #fee2e2; border: 1px solid #ef4444; color: #991b1b; }
+        .result-headline {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.1rem;
+            font-weight: 800;
+            margin-bottom: 0.4rem;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+        }
+        .result-meta {
+            font-size: 0.8rem;
+            opacity: 0.85;
+            margin-top: 0.5rem;
+            font-family: monospace;
+            word-break: break-all;
+        }
+        .ticket-info {
+            background: #f0f4f6;
+            border-radius: 0.6rem;
+            padding: 0.85rem 1rem;
+            margin-top: 0.85rem;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 0.45rem;
+        }
+        .ticket-info .row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+            font-size: 0.9rem;
+            color: #171c1e;
+        }
+        .ticket-info .row .label {
+            color: #3d494c;
+            text-transform: uppercase;
+            font-size: 0.7rem;
+            letter-spacing: 0.05em;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+        .ticket-info .row .value {
+            text-align: right;
+            font-weight: 700;
+            word-break: break-word;
+            color: #171c1e;
+        }
+        .row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.75rem;
+        }
+        .history {
+            margin-top: 1.5rem;
+            width: 100%;
+            max-width: 480px;
+        }
+        .history h3 {
+            font-size: 0.95rem;
+            margin: 0 0 0.5rem;
+            color: #3d494c;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+        .history-item {
+            background: #ffffff;
+            border: 1px solid #e4e9eb;
+            border-radius: 0.6rem;
+            padding: 0.6rem 0.9rem;
+            margin-bottom: 0.45rem;
+            font-size: 0.85rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+            color: #171c1e;
+            box-shadow: 0 4px 12px rgba(0, 101, 120, 0.04);
+        }
+        .history-item.ok { border-left: 3px solid #10b981; }
+        .history-item.warn { border-left: 3px solid #f59e0b; }
+        .history-item.err { border-left: 3px solid #ef4444; }
+        .history-item .qr {
+            font-family: monospace;
+            font-size: 0.75rem;
+            color: #6d797d;
+            max-width: 220px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+    </style>
+</head>
+
+<body>
+    <aside class="sidebar">
+        <div class="logo flex items-center gap-3">
+            <img src="/assets/images/Logoblue.png" alt="Icono" class="logo-icon">
+            <img class="logo-text" src="/assets/images/Titulo.webp" alt="VivaEventos">
+        </div>
+
+        <nav>
+            <a href="/assets/DashboardOrganizer.html">
+                <span class="material-symbols-outlined">dashboard</span>
+                Dashboard
+            </a>
+
+            <a href="/assets/DashboardOrganizer.html?section=events">
+                <span class="material-symbols-outlined">event</span>
+                Eventos
+            </a>
+
+            <a href="/validator/index.html" class="active">
+                <span class="material-symbols-outlined">qr_code_scanner</span>
+                Validar boletas
+            </a>
+
+            <a href="/assets/DashboardOrganizer.html?section=analytics">
+                <span class="material-symbols-outlined">analytics</span>
+                Estadísticas
+            </a>
+
+            <a href="/assets/DashboardOrganizer.html?section=settings">
+                <span class="material-symbols-outlined">settings</span>
+                Configuración
+            </a>
+        </nav>
+
+        <div class="sidebar-user">
+            <a href="/assets/MyAccount.html" class="user-info" style="text-decoration: none; cursor: pointer;">
+                <img src="https://i.pravatar.cc/40" alt="Usuario">
+                <span id="sidebar-username">Organizador</span>
+            </a>
+            <a href="#" class="logout-btn" id="sidebar-logout">
+                <span class="material-symbols-outlined">logout</span>
+                Cerrar sesión
+            </a>
+        </div>
+    </aside>
+
+    <div class="validator-shell">
+    <h1>
+        <span class="material-symbols-outlined">qr_code_scanner</span>
+        Validador de boletas
+    </h1>
+    <p class="subtitle">Personal de logística — escanea o pega el código QR</p>
+
+    <div class="card">
+        <label for="qr-input">Código QR</label>
+        <input id="qr-input" type="text" placeholder="Pega aquí el código de la boleta" autofocus autocomplete="off" />
+
+        <div class="row">
+            <div>
+                <label for="gate">Puerta</label>
+                <input id="gate" type="text" placeholder="Puerta 1" value="Puerta 1" />
+            </div>
+            <div>
+                <label for="operator">Operador</label>
+                <input id="operator" type="text" placeholder="logistica-01" value="logistica-01" />
+            </div>
+        </div>
+
+        <button id="validate-btn">
+            <span class="material-symbols-outlined">check_circle</span>
+            Validar boleta
+        </button>
+        <button id="clear-btn" class="secondary" type="button">
+            <span class="material-symbols-outlined">refresh</span>
+            Limpiar
+        </button>
+
+        <div id="result" class="result"></div>
+    </div>
+
+    <div class="history">
+        <h3>
+            <span class="material-symbols-outlined">history</span>
+            Últimas validaciones
+        </h3>
+        <div id="history-list"></div>
+    </div>
+
+    </div>
+
+    <script src="/assets/js/auth.js"></script>
+    <script src="/assets/js/api.js"></script>
+    <script>
+        (function setupSidebar() {
+            const logoutBtn = document.getElementById('sidebar-logout');
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', async function (e) {
+                    e.preventDefault();
+                    if (window.AuthService && typeof AuthService.logout === 'function') {
+                        await AuthService.logout();
+                    } else {
+                        localStorage.clear();
+                        sessionStorage.clear();
+                        window.location.href = '/auth/login.html';
+                    }
+                });
+            }
+        })();
+    </script>
+    <script>
+        const qrInput = document.getElementById('qr-input');
+        const gateInput = document.getElementById('gate');
+        const operatorInput = document.getElementById('operator');
+        const validateBtn = document.getElementById('validate-btn');
+        const clearBtn = document.getElementById('clear-btn');
+        const resultBox = document.getElementById('result');
+        const historyList = document.getElementById('history-list');
+
+        function resultClassFor(resCode) {
+            switch (resCode) {
+                case 'SUCCESS': return 'ok';
+                case 'ALREADY_USED':
+                case 'REVOKED': return 'warn';
+                case 'NOT_FOUND':
+                default: return 'err';
+            }
+        }
+
+        function resultIconFor(resCode) {
+            switch (resCode) {
+                case 'SUCCESS': return 'check_circle';
+                case 'ALREADY_USED': return 'block';
+                case 'REVOKED': return 'do_not_disturb_on';
+                case 'NOT_FOUND': return 'help';
+                default: return 'error';
+            }
+        }
+
+        function resultLabelFor(resCode) {
+            return ({
+                SUCCESS: 'INGRESO AUTORIZADO',
+                ALREADY_USED: 'BOLETA YA UTILIZADA',
+                REVOKED: 'BOLETA REVOCADA',
+                NOT_FOUND: 'BOLETA NO ENCONTRADA'
+            })[resCode] || 'RESULTADO DESCONOCIDO';
+        }
+
+        function pushHistory(validation) {
+            const cls = resultClassFor(validation.result);
+            const item = document.createElement('div');
+            item.className = `history-item ${cls}`;
+            const time = validation.validatedAt
+                ? new Date(validation.validatedAt).toLocaleTimeString('es-CO')
+                : new Date().toLocaleTimeString('es-CO');
+            item.innerHTML = `
+                <div>
+                    <div style="font-weight:700; font-size:0.9rem;">${resultLabelFor(validation.result)}</div>
+                    <div class="qr">${validation.qrCode || ''}</div>
+                </div>
+                <div style="color:#94a3b8; font-size:0.75rem;">${time}</div>
+            `;
+            historyList.insertBefore(item, historyList.firstChild);
+            // mantener máximo 8
+            while (historyList.children.length > 8) {
+                historyList.removeChild(historyList.lastChild);
+            }
+        }
+
+        async function validate() {
+            const qrCode = qrInput.value.trim();
+            if (!qrCode) {
+                qrInput.focus();
+                return;
+            }
+
+            validateBtn.disabled = true;
+            const originalLabel = validateBtn.innerHTML;
+            validateBtn.innerHTML = '<span class="material-symbols-outlined">sync</span> Validando...';
+            resultBox.classList.remove('show', 'ok', 'warn', 'err');
+
+            try {
+                const res = await IssuedTickets.validate({
+                    qrCode,
+                    gateLocation: gateInput.value || null,
+                    validatedBy: operatorInput.value || null
+                });
+
+                const v = (res.data && res.data.validacion) || {};
+                const cls = resultClassFor(v.result);
+                resultBox.classList.add('show', cls);
+                const escape = s => (s == null ? '' : String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c]));
+                const hasTicketInfo = v.eventName || v.holderName || v.ticketType || v.holderEmail;
+                const shortBoleta = v.issuedTicketId ? `#${String(v.issuedTicketId).substring(0,8).toUpperCase()}` : null;
+                resultBox.innerHTML = `
+                    <div class="result-headline">
+                        <span class="material-symbols-outlined">${resultIconFor(v.result)}</span>
+                        ${resultLabelFor(v.result)}
+                    </div>
+                    <div>${escape(v.message) || ''}</div>
+                    ${hasTicketInfo ? `
+                    <div class="ticket-info">
+                        ${v.eventName ? `<div class="row"><span class="label">Evento</span><span class="value">${escape(v.eventName)}</span></div>` : ''}
+                        ${v.ticketType ? `<div class="row"><span class="label">Tipo</span><span class="value">${escape(v.ticketType)}</span></div>` : ''}
+                        ${v.holderName ? `<div class="row"><span class="label">Titular</span><span class="value">${escape(v.holderName)}</span></div>` : ''}
+                        ${v.holderEmail ? `<div class="row"><span class="label">Correo</span><span class="value">${escape(v.holderEmail)}</span></div>` : ''}
+                        ${shortBoleta ? `<div class="row"><span class="label">Boleta</span><span class="value">${shortBoleta}</span></div>` : ''}
+                    </div>` : ''}
+                    <div class="result-meta">QR: ${escape(v.qrCode || qrCode)}</div>
+                `;
+
+                pushHistory({ ...v, qrCode: v.qrCode || qrCode });
+            } catch (err) {
+                console.error('Validate error:', err);
+                resultBox.classList.add('show', 'err');
+                resultBox.innerHTML = `
+                    <div class="result-headline">
+                        <span class="material-symbols-outlined">error</span>
+                        ERROR DE CONEXIÓN
+                    </div>
+                    <div>No se pudo contactar al servicio de validación.</div>
+                `;
+            } finally {
+                validateBtn.disabled = false;
+                validateBtn.innerHTML = originalLabel;
+                qrInput.select();
+            }
+        }
+
+        function clear() {
+            qrInput.value = '';
+            resultBox.classList.remove('show', 'ok', 'warn', 'err');
+            resultBox.innerHTML = '';
+            qrInput.focus();
+        }
+
+        validateBtn.addEventListener('click', validate);
+        clearBtn.addEventListener('click', clear);
+        qrInput.addEventListener('keydown', e => {
+            if (e.key === 'Enter') validate();
+        });
+
+        if (!AuthService.getToken()) {
+            // permitimos abrirlo sin login; el gateway puede dar 401 después y lo manejamos en el resultado
+            console.warn('Sin token JWT — el gateway puede rechazar las validaciones.');
+        }
+    </script>
+</body>
+
+</html>

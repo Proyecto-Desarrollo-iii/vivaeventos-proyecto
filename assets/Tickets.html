@@ -3,17 +3,117 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Mi cuenta | VivaEventos</title>
+    <title>Mis Entradas | VivaEventos</title>
     <link rel="icon" href="/assets/images/Logoblue.png">
     <link rel="stylesheet" href="/assets/css/landingpage.css">
     <link rel="stylesheet" href="/assets/css/main.css">
     <link rel="stylesheet" href="/assets/css/Myaccount.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.min.js"></script>
+    <style>
+        .ticket-card {
+            background: #fff;
+            border-radius: 1rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        .ticket-card.highlight {
+            box-shadow: 0 0 0 3px #0097A7, 0 6px 18px rgba(0,151,167,0.25);
+        }
+        .ticket-card-header {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 0.75rem;
+        }
+        .status-pill {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 999px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+        .status-paid { background: #d1fae5; color: #065f46; }
+        .status-pending { background: #fef3c7; color: #92400e; }
+        .status-cancelled { background: #fee2e2; color: #991b1b; }
+        .status-issued { background: #dbeafe; color: #1e40af; }
+        .status-used { background: #e5e7eb; color: #374151; }
+        .status-revoked { background: #fee2e2; color: #991b1b; }
+
+        .boletas-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 1rem;
+        }
+        .boleta {
+            border: 1px dashed #d1d5db;
+            border-radius: 0.75rem;
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            background: #fafafa;
+        }
+        .boleta.used { opacity: 0.65; }
+        .boleta.revoked { opacity: 0.55; background: #fef2f2; border-color: #fecaca; }
+        .boleta .qr {
+            width: 168px;
+            height: 168px;
+            background: #fff;
+            padding: 8px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .boleta .qr img { width: 100%; height: 100%; image-rendering: pixelated; }
+        .boleta .qr-code-text {
+            font-family: monospace;
+            font-size: 0.7rem;
+            color: #6b7280;
+            word-break: break-all;
+            text-align: center;
+            max-width: 100%;
+        }
+        .boleta .holder {
+            font-weight: 700;
+            color: #111;
+            font-size: 0.95rem;
+            text-align: center;
+        }
+        .boleta .type {
+            color: #0097A7;
+            font-weight: 700;
+            font-size: 0.85rem;
+        }
+        .boleta .event-name {
+            font-weight: 700;
+            font-size: 1rem;
+            color: #111;
+            text-align: center;
+            margin-bottom: 0.15rem;
+        }
+        .boleta .ticket-code {
+            font-family: monospace;
+            font-size: 0.7rem;
+            color: #6b7280;
+            background: rgba(0, 151, 167, 0.08);
+            border-radius: 0.4rem;
+            padding: 0.15rem 0.5rem;
+        }
+    </style>
 </head>
 
 <body>
-    <!-- NAVBAR -->
     <div id="navbar-container"></div>
 
     <section class="account-header">
@@ -22,7 +122,7 @@
         </div>
     </section>
 
-    <section class="orders-container" style="max-width: 900px; margin: 2rem auto; padding: 0 1.5rem;">
+    <section class="orders-container" style="max-width: 1100px; margin: 2rem auto; padding: 0 1.5rem;">
         <div id="orders-loading" style="text-align: center; padding: 3rem; color: #666;">
             <span class="material-symbols-outlined" style="font-size: 3rem;">sync</span>
             <p style="margin-top: 1rem;">Cargando tus entradas...</p>
@@ -32,14 +132,53 @@
             <p style="margin-top: 1rem; font-size: 1.1rem;">No tienes entradas aún.</p>
             <a href="/index.html" style="display: inline-block; margin-top: 1rem; padding: 0.75rem 2rem; background: #0097A7; color: white; border-radius: 999px; font-weight: 700; text-decoration: none;">Explorar Eventos</a>
         </div>
-        <div id="orders-list" class="hidden" style="display: flex; flex-direction: column; gap: 1rem;"></div>
+        <div id="orders-list" class="hidden" style="display: flex; flex-direction: column; gap: 1.5rem;"></div>
     </section>
 
     <script src="/assets/js/auth.js"></script>
     <script src="/assets/js/api.js"></script>
     <script src="/assets/js/navbar.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', async () => {
+        const highlightOrderId = new URLSearchParams(window.location.search).get('highlight');
+
+        function renderQrImage(text) {
+            try {
+                const qr = qrcode(0, 'M');
+                qr.addData(text);
+                qr.make();
+                return qr.createImgTag(4, 2);
+            } catch (e) {
+                console.warn('QR render fail', e);
+                return '<span class="material-symbols-outlined" style="font-size:64px;color:#aaa;">qr_code_2</span>';
+            }
+        }
+
+        function statusPillClass(status) {
+            switch ((status || '').toUpperCase()) {
+                case 'PAID': return 'status-pill status-paid';
+                case 'PENDING': return 'status-pill status-pending';
+                case 'CANCELLED': return 'status-pill status-cancelled';
+                case 'ISSUED': return 'status-pill status-issued';
+                case 'USED': return 'status-pill status-used';
+                case 'REVOKED': return 'status-pill status-revoked';
+                default: return 'status-pill';
+            }
+        }
+
+        function statusLabel(status) {
+            const s = (status || '').toUpperCase();
+            const map = {
+                PAID: 'Pagada',
+                PENDING: 'Pendiente',
+                CANCELLED: 'Cancelada',
+                ISSUED: 'Emitida',
+                USED: 'Usada',
+                REVOKED: 'Revocada'
+            };
+            return map[s] || s || '—';
+        }
+
+        async function loadOrders() {
             const user = AuthService.getUser();
             if (!user) {
                 window.location.href = '/auth/login.html';
@@ -48,11 +187,11 @@
 
             try {
                 const result = await Orders.getByUser(user.id);
-                const orders = Array.isArray(result) ? result : (result.ordenes || []);
+                const orders = Array.isArray(result) ? result : (result.ordenes || result.data || []);
 
                 document.getElementById('orders-loading').classList.add('hidden');
 
-                if (orders.length === 0) {
+                if (!orders || orders.length === 0) {
                     document.getElementById('orders-empty').classList.remove('hidden');
                     return;
                 }
@@ -60,40 +199,89 @@
                 const container = document.getElementById('orders-list');
                 container.classList.remove('hidden');
 
-                orders.forEach(order => {
+                for (const order of orders) {
                     const card = document.createElement('div');
-                    card.style.cssText = 'background: #fff; border-radius: 1rem; padding: 1.5rem; box-shadow: 0 4px 12px rgba(0,0,0,0.06); display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 1rem;';
+                    card.className = 'ticket-card' + (highlightOrderId && order.id === highlightOrderId ? ' highlight' : '');
+
                     const items = order.items || [];
                     const itemInfo = items.map(i => `${i.ticketTypeName || 'Entrada'} x${i.quantity}`).join(', ') || 'Entrada(s)';
+                    const dateStr = order.createdAt ? new Date(order.createdAt).toLocaleString('es-CO') : '';
 
                     card.innerHTML = `
-                        <div style="flex: 1; min-width: 200px;">
-                            <p style="font-weight: 700; font-size: 1.1rem; margin-bottom: 0.25rem;">${order.eventName || 'Evento'}</p>
-                            <p style="color: var(--text-secondary); font-size: 0.9rem;">${itemInfo}</p>
-                            <p style="color: var(--text-secondary); font-size: 0.85rem; margin-top: 0.25rem;">
-                                ${order.createdAt ? new Date(order.createdAt).toLocaleDateString('es-CO') : ''}
-                            </p>
+                        <div class="ticket-card-header">
+                            <div>
+                                <p style="font-weight: 700; font-size: 1.1rem; margin: 0;">Orden #${(order.id || '').substring(0, 8)}</p>
+                                <p style="color: #6b7280; font-size: 0.85rem; margin: 0.25rem 0 0;">${itemInfo}</p>
+                                <p style="color: #6b7280; font-size: 0.8rem; margin: 0.25rem 0 0;">${dateStr}</p>
+                            </div>
+                            <div style="text-align: right;">
+                                <span class="${statusPillClass(order.status)}">${statusLabel(order.status)}</span>
+                                <p style="font-weight: 800; font-size: 1.05rem; margin: 0.5rem 0 0;">$${Number(order.total || 0).toLocaleString()}</p>
+                            </div>
                         </div>
-                        <div style="text-align: right;">
-                            <span style="display: inline-block; padding: 0.25rem 0.75rem; border-radius: 999px; font-size: 0.8rem; font-weight: 700; text-transform: uppercase;
-                                ${order.status === 'PAID' ? 'background: #d1fae5; color: #065f46;' :
-                                  order.status === 'PENDING' ? 'background: #fef3c7; color: #92400e;' :
-                                  order.status === 'CANCELLED' ? 'background: #fee2e2; color: #991b1b;' :
-                                  'background: #e5e7eb; color: #374151;'}">
-                                ${order.status || 'PENDING'}
-                            </span>
-                            <p style="font-weight: 800; font-size: 1.1rem; margin-top: 0.5rem;">$${(order.total || 0).toLocaleString()}</p>
+                        <div class="boletas-section" data-order-id="${order.id}">
+                            <p style="color:#6b7280; font-size:0.9rem; margin: 0 0 0.5rem;">Cargando boletas...</p>
                         </div>
                     `;
                     container.appendChild(card);
-                });
+
+                    loadIssuedTicketsForOrder(order.id, card.querySelector('.boletas-section'));
+                }
             } catch (err) {
                 console.error('Error loading orders:', err);
                 document.getElementById('orders-loading').classList.add('hidden');
                 document.getElementById('orders-empty').classList.remove('hidden');
                 document.getElementById('orders-empty').querySelector('p').textContent = 'Error al cargar tus entradas. Intenta de nuevo.';
             }
-        });
+        }
+
+        async function loadIssuedTicketsForOrder(orderId, container) {
+            try {
+                const res = await IssuedTickets.getByOrder(orderId);
+                const boletas = (res.data && res.data.boletas) || [];
+
+                if (boletas.length === 0) {
+                    container.innerHTML = `
+                        <p style="color:#9ca3af; font-size:0.9rem; margin:0;">
+                            <span class="material-symbols-outlined" style="vertical-align:middle;font-size:1rem;">info</span>
+                            Aún no hay boletas emitidas para esta orden.
+                        </p>
+                    `;
+                    return;
+                }
+
+                const grid = document.createElement('div');
+                grid.className = 'boletas-grid';
+
+                boletas.forEach(b => {
+                    const wrap = document.createElement('div');
+                    wrap.className = 'boleta ' + (b.status === 'USED' ? 'used' : b.status === 'REVOKED' ? 'revoked' : '');
+                    const shortCode = b.id ? `#${b.id.toString().substring(0, 8).toUpperCase()}` : '';
+                    wrap.innerHTML = `
+                        <div class="event-name">${b.eventName || 'Evento'}</div>
+                        <div class="type">${b.ticketType || 'Entrada'}</div>
+                        <div class="qr">${renderQrImage(b.qrCode)}</div>
+                        <div class="ticket-code">Boleta ${shortCode}</div>
+                        <div class="qr-code-text">${b.qrCode}</div>
+                        <div class="holder">${b.holderName || ''}</div>
+                        <span class="${statusPillClass(b.status)}">${statusLabel(b.status)}</span>
+                    `;
+                    grid.appendChild(wrap);
+                });
+
+                container.innerHTML = '';
+                const header = document.createElement('p');
+                header.style.cssText = 'font-weight:700; color:#374151; margin: 0 0 0.5rem;';
+                header.textContent = `Boletas (${boletas.length})`;
+                container.appendChild(header);
+                container.appendChild(grid);
+            } catch (err) {
+                console.error('Error loading tickets for order', orderId, err);
+                container.innerHTML = `<p style="color:#dc2626; font-size:0.85rem; margin:0;">No se pudieron cargar las boletas de esta orden.</p>`;
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', loadOrders);
     </script>
 </body>
 

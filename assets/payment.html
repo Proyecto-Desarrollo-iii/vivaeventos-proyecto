@@ -397,18 +397,23 @@
                     if (emailInput && user.email) emailInput.value = user.email;
                 }
 
-                document.getElementById('purchase-btn').addEventListener('click', () => completePurchase(event.id, ticket?.id || ticketId, unitPrice));
+                document.getElementById('purchase-btn').addEventListener('click', () => completePurchase(event.id, ticket?.id || ticketId, unitPrice, event.name));
             } catch (err) {
                 console.error('Error loading event:', err);
             }
         }
 
-        async function completePurchase(eventId, ticketTypeId, unitPrice) {
+        async function completePurchase(eventId, ticketTypeId, unitPrice, eventName) {
             const btn = document.getElementById('purchase-btn');
             btn.disabled = true;
             btn.innerHTML = '<span class="material-symbols-outlined animate-spin">refresh</span> Processing...';
 
             try {
+                const nameInput = document.querySelector('input[placeholder="John Doe"]');
+                const emailInput = document.querySelector('input[placeholder="john@example.com"]');
+                const buyerName = (nameInput && nameInput.value) || user.nombre || user.email || 'Comprador';
+                const buyerEmail = (emailInput && emailInput.value) || user.email || 'comprador@vivaeventos.test';
+
                 const orderData = {
                     userId: user.id,
                     eventId: eventId,
@@ -424,18 +429,58 @@
 
                 const result = await Orders.create(orderData);
 
-                if (result.ok) {
-                    const order = result.data;
-                    document.querySelector('.grid-cols-1.lg\\:grid-cols-12').classList.add('hidden');
-                    document.getElementById('success-section').classList.remove('hidden');
-                    document.getElementById('success-message').textContent = `Tus entradas para el evento están listas.`;
-                    document.getElementById('order-id-display').textContent = `Orden: ${order.id || order.orden?.id || 'Confirmada'}`;
-                } else {
+                if (!result.ok) {
                     showToast(result.data?.error || 'Error al procesar la orden', 'error');
                     btn.disabled = false;
                     btn.innerHTML = 'Complete Purchase <span class="material-symbols-outlined">arrow_forward</span>';
+                    return;
                 }
+
+                const order = result.data;
+                const orderId = order.id || order.orden?.id;
+
+                btn.innerHTML = '<span class="material-symbols-outlined animate-spin">refresh</span> Emitiendo boletas...';
+
+                let emittedOk = 0;
+                let emittedFail = 0;
+                const eventNameForTickets = eventName || null;
+                for (let i = 0; i < cantidad; i++) {
+                    try {
+                        const issue = await IssuedTickets.issue({
+                            orderId: orderId,
+                            eventId: eventId,
+                            eventName: eventNameForTickets,
+                            ticketTypeId: ticketTypeId,
+                            ticketType: tipo,
+                            holderName: buyerName,
+                            holderEmail: buyerEmail,
+                            price: unitPrice
+                        });
+                        if (issue.ok) emittedOk++; else emittedFail++;
+                    } catch (e) {
+                        console.error('Issue ticket fail', e);
+                        emittedFail++;
+                    }
+                }
+
+                if (emittedOk > 0 && orderId) {
+                    try { await Orders.updateStatus(orderId, 'PAID'); } catch (e) { console.warn('No se pudo marcar PAID', e); }
+                }
+
+                document.querySelector('.grid-cols-1.lg\\:grid-cols-12').classList.add('hidden');
+                document.getElementById('success-section').classList.remove('hidden');
+                document.getElementById('success-message').textContent =
+                    emittedFail === 0
+                        ? `Tus ${emittedOk} boleta(s) están listas. Te redirigimos a "Mis entradas"...`
+                        : `Orden creada, pero ${emittedFail} boleta(s) fallaron. Revisa "Mis entradas".`;
+                document.getElementById('order-id-display').textContent = `Orden: ${orderId || 'Confirmada'}`;
+                setTimeout(() => {
+                    window.location.href = orderId
+                        ? `/assets/Tickets.html?highlight=${orderId}`
+                        : '/assets/Tickets.html';
+                }, 1800);
             } catch (err) {
+                console.error('Purchase error', err);
                 showToast('Error de conexión al procesar la orden', 'error');
                 btn.disabled = false;
                 btn.innerHTML = 'Complete Purchase <span class="material-symbols-outlined">arrow_forward</span>';

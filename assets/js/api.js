@@ -196,6 +196,44 @@ const orders = {
     async getByUser(userId) {
         return api.get(`/orders/user/${userId}`);
     },
+
+    async updateStatus(id, status) {
+        return api.request(`/orders/${id}/status?status=${encodeURIComponent(status)}`, { method: 'PATCH' });
+    },
+};
+
+const issuedTickets = {
+    async issue(payload) {
+        return api.post('/issued-tickets/issue', payload);
+    },
+
+    async getById(ticketId) {
+        return api.get(`/issued-tickets/${ticketId}`);
+    },
+
+    async getByQrCode(qrCode) {
+        return api.get(`/issued-tickets/qr/${encodeURIComponent(qrCode)}`);
+    },
+
+    async getByEvent(eventId) {
+        return api.get(`/issued-tickets/event/${eventId}`);
+    },
+
+    async getByOrder(orderId) {
+        return api.get(`/issued-tickets/order/${orderId}`);
+    },
+
+    async validate(payload) {
+        return api.post('/issued-tickets/validate', payload);
+    },
+
+    async revoke(ticketId, reason) {
+        return api.post(`/issued-tickets/${ticketId}/revoke`, { reason });
+    },
+
+    async getValidations(ticketId) {
+        return api.get(`/issued-tickets/${ticketId}/validations`);
+    },
 };
 
 const analytics = {
@@ -217,4 +255,5 @@ window.Auth = auth;
 window.Events = events;
 window.Orders = orders;
 window.Tickets = tickets;
+window.IssuedTickets = issuedTickets;
 window.Analytics = analytics;

@@ -8,18 +8,34 @@ const Navbar = {
         if (path.includes('MyAccount.html')) return 'cuenta';
         if (path.includes('Tickets.html')) return 'entradas';
         if (path.includes('support.html')) return 'soporte';
+        if (path.includes('/validator')) return 'validador';
         if (path.includes('login.html') || path.includes('registro.html')) return 'auth';
         return 'eventos';
     },
-    
+
+    getUserRole() {
+        try {
+            const user = (AuthService && typeof AuthService.getUser === 'function') ? AuthService.getUser() : null;
+            return user && user.role ? String(user.role).toUpperCase() : null;
+        } catch (e) {
+            return null;
+        }
+    },
+
     render() {
         const isAuth = AuthService && AuthService.isAuthenticated();
         const navbarContainer = document.getElementById('navbar-container');
         const currentPage = this.getCurrentPage();
-        
+
         if (!navbarContainer) return;
 
         if (isAuth) {
+            const role = this.getUserRole();
+            const canValidate = role === 'ORGANIZER' || role === 'ORGANIZADOR' || role === 'ADMIN';
+            const validatorLink = canValidate
+                ? `<a href="/validator/index.html" class="${currentPage === 'validador' ? 'active' : ''}">Validar boletas</a>`
+                : '';
+
             // Navbar cuando hay sesión iniciada
             navbarContainer.innerHTML = `
                 <header class="navbar">
@@ -32,6 +48,7 @@ const Navbar = {
                     <nav>
                         <a href="/index.html" class="${currentPage === 'eventos' ? 'active' : ''}">Eventos</a>
                         <a href="/assets/Tickets.html" class="${currentPage === 'entradas' ? 'active' : ''}">Mis entradas</a>
+                        ${validatorLink}
                         <a href="/assets/MyAccount.html" class="${currentPage === 'cuenta' ? 'active' : ''}">Mi cuenta</a>
                         <a href="#" id="logoutBtn">Cerrar sesión</a>
                     </nav>
