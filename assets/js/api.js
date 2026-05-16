@@ -238,10 +238,10 @@ const issuedTickets = {
 
 const payments = {
     async createPaymentIntent(paymentData) {
-        const user = window.AuthService ? window.AuthService.getUser() : null;
+        const user = window.Auth ? window.Auth.getUser() : null;
         const dataWithUserId = {
             ...paymentData,
-            userId: user?.userId || paymentData.userId
+            userId: user?.id || paymentData.userId
         };
         return api.post('/payments', dataWithUserId);
     },

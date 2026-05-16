@@ -10,7 +10,7 @@
     <link rel="icon" href="/assets/images/Logoblue.png">
     <script src="https://js.stripe.com/v3/"></script>
     <script>
-        window.StripePublishableKey = 'pk_test_51TXTrGJ2Lp92DHPeUZQVB73EFdSfoDXjtMIrToHpNESQqbZe9WYe9gO5aPdst5DTZ0Tc9Pkc7kbslyik1ELBaT8r00WDAmnfet';
+        window.StripePublishableKey = 'pk_test_51TXTrGJ2Lp92DHPeeQwFAXueUugsE3WLqI9xtVaUWLsEPsZf2dfioHruRJsChfblJb5IPdpiPFdC3zV7wIDBk7Lj009kWhuFa3';
     </script>
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com" rel="preconnect" />
@@ -544,9 +544,20 @@
             }
         }
 
-        async function handlePaymentSuccess(paymentIntent) {
+async function handlePaymentSuccess(paymentIntent) {
             const btn = document.getElementById('purchase-btn');
-            btn.innerHTML = '<span class="material-symbols-outlined animate-spin">refresh</span> Emitting tickets...';
+            btn.innerHTML = '<span class="material-symbols-outlined animate-spin">refreshs">Confirming payment...';
+
+            try {
+                const confirmResult = await Payments.confirmPayment(paymentIntent.id);
+                if (!confirmResult.ok) {
+                    console.error('Payment confirmation failed:', confirmResult.data);
+                }
+            } catch (e) {
+                console.warn('Payment confirmation error:', e);
+            }
+
+            btn.innerHTML = '<span class="material-symbols-outlined animate-spin">refreshs">Emitting tickets...';
 
             const nameInput = document.querySelector('input[placeholder="John Doe"]');
             const emailInput = document.querySelector('input[placeholder="john@example.com"]');

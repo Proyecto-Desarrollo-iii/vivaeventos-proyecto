@@ -9,7 +9,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     document.getElementById('addTicketBtn')?.addEventListener('click', addTicketRow);
-    document.getElementById('saveEventBtn')?.addEventListener('click', saveEvent);
+    document.getElementById('saveEventBtn')?.addEventListener('click', () => saveEvent(true));
+    document.getElementById('saveDraftBtn')?.addEventListener('click', () => saveEvent(false));
 
     document.getElementById('bannerPreview')?.addEventListener('click', () => {
         const url = prompt('Ingresa la URL del banner del evento:');
@@ -63,7 +64,7 @@ function addTicketRow() {
     });
 }
 
-async function saveEvent() {
+async function saveEvent(publish = false) {
     const name = document.getElementById('eventName')?.value.trim();
     const category = document.getElementById('eventCategory')?.value;
     const date = document.getElementById('eventDate')?.value;
@@ -114,7 +115,8 @@ async function saveEvent() {
         spotifyUrl: spotify || '',
         instagramUrl: instagram || '',
         organizerId,
-        tickets
+        tickets,
+        isPublished: publish
     };
 
     try {
