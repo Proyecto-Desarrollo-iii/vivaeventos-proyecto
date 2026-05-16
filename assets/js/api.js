@@ -236,6 +236,24 @@ const issuedTickets = {
     },
 };
 
+const payments = {
+    async createPaymentIntent(paymentData) {
+        return api.post('/payments', paymentData);
+    },
+
+    async getById(paymentId) {
+        return api.get(`/payments/${paymentId}`);
+    },
+
+    async getByOrderId(orderId) {
+        return api.get(`/payments/order/${orderId}`);
+    },
+
+    async confirmPayment(paymentIntentId) {
+        return api.post(`/payments/confirm/${paymentIntentId}`, {});
+    },
+};
+
 const analytics = {
     async getDashboard() {
         return api.get('/analytics/dashboard');
@@ -256,4 +274,5 @@ window.Events = events;
 window.Orders = orders;
 window.Tickets = tickets;
 window.IssuedTickets = issuedTickets;
+window.Payments = payments;
 window.Analytics = analytics;

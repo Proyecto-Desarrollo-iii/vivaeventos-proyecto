@@ -8,6 +8,10 @@
     <link rel="stylesheet" href="/assets/css/payment.css">
     <title>Pagar</title>
     <link rel="icon" href="/assets/images/Logoblue.png">
+    <script src="https://js.stripe.com/v3/"></script>
+    <script>
+        window.StripePublishableKey = 'pk_test_51TXTrGJ2Lp92DHPeUZQVB73EFdSfoDXjtMIrToHpNESQqbZe9WYe9gO5aPdst5DTZ0Tc9Pkc7kbslyik1ELBaT8r00WDAmnfet';
+    </script>
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com" rel="preconnect" />
     <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
@@ -180,56 +184,42 @@
                             </div>
                             <!-- PSE Option -->
                             <div
-                                class="border-2 border-transparent bg-surface-container-low rounded-xl p-6 cursor-pointer transition-all hover:bg-surface-container-high hover:scale-[1.02]">
+                                class="border-2 border-transparent bg-surface-container-low rounded-xl p-6 cursor-pointer transition-all hover:bg-surface-container-high hover:scale-[1.02] opacity-50">
                                 <div class="flex justify-between items-start mb-4">
                                     <span class="material-symbols-outlined text-secondary text-3xl"
                                         data-icon="account_balance">account_balance</span>
                                     <div class="w-5 h-5 rounded-full border-2 border-outline"></div>
                                 </div>
                                 <p class="font-bold text-on-surface">PSE</p>
-                                <p class="text-xs text-secondary mt-1">Instant Bank Transfer</p>
+                                <p class="text-xs text-secondary mt-1">Coming soon</p>
                             </div>
                         </div>
-                        <!-- Card Details (Interactive Area) -->
+                        <!-- Stripe Elements Container -->
                         <div class="space-y-6">
                             <div class="space-y-2">
                                 <label
                                     class="font-label text-xs font-bold uppercase tracking-wider text-secondary">Cardholder
                                     Name</label>
-                                <input
+                                <input id="cardholder-name"
                                     class="w-full bg-surface-container-highest border-none rounded-xl px-4 py-3 outline-none"
-                                    type="text" />
+                                    type="text" placeholder="Name on card" />
                             </div>
                             <div class="space-y-2 relative">
                                 <label class="font-label text-xs font-bold uppercase tracking-wider text-secondary">Card
-                                    Number</label>
-                                <div class="relative">
-                                    <input
-                                        class="w-full bg-surface-container-highest border-none rounded-xl px-4 py-3 outline-none"
-                                        placeholder="0000 0000 0000 0000" type="text" />
-                                    <span
-                                        class="absolute right-4 top-1/2 -translate-y-1/2 material-symbols-outlined text-outline"
-                                        data-icon="lock">lock</span>
+                                    Details</label>
+                                <div id="card-element" class="bg-surface-container-highest rounded-xl px-4 py-4 border-2 border-transparent transition-all">
+                                    <!-- Stripe Elements se renderiza aquí -->
                                 </div>
+                                <span
+                                    class="absolute right-4 top-1/2 -translate-y-1/2 material-symbols-outlined text-outline"
+                                    data-icon="lock">lock</span>
                             </div>
-                            <div class="grid grid-cols-2 gap-6">
-                                <div class="space-y-2">
-                                    <label
-                                        class="font-label text-xs font-bold uppercase tracking-wider text-secondary">Expiry
-                                        Date</label>
-                                    <input
-                                        class="w-full bg-surface-container-highest border-none rounded-xl px-4 py-3 outline-none"
-                                        placeholder="MM/YY" type="text" />
-                                </div>
-                                <div class="space-y-2">
-                                    <label
-                                        class="font-label text-xs font-bold uppercase tracking-wider text-secondary">CVV</label>
-                                    <input
-                                        class="w-full bg-surface-container-highest border-none rounded-xl px-4 py-3 outline-none"
-                                        placeholder="***" type="text" />
-                                </div>
-                            </div>
+                            <div id="card-errors" class="text-red-600 text-sm hidden"></div>
                         </div>
+                        <p class="text-xs text-outline mt-4 flex items-center gap-2">
+                            <span class="material-symbols-outlined text-sm">shield</span>
+                            Tu pago está seguro con Stripe
+                        </p>
                     </div>
                 </section>
                 <!-- Step 3: Confirmation Preview (Inactive State) -->
@@ -349,7 +339,7 @@
             <span class="font-['Manrope'] text-[10px] font-semibold uppercase tracking-wider mt-1">Profile</span>
         </div>
     </nav>
-    <script>
+<script>
         const urlParams = new URLSearchParams(window.location.search);
         const eventId = urlParams.get('eventId');
         const ticketId = urlParams.get('ticketId');
@@ -358,12 +348,52 @@
         const total = parseFloat(urlParams.get('total')) || 0;
         const user = AuthService.getUser();
 
+        let stripe = null;
+        let cardElement = null;
+        let currentOrderId = null;
+        let currentEventId = null;
+        let currentTicketTypeId = null;
+        let currentUnitPrice = null;
+        let currentEventName = null;
+        let clientSecret = null;
+
         if (!user) {
             window.location.href = '/auth/login.html';
         }
 
+        async function initStripe() {
+            if (window.StripePublishableKey) {
+                stripe = Stripe(window.StripePublishableKey);
+                const elements = stripe.elements();
+                cardElement = elements.create('card', {
+                    style: {
+                        base: {
+                            fontSize: '16px',
+                            color: '#171c1e',
+                            fontFamily: 'Manrope, sans-serif',
+                            '::placeholder': { color: '#6d797d' },
+                        },
+                        invalid: { color: '#ba1a1a' },
+                    },
+                });
+                cardElement.mount('#card-element');
+
+                cardElement.on('change', (event) => {
+                    const errorDiv = document.getElementById('card-errors');
+                    if (event.error) {
+                        errorDiv.textContent = event.error.message;
+                        errorDiv.classList.remove('hidden');
+                    } else {
+                        errorDiv.classList.add('hidden');
+                    }
+                });
+            }
+        }
+
         async function loadPaymentPage() {
             if (!eventId) return;
+
+            await initStripe();
 
             try {
                 const result = await Events.getById(eventId);
@@ -406,7 +436,12 @@
         async function completePurchase(eventId, ticketTypeId, unitPrice, eventName) {
             const btn = document.getElementById('purchase-btn');
             btn.disabled = true;
-            btn.innerHTML = '<span class="material-symbols-outlined animate-spin">refresh</span> Processing...';
+            btn.innerHTML = '<span class="material-symbols-outlined animate-spin">refresh</span> Processing payment...';
+
+            currentEventId = eventId;
+            currentTicketTypeId = ticketTypeId;
+            currentUnitPrice = unitPrice;
+            currentEventName = eventName;
 
             try {
                 const nameInput = document.querySelector('input[placeholder="John Doe"]');
@@ -427,63 +462,143 @@
                     clientIp: ''
                 };
 
-                const result = await Orders.create(orderData);
+                const orderResult = await Orders.create(orderData);
 
-                if (!result.ok) {
-                    showToast(result.data?.error || 'Error al procesar la orden', 'error');
+                if (!orderResult.ok) {
+                    showToast(orderResult.data?.error || 'Error al crear la orden', 'error');
                     btn.disabled = false;
                     btn.innerHTML = 'Complete Purchase <span class="material-symbols-outlined">arrow_forward</span>';
                     return;
                 }
 
-                const order = result.data;
-                const orderId = order.id || order.orden?.id;
+                const order = orderResult.data;
+                currentOrderId = order.id || order.orden?.id;
 
-                btn.innerHTML = '<span class="material-symbols-outlined animate-spin">refresh</span> Emitiendo boletas...';
+                btn.innerHTML = '<span class="material-symbols-outlined animate-spin">refresh</span> Creating payment...';
 
-                let emittedOk = 0;
-                let emittedFail = 0;
-                const eventNameForTickets = eventName || null;
-                for (let i = 0; i < cantidad; i++) {
-                    try {
-                        const issue = await IssuedTickets.issue({
-                            orderId: orderId,
-                            eventId: eventId,
-                            eventName: eventNameForTickets,
-                            ticketTypeId: ticketTypeId,
-                            ticketType: tipo,
-                            holderName: buyerName,
-                            holderEmail: buyerEmail,
-                            price: unitPrice
-                        });
-                        if (issue.ok) emittedOk++; else emittedFail++;
-                    } catch (e) {
-                        console.error('Issue ticket fail', e);
-                        emittedFail++;
+                const totalAmount = unitPrice * cantidad;
+                const paymentResult = await Payments.createPaymentIntent({
+                    orderId: currentOrderId,
+                    userId: user.id,
+                    amount: totalAmount,
+                    currency: 'COP',
+                    paymentMethod: 'card'
+                });
+
+                if (!paymentResult.ok) {
+                    showToast(paymentResult.data?.error || 'Error al crear el pago', 'error');
+                    btn.disabled = false;
+                    btn.innerHTML = 'Complete Purchase <span class="material-symbols-outlined">arrow_forward</span>';
+                    return;
+                }
+
+                clientSecret = paymentResult.data.clientSecret;
+                if (!clientSecret) {
+                    showToast('Error: No se recibió el clientSecret', 'error');
+                    btn.disabled = false;
+                    btn.innerHTML = 'Complete Purchase <span class="material-symbols-outlined">arrow_forward</span>';
+                    return;
+                }
+
+                btn.innerHTML = '<span class="material-symbols-outlined animate-spin">refresh</span> Processing card...';
+
+                const cardholderName = document.getElementById('cardholder-name').value || buyerName;
+                const { error, paymentIntent } = await stripe.confirmCardPayment(clientSecret, {
+                    payment_method: {
+                        card: cardElement,
+                        billing_details: {
+                            name: cardholderName,
+                            email: buyerEmail
+                        }
                     }
+                });
+
+                if (error) {
+                    showToast(error.message || 'Pago rechazado', 'error');
+                    await handlePaymentFailure(currentOrderId);
+                    btn.disabled = false;
+                    btn.innerHTML = 'Complete Purchase <span class="material-symbols-outlined">arrow_forward</span>';
+                    return;
                 }
 
-                if (emittedOk > 0 && orderId) {
-                    try { await Orders.updateStatus(orderId, 'PAID'); } catch (e) { console.warn('No se pudo marcar PAID', e); }
+                if (paymentIntent.status === 'succeeded') {
+                    await handlePaymentSuccess(paymentIntent);
+                } else if (paymentIntent.status === 'requires_action') {
+                    const { error: actionError } = await stripe.handleCardAction(paymentIntent.client_secret);
+                    if (actionError) {
+                        showToast(actionError.message || 'Pago requiere autenticación', 'error');
+                        await handlePaymentFailure(currentOrderId);
+                        btn.disabled = false;
+                        btn.innerHTML = 'Complete Purchase <span class="material-symbols-outlined">arrow_forward</span>';
+                        return;
+                    }
+                    await handlePaymentSuccess(paymentIntent);
                 }
 
-                document.querySelector('.grid-cols-1.lg\\:grid-cols-12').classList.add('hidden');
-                document.getElementById('success-section').classList.remove('hidden');
-                document.getElementById('success-message').textContent =
-                    emittedFail === 0
-                        ? `Tus ${emittedOk} boleta(s) están listas. Te redirigimos a "Mis entradas"...`
-                        : `Orden creada, pero ${emittedFail} boleta(s) fallaron. Revisa "Mis entradas".`;
-                document.getElementById('order-id-display').textContent = `Orden: ${orderId || 'Confirmada'}`;
-                setTimeout(() => {
-                    window.location.href = orderId
-                        ? `/assets/Tickets.html?highlight=${orderId}`
-                        : '/assets/Tickets.html';
-                }, 1800);
             } catch (err) {
-                console.error('Purchase error', err);
-                showToast('Error de conexión al procesar la orden', 'error');
+                console.error('Purchase error:', err);
+                showToast('Error de conexión al procesar el pago', 'error');
+                if (currentOrderId) await handlePaymentFailure(currentOrderId);
                 btn.disabled = false;
                 btn.innerHTML = 'Complete Purchase <span class="material-symbols-outlined">arrow_forward</span>';
+            }
+        }
+
+        async function handlePaymentSuccess(paymentIntent) {
+            const btn = document.getElementById('purchase-btn');
+            btn.innerHTML = '<span class="material-symbols-outlined animate-spin">refresh</span> Emitting tickets...';
+
+            const nameInput = document.querySelector('input[placeholder="John Doe"]');
+            const emailInput = document.querySelector('input[placeholder="john@example.com"]');
+            const buyerName = (nameInput && nameInput.value) || user.nombre || user.email || 'Comprador';
+            const buyerEmail = (emailInput && emailInput.value) || user.email || 'comprador@vivaeventos.test';
+
+            let emittedOk = 0;
+            let emittedFail = 0;
+            const eventNameForTickets = currentEventName || null;
+
+            for (let i = 0; i < cantidad; i++) {
+                try {
+                    const issue = await IssuedTickets.issue({
+                        orderId: currentOrderId,
+                        eventId: currentEventId,
+                        eventName: eventNameForTickets,
+                        ticketTypeId: currentTicketTypeId,
+                        ticketType: tipo,
+                        holderName: buyerName,
+                        holderEmail: buyerEmail,
+                        price: currentUnitPrice
+                    });
+                    if (issue.ok) emittedOk++; else emittedFail++;
+                } catch (e) {
+                    console.error('Issue ticket fail', e);
+                    emittedFail++;
+                }
+            }
+
+            if (emittedOk > 0 && currentOrderId) {
+                try { await Orders.updateStatus(currentOrderId, 'PAID'); } catch (e) { console.warn('No se pudo marcar PAID', e); }
+            }
+
+            document.querySelector('.grid-cols-1.lg\\:grid-cols-12').classList.add('hidden');
+            document.getElementById('success-section').classList.remove('hidden');
+            document.getElementById('success-message').textContent =
+                emittedFail === 0
+                    ? `Tus ${emittedOk} boleta(s) están listas. Te redirigimos a "Mis entradas"...`
+                    : `Orden creada, pero ${emittedFail} boleta(s) fallaron. Revisa "Mis entradas".`;
+            document.getElementById('order-id-display').textContent = `Orden: ${currentOrderId || 'Confirmada'}`;
+            setTimeout(() => {
+                window.location.href = currentOrderId
+                    ? `/assets/Tickets.html?highlight=${currentOrderId}`
+                    : '/assets/Tickets.html';
+            }, 1800);
+        }
+
+        async function handlePaymentFailure(orderId) {
+            try {
+                await Orders.updateStatus(orderId, 'FAILED');
+            } catch (e) {
+                console.warn('No se pudo marcar FAILED', e);
             }
         }
 
