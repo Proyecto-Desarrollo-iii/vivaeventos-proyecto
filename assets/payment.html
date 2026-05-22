@@ -403,6 +403,15 @@
                 const ticket = event.tickets?.find(t => t.id === ticketId);
                 const unitPrice = ticket ? parseFloat(ticket.price) : (total / cantidad);
 
+                const disponibles = ticket ? (ticket.capacity - ticket.soldCount) : 999;
+                if (cantidad > disponibles) {
+                    document.getElementById('payment-loading').classList.add('hidden');
+                    document.getElementById('payment-section').classList.add('hidden');
+                    document.getElementById('payment-error')?.classList.remove('hidden');
+                    document.getElementById('payment-error-text').textContent = `Solo hay ${disponibles} boletas disponibles para este tipo de entrada. Has seleccionado ${cantidad}.`;
+                    return;
+                }
+
                 document.querySelector('.h-48 img').src = event.bannerUrl || document.querySelector('.h-48 img').src;
                 document.querySelector('.h-48 h3').textContent = event.name || 'Evento';
                 document.querySelector('.flex.items-center.gap-3.text-secondary.text-sm span:first-child').closest('.flex').querySelector('span:last-child').textContent =
@@ -436,7 +445,7 @@
         async function completePurchase(eventId, ticketTypeId, unitPrice, eventName) {
             const btn = document.getElementById('purchase-btn');
             btn.disabled = true;
-            btn.innerHTML = '<span class="material-symbols-outlined animate-spin">refresh</span> Processing payment...';
+            btn.innerHTML = 'Procesando pago...';
 
             currentEventId = eventId;
             currentTicketTypeId = ticketTypeId;
@@ -454,6 +463,7 @@
                     eventId: eventId,
                     items: [{
                         eventId: eventId,
+                        eventName: eventName,
                         ticketTypeId: ticketTypeId,
                         ticketTypeName: tipo,
                         quantity: cantidad,
@@ -474,7 +484,7 @@
                 const order = orderResult.data;
                 currentOrderId = order.id || order.orden?.id;
 
-                btn.innerHTML = '<span class="material-symbols-outlined animate-spin">refresh</span> Creating payment...';
+                btn.innerHTML = 'Creando pago...';
 
                 const totalAmount = unitPrice * cantidad;
                 const paymentResult = await Payments.createPaymentIntent({
@@ -500,7 +510,7 @@
                     return;
                 }
 
-                btn.innerHTML = '<span class="material-symbols-outlined animate-spin">refresh</span> Processing card...';
+                btn.innerHTML = 'Procesando tarjeta...';
 
                 const cardholderName = document.getElementById('cardholder-name').value || buyerName;
                 const { error, paymentIntent } = await stripe.confirmCardPayment(clientSecret, {
@@ -544,9 +554,9 @@
             }
         }
 
-async function handlePaymentSuccess(paymentIntent) {
+        async function handlePaymentSuccess(paymentIntent) {
             const btn = document.getElementById('purchase-btn');
-            btn.innerHTML = '<span class="material-symbols-outlined animate-spin">refreshs">Confirming payment...';
+            btn.innerHTML = 'Confirmando pago...';
 
             try {
                 const confirmResult = await Payments.confirmPayment(paymentIntent.id);
@@ -557,7 +567,7 @@ async function handlePaymentSuccess(paymentIntent) {
                 console.warn('Payment confirmation error:', e);
             }
 
-            btn.innerHTML = '<span class="material-symbols-outlined animate-spin">refreshs">Emitting tickets...';
+            btn.innerHTML = 'Emitiendo boletas...';
 
             const nameInput = document.querySelector('input[placeholder="John Doe"]');
             const emailInput = document.querySelector('input[placeholder="john@example.com"]');
@@ -589,20 +599,16 @@ async function handlePaymentSuccess(paymentIntent) {
 
             if (emittedOk > 0 && currentOrderId) {
                 try { await Orders.updateStatus(currentOrderId, 'PAID'); } catch (e) { console.warn('No se pudo marcar PAID', e); }
+                try { await Events.incrementTicketSales(currentTicketTypeId, emittedOk); } catch (e) { console.warn('No se pudo actualizar el contador de ventas', e); }
             }
 
             document.querySelector('.grid-cols-1.lg\\:grid-cols-12').classList.add('hidden');
             document.getElementById('success-section').classList.remove('hidden');
             document.getElementById('success-message').textContent =
                 emittedFail === 0
-                    ? `Tus ${emittedOk} boleta(s) están listas. Te redirigimos a "Mis entradas"...`
+                    ? `Tus ${emittedOk} boleta(s) están listas.`
                     : `Orden creada, pero ${emittedFail} boleta(s) fallaron. Revisa "Mis entradas".`;
             document.getElementById('order-id-display').textContent = `Orden: ${currentOrderId || 'Confirmada'}`;
-            setTimeout(() => {
-                window.location.href = currentOrderId
-                    ? `/assets/Tickets.html?highlight=${currentOrderId}`
-                    : '/assets/Tickets.html';
-            }, 1800);
         }
 
         async function handlePaymentFailure(orderId) {

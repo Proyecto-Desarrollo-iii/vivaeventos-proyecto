@@ -15,7 +15,10 @@ document.addEventListener('DOMContentLoaded', () => {
         if (cantidad > 1) { cantidad--; actualizarTotal(); }
     });
     document.getElementById('qty-plus')?.addEventListener('click', () => {
-        cantidad++; actualizarTotal();
+        const ticket = currentEvent?.tickets?.find(t => t.id === (selectedTicketId || currentEvent?.tickets?.[0]?.id));
+        const max = ticket ? (ticket.capacity - ticket.soldCount) : 999;
+        if (cantidad < max) { cantidad++; actualizarTotal(); }
+        else { showToast('No hay más boletas disponibles', 'info'); }
     });
     document.getElementById('buy-btn')?.addEventListener('click', comprar);
 });
@@ -124,6 +127,11 @@ function comprar() {
     }
     const ticket = currentEvent.tickets.find(t => t.id === selectedTicketId);
     if (!ticket) return;
+    const disponibles = ticket.capacity - ticket.soldCount;
+    if (cantidad > disponibles) {
+        showToast(`Solo hay ${disponibles} boletas disponibles`, 'error');
+        return;
+    }
     window.location.href = `/assets/payment.html?eventId=${currentEvent.id}&ticketId=${selectedTicketId}&type=${encodeURIComponent(ticket.type)}&cantidad=${cantidad}&total=${(ticket.price * cantidad).toFixed(2)}`;
 }
 

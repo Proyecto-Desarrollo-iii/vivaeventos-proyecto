@@ -136,6 +136,10 @@ const events = {
         return result.data;
     },
 
+    async incrementTicketSales(ticketId, cantidad) {
+        return api.post(`/events/tickets/${ticketId}/vender`, { cantidad });
+    },
+
     async getHistory(eventId) {
         const result = await api.get(`/events/${eventId}/history`);
         return result.data;
