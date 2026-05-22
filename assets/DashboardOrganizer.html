@@ -647,6 +647,21 @@
             AuthService.logout();
         });
 
+        function showPanel(name) {
+            const navLinks = document.querySelectorAll('.sidebar nav a[data-section]');
+            const panels = {
+                dashboard: document.getElementById('dashboard-panel'),
+                events: document.getElementById('events-panel'),
+                analytics: document.getElementById('analytics-panel'),
+                settings: document.getElementById('settings-panel')
+            };
+            navLinks.forEach(nav => nav.classList.remove('active'));
+            const link = document.querySelector(`.sidebar nav a[data-section="${name}"]`);
+            link?.classList.add('active');
+            Object.values(panels).forEach(panel => panel?.classList.add('hidden'));
+            panels[name]?.classList.remove('hidden');
+        }
+
         document.addEventListener('DOMContentLoaded', function() {
             const navLinks = document.querySelectorAll('.sidebar nav a[data-section]');
             const panels = {
@@ -656,24 +671,20 @@
                 settings: document.getElementById('settings-panel')
             };
 
+            const params = new URLSearchParams(window.location.search);
+            const initialPanel = params.get('panel') || 'dashboard';
+            showPanel(initialPanel);
+
             navLinks.forEach(link => {
                 link.addEventListener('click', function(e) {
                     e.preventDefault();
-                    const target = this.dataset.section;
-                    navLinks.forEach(nav => nav.classList.remove('active'));
-                    this.classList.add('active');
-                    Object.values(panels).forEach(panel => panel?.classList.add('hidden'));
-                    panels[target]?.classList.remove('hidden');
+                    showPanel(this.dataset.section);
                 });
             });
 
             document.getElementById('view-events-button')?.addEventListener('click', function(e) {
                 e.preventDefault();
-                navLinks.forEach(nav => nav.classList.remove('active'));
-                const eventsLink = document.querySelector('.sidebar nav a[data-section="events"]');
-                eventsLink?.classList.add('active');
-                Object.values(panels).forEach(panel => panel?.classList.add('hidden'));
-                panels.events?.classList.remove('hidden');
+                showPanel('events');
             });
 
             document.getElementById('generate-report-button')?.addEventListener('click', function() {
