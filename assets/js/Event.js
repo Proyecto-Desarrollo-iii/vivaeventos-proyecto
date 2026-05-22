@@ -81,9 +81,8 @@ async function loadEvent(eventId) {
                 socialGrid.innerHTML = links.map(s => {
                     const icon = getSocialIcon(s.platform);
                     return `
-                        <a href="${escapeHtml(s.url)}" target="_blank" rel="noopener" class="social-link-btn">
+                        <a href="${escapeHtml(s.url)}" target="_blank" rel="noopener" class="social-link-btn" title="${escapeHtml(s.platform)}">
                             <span class="material-symbols-outlined">${icon}</span>
-                            <span class="social-label">${escapeHtml(s.platform)}</span>
                         </a>
                     `;
                 }).join('');
