@@ -462,9 +462,10 @@ html {
     transform: translateY(-2px);
 }
 
-.social-link-btn .material-symbols-outlined {
-    font-size: 22px;
-    color: #0097b2;
+.social-link-btn svg {
+    width: 20px;
+    height: 20px;
+    fill: #0097b2;
 }
 
 @media (max-width: 768px) {
