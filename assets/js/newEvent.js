@@ -8,7 +8,10 @@ document.addEventListener('DOMContentLoaded', () => {
         loadEventForEdit(editId);
     }
 
+    addSocialLinkRow();
+
     document.getElementById('addTicketBtn')?.addEventListener('click', addTicketRow);
+    document.getElementById('addSocialBtn')?.addEventListener('click', addSocialLinkRow);
     document.getElementById('saveEventBtn')?.addEventListener('click', () => saveEvent(true));
     document.getElementById('saveDraftBtn')?.addEventListener('click', () => saveEvent(false));
 
@@ -31,6 +34,25 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 });
+
+function addSocialLinkRow(platform = '', url = '') {
+    const container = document.getElementById('social-links-container');
+    const row = document.createElement('div');
+    row.className = 'social-row flex items-center gap-2 bg-surface-container-high p-3 rounded-xl';
+    row.innerHTML = `
+        <input class="social-platform flex-1 bg-transparent border-b border-outline/30 px-2 py-1 text-sm focus:outline-none focus:border-primary" type="text" placeholder="Plataforma (Ej: Instagram)" value="${escapeHtml(platform)}" />
+        <input class="social-url flex-[2] bg-transparent border-b border-outline/30 px-2 py-1 text-sm focus:outline-none focus:border-primary" type="text" placeholder="URL (Ej: https://instagram.com/artista)" value="${escapeHtml(url)}" />
+        <span class="material-symbols-outlined text-secondary cursor-pointer hover:text-error transition-colors delete-social">remove_circle</span>
+    `;
+    container.appendChild(row);
+    row.querySelector('.delete-social')?.addEventListener('click', () => {
+        if (document.querySelectorAll('.social-row').length > 1) {
+            row.remove();
+        } else {
+            showToast('Debe haber al menos una red social', 'error');
+        }
+    });
+}
 
 function addTicketRow() {
     const container = document.getElementById('ticketsContainer');
@@ -74,10 +96,24 @@ async function saveEvent(publish = false) {
     const city = document.getElementById('eventCity')?.value.trim();
     const bannerUrl = document.getElementById('eventBannerUrl')?.value.trim();
     const spotify = document.getElementById('eventSpotify')?.value.trim();
-    const instagram = document.getElementById('eventInstagram')?.value.trim();
 
     if (!name || !category || !date) {
         showToast('Completa nombre, categoría y fecha del evento', 'error');
+        return;
+    }
+
+    const socialRows = document.querySelectorAll('.social-row');
+    const socialLinks = [];
+    socialRows.forEach(row => {
+        const platform = row.querySelector('.social-platform')?.value.trim();
+        const url = row.querySelector('.social-url')?.value.trim();
+        if (platform && url) {
+            socialLinks.push({ platform, url });
+        }
+    });
+
+    if (socialLinks.length === 0) {
+        showToast('Agrega al menos una red social con plataforma y URL', 'error');
         return;
     }
 
@@ -103,6 +139,16 @@ async function saveEvent(publish = false) {
     const user = typeof AuthService !== 'undefined' ? AuthService.getUser() : null;
     const organizerId = user?.id || null;
 
+    const locationParts = [venue, address, city].filter(Boolean);
+    const locationStr = locationParts.join(', ');
+    let mapsEmbedUrl = '';
+    let mapsLinkUrl = '';
+    if (locationStr) {
+        const q = encodeURIComponent(locationStr);
+        mapsEmbedUrl = `https://www.google.com/maps?q=${q}&output=embed`;
+        mapsLinkUrl = `https://www.google.com/maps?q=${q}`;
+    }
+
     const eventData = {
         name,
         category,
@@ -111,9 +157,11 @@ async function saveEvent(publish = false) {
         venueName: venue || '',
         address: address || '',
         city: city || '',
+        mapsEmbedUrl,
+        mapsLinkUrl,
+        socialLinks: JSON.stringify(socialLinks),
         bannerUrl: bannerUrl || '',
         spotifyUrl: spotify || '',
-        instagramUrl: instagram || '',
         organizerId,
         tickets,
         isPublished: publish
@@ -155,7 +203,26 @@ async function loadEventForEdit(eventId) {
         document.getElementById('eventBannerUrl').value = event.bannerUrl || '';
         if (event.bannerUrl) document.getElementById('bannerImage').src = event.bannerUrl;
         document.getElementById('eventSpotify').value = event.spotifyUrl || '';
-        document.getElementById('eventInstagram').value = event.instagramUrl || '';
+
+        const container = document.getElementById('social-links-container');
+        if (container) container.innerHTML = '';
+        let loadedSocial = [];
+        if (event.socialLinks) {
+            try { loadedSocial = JSON.parse(event.socialLinks); } catch (e) {}
+        }
+        if (loadedSocial.length === 0) {
+            if (event.instagramUrl) {
+                loadedSocial.push({ platform: 'Instagram', url: event.instagramUrl });
+            }
+            if (event.twitterUrl) {
+                loadedSocial.push({ platform: 'Twitter', url: event.twitterUrl });
+            }
+        }
+        if (loadedSocial.length === 0) {
+            addSocialLinkRow();
+        } else {
+            loadedSocial.forEach(s => addSocialLinkRow(s.platform || '', s.url || ''));
+        }
 
         if (event.tickets && event.tickets.length > 0) {
             const container = document.getElementById('ticketsContainer');

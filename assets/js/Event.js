@@ -39,6 +39,11 @@ async function loadEvent(eventId) {
         const venueName = document.getElementById('venue-name');
         if (venueName) venueName.textContent = event.venueName || '';
 
+        const locationAddress = document.getElementById('location-address');
+        if (locationAddress) {
+            locationAddress.textContent = [event.address, event.city].filter(Boolean).join(', ') || '';
+        }
+
         const mapsIframe = document.getElementById('event-map-iframe');
         if (mapsIframe && event.mapsEmbedUrl) {
             mapsIframe.src = event.mapsEmbedUrl;
@@ -47,20 +52,52 @@ async function loadEvent(eventId) {
             mapsIframe.parentElement.style.display = 'none';
         }
 
-        const mapsLink = document.getElementById('maps-link');
-        if (mapsLink && event.mapsLinkUrl) {
-            mapsLink.href = event.mapsLinkUrl;
+        const howSection = document.getElementById('how');
+        if (howSection) {
+            howSection.style.display = event.mapsEmbedUrl ? '' : 'none';
         }
 
-        const spotifyEmbed = document.getElementById('spotify-embed');
-        if (spotifyEmbed && event.spotifyUrl) {
-            const playlistId = event.spotifyUrl.split('/').pop()?.split('?')[0];
-            if (playlistId) {
-                spotifyEmbed.src = `https://open.spotify.com/embed/playlist/${playlistId}`;
+        const spotifyContainer = document.getElementById('spotify-container');
+        if (spotifyContainer) {
+            const spotifyEmbed = document.getElementById('spotify-embed');
+            if (spotifyEmbed && event.spotifyUrl) {
+                const playlistId = event.spotifyUrl.split('/').pop()?.split('?')[0];
+                if (playlistId) {
+                    spotifyEmbed.src = `https://open.spotify.com/embed/playlist/${playlistId}`;
+                }
+                spotifyContainer.style.display = '';
+            } else {
+                spotifyContainer.style.display = 'none';
             }
-            spotifyEmbed.parentElement.style.display = '';
-        } else if (spotifyEmbed) {
-            spotifyEmbed.parentElement.style.display = 'none';
+        }
+
+        const socialGrid = document.getElementById('social-links-grid');
+        if (socialGrid) {
+            let links = [];
+            if (event.socialLinks) {
+                try { links = JSON.parse(event.socialLinks); } catch (e) {}
+            }
+            if (links.length > 0) {
+                socialGrid.innerHTML = links.map(s => {
+                    const icon = getSocialIcon(s.platform);
+                    return `
+                        <a href="${escapeHtml(s.url)}" target="_blank" rel="noopener" class="social-link-btn">
+                            <span class="material-symbols-outlined">${icon}</span>
+                            <span class="social-label">${escapeHtml(s.platform)}</span>
+                        </a>
+                    `;
+                }).join('');
+                socialGrid.style.display = '';
+            } else {
+                socialGrid.style.display = 'none';
+            }
+        }
+
+        const listenSection = document.getElementById('listen');
+        if (listenSection) {
+            const hasSpotify = spotifyContainer && spotifyContainer.style.display !== 'none';
+            const hasSocial = socialGrid && socialGrid.style.display !== 'none';
+            listenSection.style.display = (hasSpotify || hasSocial) ? '' : 'none';
         }
 
         renderTickets(event.tickets || []);
@@ -133,6 +170,28 @@ function comprar() {
         return;
     }
     window.location.href = `/assets/payment.html?eventId=${currentEvent.id}&ticketId=${selectedTicketId}&type=${encodeURIComponent(ticket.type)}&cantidad=${cantidad}&total=${(ticket.price * cantidad).toFixed(2)}`;
+}
+
+function getSocialIcon(platform) {
+    const p = (platform || '').toLowerCase();
+    if (p.includes('instagram')) return 'camera';
+    if (p.includes('twitter') || p.includes('x')) return 'alternate_email';
+    if (p.includes('facebook')) return 'facebook';
+    if (p.includes('tiktok')) return 'music_note';
+    if (p.includes('youtube')) return 'play_circle';
+    if (p.includes('spotify')) return 'brand_awareness';
+    if (p.includes('linkedin')) return 'work';
+    if (p.includes('whatsapp')) return 'chat';
+    if (p.includes('telegram')) return 'send';
+    if (p.includes('twitch')) return 'live_tv';
+    return 'public';
+}
+
+function escapeHtml(text) {
+    if (!text) return '';
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
 }
 
 function showToast(message, type) {

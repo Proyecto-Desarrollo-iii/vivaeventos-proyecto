@@ -58,7 +58,7 @@
                     <a href="#about">Acerca de</a>
                     <a href="#map">Mapa y precios</a>
                     <a href="#how">¿Cómo llegar?</a>
-                    <a href="#listen">Escúchalo</a>
+                    <a href="#listen">Redes</a>
                     <a href="#terms">Términos</a>
                 </div>
 
@@ -96,25 +96,28 @@
                         <div class="map-container">
                             <iframe id="event-map-iframe" class="map-iframe"
                                 loading="lazy"></iframe>
-                            <a id="maps-link" target="_blank" class="maps-link">
+                            <div class="location-info">
                                 <span
                                     class="material-symbols-outlined">location_on</span>
-                                <span id="venue-name"></span>
-                                <span class="maps-link-text">Ver en Google
-                                    Maps</span>
-                            </a>
+                                <div class="location-details">
+                                    <span id="venue-name" class="location-venue"></span>
+                                    <span id="location-address" class="location-address"></span>
+                                </div>
+                            </div>
                         </div>
                     </section>
 
                     <section id="listen" class="event-section">
-                        <h2>Escúchalo</h2>
-                        <div class="spotify-embed-container">
+                        <h2>Redes del Artista</h2>
+                        <div class="spotify-embed-container" id="spotify-container">
                             <iframe id="spotify-embed"
                                 style="border-radius:12px"
                                 src width="100%" height="352" frameBorder="0"
                                 allowfullscreen
                                 allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
                                 loading="lazy"></iframe>
+                        </div>
+                        <div id="social-links-grid" class="social-links-grid">
                         </div>
                     </section>
                 </div>

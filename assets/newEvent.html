@@ -298,13 +298,19 @@
                             <input id="eventSpotify" placeholder="Enlace de Spotify del Artista"
                                 type="text" />
                         </div>
-                        <div
-                            class="flex items-center gap-3 bg-surface-container-high p-4 rounded-xl">
-                            <span
-                                class="material-symbols-outlined text-primary">public</span>
-                            <input id="eventInstagram" placeholder="Instagram / X (Twitter)"
-                                type="text" />
+
+                        <div class="space-y-3">
+                            <label class="text-sm font-semibold text-on-surface">Otras redes sociales</label>
+                            <div id="social-links-container" class="space-y-2">
+                                <!-- Dynamic social link rows go here -->
+                            </div>
+                            <button type="button" id="addSocialBtn"
+                                class="flex items-center gap-2 text-sm text-primary font-semibold hover:underline">
+                                <span class="material-symbols-outlined text-lg">add_circle</span>
+                                Agregar red social
+                            </button>
                         </div>
+
                         <div
                             class="p-4 bg-primary-fixed/20 rounded-xl flex items-center gap-4">
                             <div
