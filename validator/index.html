@@ -268,11 +268,26 @@
         <span class="material-symbols-outlined">qr_code_scanner</span>
         Validador de boletas
     </h1>
-    <p class="subtitle">Personal de logística — escanea o pega el código QR</p>
+    <p class="subtitle">Personal de logística — escanea el QR con la cámara o ingrésalo manualmente</p>
 
     <div class="card">
-        <label for="qr-input">Código QR</label>
-        <input id="qr-input" type="text" placeholder="Pega aquí el código de la boleta" autofocus autocomplete="off" />
+        <!-- Camera Scanner -->
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.75rem;">
+            <label style="margin:0;">Escáner QR</label>
+            <button id="toggle-camera" style="display:inline-flex;align-items:center;gap:0.4rem;padding:0.5rem 1rem;border-radius:999px;border:1px solid #bdc8cd;background:#fff;color:#3d494c;font-weight:600;font-size:0.8rem;cursor:pointer;transition:all 0.15s;">
+                <span class="material-symbols-outlined" style="font-size:1.2rem;">videocam</span>
+                Iniciar cámara
+            </button>
+        </div>
+        <div id="scanner-container" style="width:100%;max-width:400px;margin:0 auto 1rem;border-radius:0.75rem;overflow:hidden;background:#000;position:relative;">
+            <div id="reader" style="width:100%;"></div>
+        </div>
+        <p id="scanner-status" style="text-align:center;font-size:0.8rem;color:#6d797d;margin-bottom:1rem;">Presiona "Iniciar cámara" para escanear QR</p>
+
+        <hr style="border:none;border-top:1px solid #e4e9eb;margin:0.75rem 0;" />
+
+        <label for="qr-input">Código QR manual</label>
+        <input id="qr-input" type="text" placeholder="Pega aquí el código de la boleta" autocomplete="off" />
 
         <div class="row">
             <div>
@@ -309,6 +324,7 @@
 
     <script src="/assets/js/auth.js"></script>
     <script src="/assets/js/api.js"></script>
+    <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
     <script>
         (function setupSidebar() {
             const logoutBtn = document.getElementById('sidebar-logout');
@@ -334,7 +350,92 @@
         const clearBtn = document.getElementById('clear-btn');
         const resultBox = document.getElementById('result');
         const historyList = document.getElementById('history-list');
+        const toggleCameraBtn = document.getElementById('toggle-camera');
+        const scannerStatus = document.getElementById('scanner-status');
 
+        // ====================== QR SCANNER (html5-qrcode) ======================
+        let html5QrCode = null;
+        let isScanning = false;
+
+        async function startScanner() {
+            try {
+                if (!html5QrCode) {
+                    html5QrCode = new Html5Qrcode("reader");
+                }
+
+                await html5QrCode.start(
+                    { facingMode: "environment" },
+                    { fps: 15, qrbox: { width: 250, height: 250 } },
+                    onScanSuccess,
+                    onScanFailure
+                );
+
+                isScanning = true;
+                toggleCameraBtn.innerHTML = '<span class="material-symbols-outlined" style="font-size:1.2rem;">videocam_off</span> Detener cámara';
+                scannerStatus.textContent = 'Cámara trasera activa — apunta al código QR';
+                scannerStatus.style.color = '#10b981';
+            } catch (err) {
+                console.error('Error starting scanner:', err);
+                scannerStatus.textContent = 'Error al acceder a la cámara: ' + (err.message || '');
+                scannerStatus.style.color = '#ef4444';
+                try {
+                    if (html5QrCode) await html5QrCode.stop();
+                    html5QrCode = new Html5Qrcode("reader");
+                    await html5QrCode.start(
+                        { facingMode: "user" },
+                        { fps: 15, qrbox: { width: 250, height: 250 } },
+                        onScanSuccess,
+                        onScanFailure
+                    );
+                    isScanning = true;
+                    toggleCameraBtn.innerHTML = '<span class="material-symbols-outlined" style="font-size:1.2rem;">videocam_off</span> Detener cámara';
+                    scannerStatus.textContent = 'Cámara frontal activa';
+                    scannerStatus.style.color = '#f59e0b';
+                } catch (err2) {
+                    scannerStatus.textContent = 'No se pudo acceder a ninguna cámara. Usa el ingreso manual.';
+                    scannerStatus.style.color = '#ef4444';
+                }
+            }
+        }
+
+        async function stopScanner() {
+            if (html5QrCode && isScanning) {
+                try { await html5QrCode.stop(); } catch (e) {}
+                isScanning = false;
+                toggleCameraBtn.innerHTML = '<span class="material-symbols-outlined" style="font-size:1.2rem;">videocam</span> Iniciar cámara';
+                scannerStatus.textContent = 'Cámara detenida';
+                scannerStatus.style.color = '#6d797d';
+            }
+        }
+
+        function onScanSuccess(decodedText, decodedResult) {
+            qrInput.value = decodedText;
+            try {
+                const audio = new AudioContext();
+                const osc = audio.createOscillator();
+                const gain = audio.createGain();
+                osc.connect(gain);
+                gain.connect(audio.destination);
+                osc.frequency.value = 800;
+                gain.gain.value = 0.2;
+                osc.start();
+                osc.stop(audio.currentTime + 0.1);
+            } catch(e) {}
+            validate();
+            setTimeout(() => stopScanner(), 500);
+        }
+
+        function onScanFailure(error) {}
+
+        toggleCameraBtn.addEventListener('click', function () {
+            if (isScanning) {
+                stopScanner();
+            } else {
+                startScanner();
+            }
+        });
+
+        // ====================== VALIDATION ======================
         function resultClassFor(resCode) {
             switch (resCode) {
                 case 'SUCCESS': return 'ok';
@@ -379,7 +480,6 @@
                 <div style="color:#94a3b8; font-size:0.75rem;">${time}</div>
             `;
             historyList.insertBefore(item, historyList.firstChild);
-            // mantener máximo 8
             while (historyList.children.length > 8) {
                 historyList.removeChild(historyList.lastChild);
             }
@@ -459,7 +559,6 @@
         });
 
         if (!AuthService.getToken()) {
-            // permitimos abrirlo sin login; el gateway puede dar 401 después y lo manejamos en el resultado
             console.warn('Sin token JWT — el gateway puede rechazar las validaciones.');
         }
     </script>

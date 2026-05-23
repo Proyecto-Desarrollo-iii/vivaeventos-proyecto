@@ -1,0 +1,909 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Logística | VivaEventos</title>
+    <link rel="icon" href="/assets/images/Logoblue.png">
+    <link rel="stylesheet" href="/assets/css/Organizador.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#006578",
+                        "primary-container": "#008097",
+                        "primary-fixed": "#aeecff",
+                        "on-primary": "#ffffff",
+                        "on-primary-container": "#f9fdff",
+                        secondary: "#3f646e",
+                        "surface": "#f6fafc",
+                        "on-surface": "#171c1e",
+                        "surface-variant": "#dfe3e5",
+                        "surface-container-low": "#f0f4f6",
+                        "surface-container-high": "#e4e9eb",
+                        "surface-container-highest": "#dfe3e5",
+                        "on-surface-variant": "#3d494c",
+                        outline: "#6d797d",
+                    },
+                    fontFamily: {
+                        body: ["Manrope", "Poppins", "sans-serif"],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            font-family: 'Manrope', 'Poppins', system-ui, sans-serif;
+            background: #f6fafc;
+            min-height: 100vh;
+            color: #171c1e;
+        }
+        .main-content {
+            margin-left: 240px;
+            padding: 2rem;
+            min-height: 100vh;
+        }
+        @media (max-width: 768px) {
+            .main-content { margin-left: 0; padding: 1rem; }
+        }
+        .page-title {
+            font-size: 1.75rem;
+            font-weight: 800;
+            margin: 0 0 0.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        .page-subtitle {
+            color: #3d494c;
+            font-size: 0.95rem;
+            margin: 0 0 2rem;
+        }
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        .kpi-card {
+            background: #fff;
+            border: 1px solid #e4e9eb;
+            border-radius: 1.25rem;
+            padding: 1.25rem;
+            box-shadow: 0 4px 12px rgba(0, 101, 120, 0.06);
+        }
+        .kpi-card .kpi-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: #e0f7fa;
+            color: #006578;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 0.75rem;
+        }
+        .kpi-card .kpi-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #3d494c;
+            font-weight: 600;
+        }
+        .kpi-card .kpi-value {
+            font-size: 1.75rem;
+            font-weight: 800;
+            color: #006578;
+            margin-top: 0.25rem;
+        }
+        .panel-card {
+            background: #fff;
+            border: 1px solid #bdc8cd;
+            border-radius: 1.25rem;
+            padding: 1.5rem;
+            box-shadow: 0 20px 40px rgba(0, 101, 120, 0.08);
+        }
+        .panel-card label {
+            display: block;
+            font-size: 0.8rem;
+            color: #3d494c;
+            margin-bottom: 0.35rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+        .panel-card input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border-radius: 0.6rem;
+            border: 1px solid #bdc8cd;
+            background: #f6fafc;
+            color: #171c1e;
+            font-size: 0.95rem;
+            outline: none;
+            margin-bottom: 1rem;
+            transition: border-color 0.15s, box-shadow 0.15s;
+        }
+        .panel-card input:focus {
+            border-color: #006578;
+            box-shadow: 0 0 0 3px rgba(0, 101, 120, 0.15);
+        }
+        .btn-primary {
+            padding: 0.85rem 1.5rem;
+            border-radius: 999px;
+            border: none;
+            background: #006578;
+            color: #fff;
+            font-weight: 700;
+            font-size: 0.95rem;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            transition: background 0.15s, transform 0.1s;
+        }
+        .btn-primary:hover:not(:disabled) { background: #008097; }
+        .btn-primary:active:not(:disabled) { transform: scale(0.98); }
+        .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+        .btn-secondary {
+            background: transparent;
+            color: #006578;
+            border: 1px solid #006578;
+            padding: 0.85rem 1.5rem;
+            border-radius: 999px;
+            font-weight: 700;
+            font-size: 0.95rem;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            transition: background 0.15s;
+        }
+        .btn-secondary:hover { background: #aeecff; color: #004e5d; }
+        .result-box {
+            margin-top: 1.25rem;
+            padding: 1.25rem;
+            border-radius: 0.75rem;
+            font-weight: 600;
+            display: none;
+        }
+        .result-box.show { display: block; }
+        .result-box.ok { background: #d1fae5; border: 1px solid #10b981; color: #065f46; }
+        .result-box.warn { background: #fef3c7; border: 1px solid #f59e0b; color: #92400e; }
+        .result-box.err { background: #fee2e2; border: 1px solid #ef4444; color: #991b1b; }
+        .ticket-info {
+            background: #f0f4f6;
+            border-radius: 0.6rem;
+            padding: 0.85rem 1rem;
+            margin-top: 0.85rem;
+            display: grid;
+            gap: 0.45rem;
+        }
+        .ticket-info .row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+            font-size: 0.9rem;
+        }
+        .ticket-info .row .lbl {
+            color: #3d494c;
+            text-transform: uppercase;
+            font-size: 0.7rem;
+            letter-spacing: 0.05em;
+            font-weight: 600;
+        }
+        .ticket-info .row .val {
+            text-align: right;
+            font-weight: 700;
+            word-break: break-word;
+        }
+        #scanner-container {
+            width: 100%;
+            max-width: 400px;
+            margin: 0 auto;
+            border-radius: 0.75rem;
+            overflow: hidden;
+            background: #000;
+            position: relative;
+        }
+        #scanner-container video {
+            width: 100%;
+            display: block;
+        }
+        #reader {
+            width: 100%;
+        }
+        #reader video {
+            border-radius: 0.75rem;
+        }
+        .scanner-overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 200px;
+            height: 200px;
+            border: 3px solid rgba(0, 229, 255, 0.7);
+            border-radius: 12px;
+            pointer-events: none;
+            box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.3);
+        }
+        .camera-toggle {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.6rem 1.2rem;
+            border-radius: 999px;
+            border: 1px solid #bdc8cd;
+            background: #fff;
+            color: #3d494c;
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+        .camera-toggle:hover {
+            border-color: #006578;
+            color: #006578;
+            background: #f0f4f6;
+        }
+        .camera-toggle.active {
+            background: #006578;
+            color: #fff;
+            border-color: #006578;
+        }
+        .history-section {
+            margin-top: 2rem;
+        }
+        .history-section h3 {
+            font-size: 0.95rem;
+            margin: 0 0 0.75rem;
+            color: #3d494c;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+        .history-item {
+            background: #fff;
+            border: 1px solid #e4e9eb;
+            border-radius: 0.6rem;
+            padding: 0.6rem 0.9rem;
+            margin-bottom: 0.45rem;
+            font-size: 0.85rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+            box-shadow: 0 4px 12px rgba(0, 101, 120, 0.04);
+        }
+        .history-item.ok { border-left: 3px solid #10b981; }
+        .history-item.warn { border-left: 3px solid #f59e0b; }
+        .history-item.err { border-left: 3px solid #ef4444; }
+        .hide { display: none !important; }
+    </style>
+</head>
+<body>
+    <aside class="sidebar">
+        <div class="logo flex items-center gap-3">
+            <img src="/assets/images/Logoblue.png" alt="Icono" class="logo-icon">
+            <img class="logo-text" src="/assets/images/Titulo.webp" alt="VivaEventos">
+        </div>
+
+        <nav>
+            <a href="#" class="active" data-panel="dashboard">
+                <span class="material-symbols-outlined">dashboard</span>
+                Dashboard
+            </a>
+
+            <a href="#" data-panel="validator">
+                <span class="material-symbols-outlined">qr_code_scanner</span>
+                Validar boletas
+            </a>
+
+            <a href="#" data-panel="history">
+                <span class="material-symbols-outlined">history</span>
+                Historial
+            </a>
+
+            <a href="#" data-panel="settings">
+                <span class="material-symbols-outlined">settings</span>
+                Configuración
+            </a>
+        </nav>
+
+        <div class="sidebar-user">
+            <a href="/assets/MyAccount.html" class="user-info" style="text-decoration: none; cursor: pointer;">
+                <img src="https://i.pravatar.cc/40" alt="Usuario">
+                <span id="sidebar-username">Logística</span>
+            </a>
+            <a href="#" class="logout-btn" id="sidebar-logout">
+                <span class="material-symbols-outlined">logout</span>
+                Cerrar sesión
+            </a>
+        </div>
+    </aside>
+
+    <div class="main-content">
+
+        <!-- ==================== PANEL DASHBOARD ==================== -->
+        <div id="panel-dashboard">
+            <h1 class="page-title">
+                <span class="material-symbols-outlined">dashboard</span>
+                Panel de Logística
+            </h1>
+            <p class="page-subtitle" id="greeting">Bienvenido, personal de logística</p>
+
+            <div class="kpi-grid" id="kpi-grid">
+                <div class="kpi-card">
+                    <div class="kpi-icon"><span class="material-symbols-outlined">qr_code_scanner</span></div>
+                    <div class="kpi-label">Validaciones hoy</div>
+                    <div class="kpi-value" id="kpi-hoy">0</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-icon"><span class="material-symbols-outlined">check_circle</span></div>
+                    <div class="kpi-label">Autorizadas</div>
+                    <div class="kpi-value" id="kpi-ok" style="color:#10b981;">0</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-icon"><span class="material-symbols-outlined">block</span></div>
+                    <div class="kpi-label">Rechazadas</div>
+                    <div class="kpi-value" id="kpi-reject" style="color:#ef4444;">0</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-icon"><span class="material-symbols-outlined">event</span></div>
+                    <div class="kpi-label">Eventos activos</div>
+                    <div class="kpi-value" id="kpi-eventos">-</div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div class="panel-card">
+                    <h3 style="margin:0 0 1rem;font-size:1.1rem;display:flex;align-items:center;gap:0.5rem;">
+                        <span class="material-symbols-outlined">bolt</span>
+                        Acceso rápido
+                    </h3>
+                    <p style="color:#3d494c;font-size:0.9rem;margin-bottom:1rem;">
+                        Escanea o ingresa el código QR de una boleta para validar el ingreso.
+                    </p>
+                    <button class="btn-primary" onclick="switchPanel('validator')" style="width:100%;">
+                        <span class="material-symbols-outlined">qr_code_scanner</span>
+                        Ir a validador
+                    </button>
+                </div>
+                <div class="panel-card">
+                    <h3 style="margin:0 0 1rem;font-size:1.1rem;display:flex;align-items:center;gap:0.5rem;">
+                        <span class="material-symbols-outlined">history</span>
+                        Últimas validaciones
+                    </h3>
+                    <div id="dashboard-last-validations">
+                        <p style="color:#6d797d;font-size:0.85rem;">Aún no hay validaciones registradas hoy.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== PANEL VALIDADOR ==================== -->
+        <div id="panel-validator" class="hide">
+            <h1 class="page-title">
+                <span class="material-symbols-outlined">qr_code_scanner</span>
+                Validador de boletas
+            </h1>
+            <p class="page-subtitle">Personal de logística — escanea el código QR con la cámara o ingrésalo manualmente</p>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- Scanner panel -->
+                <div class="panel-card">
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;">
+                        <label style="margin:0;">Escáner QR</label>
+                        <button id="toggle-camera" class="camera-toggle">
+                            <span class="material-symbols-outlined">videocam</span>
+                            Iniciar cámara
+                        </button>
+                    </div>
+                    <div id="scanner-container">
+                        <div id="reader"></div>
+                    </div>
+                    <p id="scanner-status" style="text-align:center;font-size:0.8rem;color:#6d797d;margin-top:0.75rem;">
+                        Presiona "Iniciar cámara" para escanear QR
+                    </p>
+                </div>
+
+                <!-- Manual input panel -->
+                <div class="panel-card">
+                    <label for="qr-input">Código QR manual</label>
+                    <input id="qr-input" type="text" placeholder="Pega aquí el código de la boleta" autocomplete="off">
+
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;">
+                        <div>
+                            <label for="gate">Puerta</label>
+                            <input id="gate" type="text" placeholder="Puerta 1" value="Puerta 1">
+                        </div>
+                        <div>
+                            <label for="operator">Operador</label>
+                            <input id="operator" type="text" placeholder="logistica-01" value="logistica-01">
+                        </div>
+                    </div>
+
+                    <button id="validate-btn" class="btn-primary" style="width:100%;">
+                        <span class="material-symbols-outlined">check_circle</span>
+                        Validar boleta
+                    </button>
+                    <button id="clear-btn" class="btn-secondary" type="button" style="width:100%;margin-top:0.5rem;">
+                        <span class="material-symbols-outlined">refresh</span>
+                        Limpiar
+                    </button>
+
+                    <div id="result" class="result-box"></div>
+                </div>
+            </div>
+
+            <div class="history-section">
+                <h3>
+                    <span class="material-symbols-outlined">history</span>
+                    Últimas validaciones
+                </h3>
+                <div id="history-list"></div>
+            </div>
+        </div>
+
+        <!-- ==================== PANEL HISTORIAL ==================== -->
+        <div id="panel-history" class="hide">
+            <h1 class="page-title">
+                <span class="material-symbols-outlined">history</span>
+                Historial de validaciones
+            </h1>
+            <p class="page-subtitle">Todas las validaciones realizadas durante el día de hoy.</p>
+            <div class="panel-card">
+                <div id="full-history-list">
+                    <p style="color:#6d797d;">Aún no hay validaciones registradas.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== PANEL CONFIGURACIÓN ==================== -->
+        <div id="panel-settings" class="hide">
+            <h1 class="page-title">
+                <span class="material-symbols-outlined">settings</span>
+                Configuración
+            </h1>
+            <p class="page-subtitle">Próximamente podrás administrar tus preferencias.</p>
+        </div>
+    </div>
+
+    <script src="/assets/js/auth.js"></script>
+    <script src="/assets/js/api.js"></script>
+    <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+    <script>
+        // ====================== AUTH CHECK ======================
+        (function () {
+            if (!AuthService.isAuthenticated()) {
+                window.location.href = '/auth/login.html';
+                return;
+            }
+            const user = AuthService.getUser();
+            const role = (user && user.role || '').toUpperCase();
+            if (role !== 'LOGISTICA' && role !== 'ADMIN') {
+                window.location.href = '/auth/login.html';
+                return;
+            }
+            const nameEl = document.getElementById('sidebar-username');
+            if (nameEl && user) {
+                nameEl.textContent = user.fullName || user.email || 'Logística';
+            }
+            const greeting = document.getElementById('greeting');
+            if (greeting && user) {
+                greeting.textContent = `Bienvenido, ${user.fullName || user.email || 'personal de logística'}`;
+            }
+        })();
+
+        // ====================== SIDEBAR ======================
+        document.getElementById('sidebar-logout').addEventListener('click', async function (e) {
+            e.preventDefault();
+            if (window.AuthService && typeof AuthService.logout === 'function') {
+                await AuthService.logout();
+            } else {
+                localStorage.clear();
+                sessionStorage.clear();
+                window.location.href = '/auth/login.html';
+            }
+        });
+
+        // ====================== PANEL SWITCHING ======================
+        function switchPanel(name) {
+            document.querySelectorAll('[data-panel]').forEach(a => a.classList.remove('active'));
+            document.querySelector(`[data-panel="${name}"]`)?.classList.add('active');
+            ['dashboard', 'validator', 'history', 'settings'].forEach(p => {
+                const el = document.getElementById('panel-' + p);
+                if (el) el.classList.toggle('hide', p !== name);
+            });
+            if (name === 'validator' && html5QrCode && !isScanning) {
+                // don't auto-start; user clicks button
+            }
+            if (name !== 'validator' && isScanning) {
+                stopScanner();
+            }
+        }
+
+        document.querySelectorAll('[data-panel]').forEach(link => {
+            link.addEventListener('click', function (e) {
+                e.preventDefault();
+                switchPanel(this.dataset.panel);
+            });
+        });
+
+        // ====================== LOCAL STORAGE HELPERS ======================
+        function getValidationsToday() {
+            const today = new Date().toISOString().split('T')[0];
+            const key = 'validations_' + today;
+            try {
+                return JSON.parse(localStorage.getItem(key)) || [];
+            } catch { return []; }
+        }
+
+        function saveValidation(v) {
+            const today = new Date().toISOString().split('T')[0];
+            const key = 'validations_' + today;
+            const list = getValidationsToday();
+            list.unshift(v);
+            localStorage.setItem(key, JSON.stringify(list));
+            updateAll();
+        }
+
+        function getAllValidations() {
+            const today = new Date().toISOString().split('T')[0];
+            const key = 'validations_' + today;
+            try {
+                return JSON.parse(localStorage.getItem(key)) || [];
+            } catch { return []; }
+        }
+
+        function updateAll() {
+            updateKpis();
+            updateHistoryList();
+            updateDashboardLast();
+            updateFullHistory();
+        }
+
+        // ====================== KPI UPDATES ======================
+        function updateKpis() {
+            const list = getAllValidations();
+            document.getElementById('kpi-hoy').textContent = list.length;
+            const okCount = list.filter(v => v.result === 'SUCCESS').length;
+            const rejectCount = list.filter(v => v.result !== 'SUCCESS').length;
+            document.getElementById('kpi-ok').textContent = okCount;
+            document.getElementById('kpi-reject').textContent = rejectCount;
+        }
+
+        // ====================== FETCH ACTIVE EVENTS COUNT ======================
+        async function loadActiveEvents() {
+            try {
+                const res = await api.get('/events');
+                const eventos = res.data?.eventos || [];
+                const active = eventos.filter(e => e.isPublished && e.isActive).length;
+                document.getElementById('kpi-eventos').textContent = active;
+            } catch {
+                document.getElementById('kpi-eventos').textContent = 'N/A';
+            }
+        }
+
+        // ====================== RESULT HELPERS ======================
+        function resultClass(code) {
+            switch (code) {
+                case 'SUCCESS': return 'ok';
+                case 'ALREADY_USED':
+                case 'REVOKED': return 'warn';
+                case 'NOT_FOUND':
+                default: return 'err';
+            }
+        }
+
+        function resultIcon(code) {
+            switch (code) {
+                case 'SUCCESS': return 'check_circle';
+                case 'ALREADY_USED': return 'block';
+                case 'REVOKED': return 'do_not_disturb_on';
+                case 'NOT_FOUND': return 'help';
+                default: return 'error';
+            }
+        }
+
+        function resultLabel(code) {
+            return ({
+                SUCCESS: 'INGRESO AUTORIZADO',
+                ALREADY_USED: 'BOLETA YA UTILIZADA',
+                REVOKED: 'BOLETA REVOCADA',
+                NOT_FOUND: 'BOLETA NO ENCONTRADA'
+            })[code] || 'RESULTADO DESCONOCIDO';
+        }
+
+        // ====================== VALIDATE ======================
+        async function validateQR(qrCode) {
+            if (!qrCode) return;
+
+            const validateBtn = document.getElementById('validate-btn');
+            const resultBox = document.getElementById('result');
+
+            validateBtn.disabled = true;
+            const originalLabel = validateBtn.innerHTML;
+            validateBtn.innerHTML = '<span class="material-symbols-outlined">sync</span> Validando...';
+            resultBox.classList.remove('show', 'ok', 'warn', 'err');
+
+            try {
+                const res = await IssuedTickets.validate({
+                    qrCode,
+                    gateLocation: document.getElementById('gate').value || null,
+                    validatedBy: document.getElementById('operator').value || null
+                });
+
+                const v = (res.data && res.data.validacion) || {};
+                const cls = resultClass(v.result);
+                resultBox.classList.add('show', cls);
+                const esc = s => (s == null ? '' : String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c]));
+                const hasInfo = v.eventName || v.holderName || v.ticketType || v.holderEmail;
+                const shortId = v.issuedTicketId ? `#${String(v.issuedTicketId).substring(0,8).toUpperCase()}` : null;
+                resultBox.innerHTML = `
+                    <div style="display:flex;align-items:center;gap:0.5rem;font-size:1.1rem;font-weight:800;text-transform:uppercase;letter-spacing:0.03em;margin-bottom:0.4rem;">
+                        <span class="material-symbols-outlined">${resultIcon(v.result)}</span>
+                        ${resultLabel(v.result)}
+                    </div>
+                    <div>${esc(v.message) || ''}</div>
+                    ${hasInfo ? `
+                    <div class="ticket-info">
+                        ${v.eventName ? `<div class="row"><span class="lbl">Evento</span><span class="val">${esc(v.eventName)}</span></div>` : ''}
+                        ${v.ticketType ? `<div class="row"><span class="lbl">Tipo</span><span class="val">${esc(v.ticketType)}</span></div>` : ''}
+                        ${v.holderName ? `<div class="row"><span class="lbl">Titular</span><span class="val">${esc(v.holderName)}</span></div>` : ''}
+                        ${v.holderEmail ? `<div class="row"><span class="lbl">Correo</span><span class="val">${esc(v.holderEmail)}</span></div>` : ''}
+                        ${shortId ? `<div class="row"><span class="lbl">Boleta</span><span class="val">${shortId}</span></div>` : ''}
+                    </div>` : ''}
+                    <div style="font-size:0.8rem;opacity:0.85;margin-top:0.5rem;font-family:monospace;word-break:break-all;">QR: ${esc(v.qrCode || qrCode)}</div>
+                `;
+
+                saveValidation({ ...v, qrCode: v.qrCode || qrCode, result: v.result || 'SUCCESS' });
+
+                if (v.result === 'SUCCESS') {
+                    const audio = new AudioContext();
+                    const osc = audio.createOscillator();
+                    const gain = audio.createGain();
+                    osc.connect(gain);
+                    gain.connect(audio.destination);
+                    osc.frequency.value = 1200;
+                    gain.gain.value = 0.3;
+                    osc.start();
+                    osc.stop(audio.currentTime + 0.15);
+                }
+            } catch (err) {
+                console.error('Validate error:', err);
+                resultBox.classList.add('show', 'err');
+                resultBox.innerHTML = `
+                    <div style="display:flex;align-items:center;gap:0.5rem;font-size:1.1rem;font-weight:800;text-transform:uppercase;letter-spacing:0.03em;margin-bottom:0.4rem;">
+                        <span class="material-symbols-outlined">error</span>
+                        ERROR DE CONEXIÓN
+                    </div>
+                    <div>No se pudo contactar al servicio de validación.</div>
+                `;
+            } finally {
+                validateBtn.disabled = false;
+                validateBtn.innerHTML = originalLabel;
+            }
+        }
+
+        // ====================== HISTORY RENDERING ======================
+        function updateHistoryList() {
+            const list = getValidationsToday();
+            const container = document.getElementById('history-list');
+            container.innerHTML = list.slice(0, 8).map(v => {
+                const cls = resultClass(v.result);
+                const time = v.validatedAt
+                    ? new Date(v.validatedAt).toLocaleTimeString('es-CO')
+                    : new Date().toLocaleTimeString('es-CO');
+                return `
+                    <div class="history-item ${cls}">
+                        <div>
+                            <div style="font-weight:700;font-size:0.9rem;">${resultLabel(v.result)}</div>
+                            <div style="font-family:monospace;font-size:0.75rem;color:#6d797d;max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${v.qrCode || ''}</div>
+                        </div>
+                        <div style="color:#94a3b8;font-size:0.75rem;">${time}</div>
+                    </div>
+                `;
+            }).join('');
+            if (!list.length) container.innerHTML = '<p style="color:#6d797d;font-size:0.85rem;">Aún no hay validaciones hoy.</p>';
+        }
+
+        function updateDashboardLast() {
+            const list = getValidationsToday();
+            const container = document.getElementById('dashboard-last-validations');
+            if (!list.length) {
+                container.innerHTML = '<p style="color:#6d797d;font-size:0.85rem;">Aún no hay validaciones registradas hoy.</p>';
+                return;
+            }
+            container.innerHTML = list.slice(0, 3).map(v => {
+                const cls = resultClass(v.result);
+                const time = v.validatedAt
+                    ? new Date(v.validatedAt).toLocaleTimeString('es-CO')
+                    : new Date().toLocaleTimeString('es-CO');
+                return `
+                    <div class="history-item ${cls}" style="margin-bottom:0.35rem;">
+                        <div>
+                            <div style="font-weight:700;font-size:0.85rem;">${resultLabel(v.result)}</div>
+                            <div style="font-size:0.7rem;color:#6d797d;">${v.holderName || v.qrCode || ''}</div>
+                        </div>
+                        <div style="color:#94a3b8;font-size:0.7rem;">${time}</div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function updateFullHistory() {
+            const list = getValidationsToday();
+            const container = document.getElementById('full-history-list');
+            if (!list.length) {
+                container.innerHTML = '<p style="color:#6d797d;">Aún no hay validaciones registradas.</p>';
+                return;
+            }
+            container.innerHTML = list.map(v => {
+                const cls = resultClass(v.result);
+                const time = v.validatedAt
+                    ? new Date(v.validatedAt).toLocaleString('es-CO')
+                    : new Date().toLocaleString('es-CO');
+                return `
+                    <div class="history-item ${cls}">
+                        <div style="flex:1;">
+                            <div style="font-weight:700;font-size:0.9rem;">${resultLabel(v.result)}</div>
+                            <div style="font-size:0.8rem;color:#3d494c;">${v.holderName || ''} ${v.holderEmail ? '• ' + v.holderEmail : ''}</div>
+                            <div style="font-size:0.75rem;color:#6d797d;font-family:monospace;">${v.qrCode || ''}</div>
+                        </div>
+                        <div style="text-align:right;flex-shrink:0;">
+                            <div style="color:#94a3b8;font-size:0.7rem;">${time}</div>
+                            ${v.eventName ? '<div style="font-size:0.7rem;color:#006578;">' + v.eventName + '</div>' : ''}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // ====================== QR SCANNER (html5-qrcode) ======================
+        let html5QrCode = null;
+        let isScanning = false;
+
+        async function startScanner() {
+            const statusEl = document.getElementById('scanner-status');
+            const toggleBtn = document.getElementById('toggle-camera');
+
+            try {
+                if (!html5QrCode) {
+                    html5QrCode = new Html5Qrcode("reader");
+                }
+
+                const config = {
+                    fps: 15,
+                    qrbox: { width: 250, height: 250 },
+                    aspectRatio: 1.0
+                };
+
+                await html5QrCode.start(
+                    { facingMode: "environment" },
+                    config,
+                    onScanSuccess,
+                    onScanFailure
+                );
+
+                isScanning = true;
+                toggleBtn.classList.add('active');
+                toggleBtn.innerHTML = '<span class="material-symbols-outlined">videocam_off</span> Detener cámara';
+                statusEl.textContent = 'Cámara trasera activa — apunta al código QR';
+                statusEl.style.color = '#10b981';
+            } catch (err) {
+                console.error('Error starting scanner:', err);
+                statusEl.textContent = 'Error al acceder a la cámara: ' + (err.message || '');
+                statusEl.style.color = '#ef4444';
+                // fallback: try front camera
+                try {
+                    if (html5QrCode) await html5QrCode.stop();
+                    html5QrCode = new Html5Qrcode("reader");
+                    await html5QrCode.start(
+                        { facingMode: "user" },
+                        { fps: 15, qrbox: { width: 250, height: 250 } },
+                        onScanSuccess,
+                        onScanFailure
+                    );
+                    isScanning = true;
+                    toggleBtn.classList.add('active');
+                    toggleBtn.innerHTML = '<span class="material-symbols-outlined">videocam_off</span> Detener cámara';
+                    statusEl.textContent = 'Cámara frontal activa (no se encontró cámara trasera)';
+                    statusEl.style.color = '#f59e0b';
+                } catch (err2) {
+                    statusEl.textContent = 'No se pudo acceder a ninguna cámara. Usa el ingreso manual.';
+                    statusEl.style.color = '#ef4444';
+                }
+            }
+        }
+
+        async function stopScanner() {
+            if (html5QrCode && isScanning) {
+                try {
+                    await html5QrCode.stop();
+                } catch (e) { /* ignore */ }
+                isScanning = false;
+                const toggleBtn = document.getElementById('toggle-camera');
+                toggleBtn.classList.remove('active');
+                toggleBtn.innerHTML = '<span class="material-symbols-outlined">videocam</span> Iniciar cámara';
+                document.getElementById('scanner-status').textContent = 'Cámara detenida';
+                document.getElementById('scanner-status').style.color = '#6d797d';
+            }
+        }
+
+        function onScanSuccess(decodedText, decodedResult) {
+            document.getElementById('qr-input').value = decodedText;
+            // Play short beep
+            try {
+                const audio = new AudioContext();
+                const osc = audio.createOscillator();
+                const gain = audio.createGain();
+                osc.connect(gain);
+                gain.connect(audio.destination);
+                osc.frequency.value = 800;
+                gain.gain.value = 0.2;
+                osc.start();
+                osc.stop(audio.currentTime + 0.1);
+            } catch(e) {}
+            validateQR(decodedText);
+            // Auto-stop after scan so user can see result and not keep scanning
+            setTimeout(() => stopScanner(), 500);
+        }
+
+        function onScanFailure(error) {
+            // ignore, it's called continuously
+        }
+
+        document.getElementById('toggle-camera').addEventListener('click', function () {
+            if (isScanning) {
+                stopScanner();
+            } else {
+                startScanner();
+            }
+        });
+
+        // ====================== MANUAL VALIDATION ======================
+        document.getElementById('validate-btn').addEventListener('click', function () {
+            const qr = document.getElementById('qr-input').value.trim();
+            if (!qr) { document.getElementById('qr-input').focus(); return; }
+            validateQR(qr);
+        });
+
+        document.getElementById('clear-btn').addEventListener('click', function () {
+            document.getElementById('qr-input').value = '';
+            document.getElementById('result').classList.remove('show', 'ok', 'warn', 'err');
+            document.getElementById('result').innerHTML = '';
+            document.getElementById('qr-input').focus();
+        });
+
+        document.getElementById('qr-input').addEventListener('keydown', function (e) {
+            if (e.key === 'Enter') {
+                const qr = this.value.trim();
+                if (!qr) return;
+                document.getElementById('validate-btn').click();
+            }
+        });
+
+        // ====================== INIT ======================
+        updateAll();
+        loadActiveEvents();
+
+        // Every 30s refresh active events count
+        setInterval(loadActiveEvents, 30000);
+    </script>
+</body>
+</html>

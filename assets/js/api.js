@@ -30,7 +30,6 @@ const api = {
                 sessionStorage.removeItem('token');
                 localStorage.removeItem('user');
                 sessionStorage.removeItem('user');
-                window.location.href = '/auth/login.html';
                 return { ok: false, status: 401, data: { error: 'Sesión expirada' } };
             }
 
