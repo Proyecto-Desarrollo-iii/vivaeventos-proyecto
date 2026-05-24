@@ -205,6 +205,10 @@ const orders = {
     async updateStatus(id, status) {
         return api.request(`/orders/${id}/status?status=${encodeURIComponent(status)}`, { method: 'PATCH' });
     },
+
+    async cancelOrder(orderId) {
+        return api.post(`/orders/${orderId}/cancel`, {});
+    },
 };
 
 const issuedTickets = {
@@ -285,6 +289,14 @@ const payments = {
     async processRefund(paymentId, idempotencyKey, refundData) {
         const headers = idempotencyKey ? { 'Idempotency-Key': idempotencyKey } : {};
         return api.post(`/payments/${paymentId}/refund`, refundData, headers);
+    },
+
+    async retryByOrder(orderId) {
+        return api.post(`/payments/order/${orderId}/retry`, {});
+    },
+
+    async cancelByOrder(orderId) {
+        return api.post(`/payments/order/${orderId}/cancel`, {});
     },
 };
 
