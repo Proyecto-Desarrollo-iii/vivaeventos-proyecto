@@ -576,49 +576,11 @@
                 console.warn('Payment confirmation error:', e);
             }
 
-            btn.innerHTML = 'Emitiendo boletas...';
-
-            const nameInput = document.querySelector('input[placeholder="John Doe"]');
-            const emailInput = document.querySelector('input[placeholder="john@example.com"]');
-            const buyerName = (nameInput && nameInput.value) || user.nombre || user.email || 'Comprador';
-            const buyerEmail = (emailInput && emailInput.value) || user.email || 'comprador@vivaeventos.test';
-
-            let emittedOk = 0;
-            let emittedFail = 0;
-            const eventNameForTickets = currentEventName || null;
-
-            for (let i = 0; i < cantidad; i++) {
-                try {
-                    const issue = await IssuedTickets.issue({
-                        orderId: currentOrderId,
-                        eventId: currentEventId,
-                        eventName: eventNameForTickets,
-                        ticketTypeId: currentTicketTypeId,
-                        ticketType: tipo,
-                        holderName: buyerName,
-                        holderEmail: buyerEmail,
-                        price: currentUnitPrice
-                    });
-                    if (issue.ok) emittedOk++; else emittedFail++;
-                } catch (e) {
-                    console.error('Issue ticket fail', e);
-                    emittedFail++;
-                }
-            }
-
-            if (emittedOk > 0 && currentOrderId) {
-                try { await Orders.updateStatus(currentOrderId, 'PAID'); } catch (e) { console.warn('No se pudo marcar PAID', e); }
-                try { await Events.incrementTicketSales(currentTicketTypeId, emittedOk); } catch (e) { console.warn('No se pudo actualizar el contador de ventas', e); }
-            }
-
             if (currentOrderId) sessionStorage.removeItem(`payment_key_${currentOrderId}`);
 
             document.querySelector('.grid-cols-1.lg\\:grid-cols-12').classList.add('hidden');
             document.getElementById('success-section').classList.remove('hidden');
-            document.getElementById('success-message').textContent =
-                emittedFail === 0
-                    ? `Tus ${emittedOk} boleta(s) están listas.`
-                    : `Orden creada, pero ${emittedFail} boleta(s) fallaron. Revisa "Mis entradas".`;
+            document.getElementById('success-message').textContent = 'Pago exitoso. Tus boletas se están generando.';
             document.getElementById('order-id-display').textContent = `Orden: ${currentOrderId || 'Confirmada'}`;
         }
 
