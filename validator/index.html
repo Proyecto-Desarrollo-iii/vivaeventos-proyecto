@@ -498,7 +498,7 @@
             resultBox.classList.remove('show', 'ok', 'warn', 'err');
 
             try {
-                const res = await IssuedTickets.validate({
+                const res = await Checkin.validate({
                     qrCode,
                     gateLocation: gateInput.value || null,
                     validatedBy: operatorInput.value || null
