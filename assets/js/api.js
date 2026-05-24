@@ -226,16 +226,34 @@ const issuedTickets = {
         return api.get(`/issued-tickets/order/${orderId}`);
     },
 
-    async validate(payload) {
-        return api.post('/issued-tickets/validate', payload);
-    },
-
     async revoke(ticketId, reason) {
         return api.post(`/issued-tickets/${ticketId}/revoke`, { reason });
     },
+};
 
-    async getValidations(ticketId) {
-        return api.get(`/issued-tickets/${ticketId}/validations`);
+const checkin = {
+    async validate(payload) {
+        return api.post('/checkin/validate', payload);
+    },
+
+    async sync(validations) {
+        return api.post('/checkin/sync', { validations });
+    },
+
+    async getValidationsByTicket(ticketId) {
+        return api.get(`/checkin/validations/ticket/${ticketId}`);
+    },
+
+    async getValidationsByEvent(eventId) {
+        return api.get(`/checkin/validations/event/${eventId}`);
+    },
+
+    async getEventStats(eventId) {
+        return api.get(`/checkin/stats/event/${eventId}`);
+    },
+
+    async retryPending() {
+        return api.post('/checkin/retry-pending', {});
     },
 };
 
@@ -282,5 +300,6 @@ window.Events = events;
 window.Orders = orders;
 window.Tickets = tickets;
 window.IssuedTickets = issuedTickets;
+window.Checkin = checkin;
 window.Payments = payments;
 window.Analytics = analytics;
