@@ -47,17 +47,19 @@ const api = {
         return this.request(endpoint, { method: 'GET' });
     },
 
-    async post(endpoint, body) {
+    async post(endpoint, body, headers = {}) {
         return this.request(endpoint, {
             method: 'POST',
             body: JSON.stringify(body),
+            headers,
         });
     },
 
-    async put(endpoint, body) {
+    async put(endpoint, body, headers = {}) {
         return this.request(endpoint, {
             method: 'PUT',
             body: JSON.stringify(body),
+            headers,
         });
     },
 
@@ -240,13 +242,14 @@ const issuedTickets = {
 };
 
 const payments = {
-    async createPaymentIntent(paymentData) {
+    async createPaymentIntent(paymentData, idempotencyKey) {
         const user = window.Auth ? window.Auth.getUser() : null;
         const dataWithUserId = {
             ...paymentData,
             userId: user?.id || paymentData.userId
         };
-        return api.post('/payments', dataWithUserId);
+        const headers = idempotencyKey ? { 'Idempotency-Key': idempotencyKey } : {};
+        return api.post('/payments', dataWithUserId, headers);
     },
 
     async getById(paymentId) {
@@ -259,6 +262,11 @@ const payments = {
 
     async confirmPayment(paymentIntentId) {
         return api.post(`/payments/confirm/${paymentIntentId}`, {});
+    },
+
+    async processRefund(paymentId, idempotencyKey, refundData) {
+        const headers = idempotencyKey ? { 'Idempotency-Key': idempotencyKey } : {};
+        return api.post(`/payments/${paymentId}/refund`, refundData, headers);
     },
 };
 

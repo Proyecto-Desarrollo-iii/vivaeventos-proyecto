@@ -356,6 +356,11 @@
         let currentUnitPrice = null;
         let currentEventName = null;
         let clientSecret = null;
+        let currentIdempotencyKey = null;
+
+        function generateIdempotencyKey() {
+            return crypto.randomUUID();
+        }
 
         if (!user) {
             window.location.href = '/auth/login.html';
@@ -487,13 +492,17 @@
                 btn.innerHTML = 'Creando pago...';
 
                 const totalAmount = unitPrice * cantidad;
+
+                currentIdempotencyKey = sessionStorage.getItem(`payment_key_${currentOrderId}`) || generateIdempotencyKey();
+                sessionStorage.setItem(`payment_key_${currentOrderId}`, currentIdempotencyKey);
+
                 const paymentResult = await Payments.createPaymentIntent({
                     orderId: currentOrderId,
                     userId: user.id,
                     amount: totalAmount,
                     currency: 'COP',
                     paymentMethod: 'card'
-                });
+                }, currentIdempotencyKey);
 
                 if (!paymentResult.ok) {
                     showToast(paymentResult.data?.error || 'Error al crear el pago', 'error');
@@ -601,6 +610,8 @@
                 try { await Orders.updateStatus(currentOrderId, 'PAID'); } catch (e) { console.warn('No se pudo marcar PAID', e); }
                 try { await Events.incrementTicketSales(currentTicketTypeId, emittedOk); } catch (e) { console.warn('No se pudo actualizar el contador de ventas', e); }
             }
+
+            if (currentOrderId) sessionStorage.removeItem(`payment_key_${currentOrderId}`);
 
             document.querySelector('.grid-cols-1.lg\\:grid-cols-12').classList.add('hidden');
             document.getElementById('success-section').classList.remove('hidden');

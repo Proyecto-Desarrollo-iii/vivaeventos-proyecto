@@ -4,7 +4,7 @@ const { createProxyMiddleware } = require('http-proxy-middleware');
 
 const app = express();
 const PORT = 5000;
-const GATEWAY = 'http://localhost:8090';
+const GATEWAY = 'http://localhost:8080';
 
 app.use((req, res, next) => {
     console.log('[Request]', req.method, req.url);
