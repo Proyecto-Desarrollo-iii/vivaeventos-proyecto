@@ -77,6 +77,18 @@
             font-weight: var(--font-weight-semibold);
         }
         
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            .role-selector {
+                flex-direction: column;
+            }
+            .form-card {
+                padding: var(--space-6);
+                border-radius: var(--radius-md);
+            }
+        }
         @media (max-width: 480px) {
             .form-row {
                 grid-template-columns: 1fr;
