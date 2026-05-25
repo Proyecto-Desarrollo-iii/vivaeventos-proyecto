@@ -365,6 +365,7 @@
                 case 'SUCCESS': return 'check_circle';
                 case 'ALREADY_USED': return 'block';
                 case 'REVOKED': return 'do_not_disturb_on';
+                case 'WRONG_EVENT': return 'block';
                 default: return 'error';
             }
         }
@@ -374,7 +375,8 @@
                 SUCCESS: 'INGRESO AUTORIZADO',
                 ALREADY_USED: 'BOLETA YA UTILIZADA',
                 REVOKED: 'BOLETA REVOCADA',
-                NOT_FOUND: 'BOLETA NO ENCONTRADA'
+                NOT_FOUND: 'BOLETA NO ENCONTRADA',
+                WRONG_EVENT: 'BOLETA DE OTRO EVENTO'
             })[code] || 'ERROR EN VERIFICACIÓN';
         }
 

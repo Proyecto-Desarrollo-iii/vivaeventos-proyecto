@@ -403,10 +403,6 @@
                         }
                     }
 
-                    const paymentBadge = paymentStatus
-                        ? `<span class="${paymentStatusBadgeClass(paymentStatus)}">Pago: ${paymentStatusLabel(paymentStatus)}</span>`
-                        : '';
-
                     card.innerHTML = `
                         <div class="ticket-card-header">
                             <div>
@@ -416,9 +412,8 @@
                                 <p style="color: #6b7280; font-size: 0.8rem; margin: 0.25rem 0 0;">${dateStr}</p>
                             </div>
                             <div style="text-align: right;">
-                                <span class="${statusPillClass(order.status)}">${statusLabel(order.status)}</span>
+                                <span class="${paymentStatus ? paymentStatusBadgeClass(paymentStatus) : 'status-pill'}">${paymentStatus ? 'Pago: ' + paymentStatusLabel(paymentStatus) : '—'}</span>
                                 <p style="font-weight: 800; font-size: 1.05rem; margin: 0.5rem 0 0;">$${Number(order.total || 0).toLocaleString()}</p>
-                                <div style="margin-top:0.35rem;">${paymentBadge}</div>
                             </div>
                         </div>
                         ${showRetry || showCancel ? `

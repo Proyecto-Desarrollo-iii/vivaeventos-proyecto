@@ -356,6 +356,7 @@
         // ====================== QR SCANNER (html5-qrcode) ======================
         let html5QrCode = null;
         let isScanning = false;
+        let isProcessing = false;
 
         async function startScanner() {
             try {
@@ -408,7 +409,10 @@
             }
         }
 
-        function onScanSuccess(decodedText, decodedResult) {
+        async function onScanSuccess(decodedText, decodedResult) {
+            if (isProcessing) return;
+            isProcessing = true;
+            stopScanner();
             qrInput.value = decodedText;
             try {
                 const audio = new AudioContext();
@@ -421,8 +425,7 @@
                 osc.start();
                 osc.stop(audio.currentTime + 0.1);
             } catch(e) {}
-            validate();
-            setTimeout(() => stopScanner(), 500);
+            await validate();
         }
 
         function onScanFailure(error) {}
@@ -441,6 +444,7 @@
                 case 'SUCCESS': return 'ok';
                 case 'ALREADY_USED':
                 case 'REVOKED': return 'warn';
+                case 'WRONG_EVENT':
                 case 'NOT_FOUND':
                 default: return 'err';
             }
@@ -451,6 +455,7 @@
                 case 'SUCCESS': return 'check_circle';
                 case 'ALREADY_USED': return 'block';
                 case 'REVOKED': return 'do_not_disturb_on';
+                case 'WRONG_EVENT': return 'block';
                 case 'NOT_FOUND': return 'help';
                 default: return 'error';
             }
@@ -461,7 +466,8 @@
                 SUCCESS: 'INGRESO AUTORIZADO',
                 ALREADY_USED: 'BOLETA YA UTILIZADA',
                 REVOKED: 'BOLETA REVOCADA',
-                NOT_FOUND: 'BOLETA NO ENCONTRADA'
+                NOT_FOUND: 'BOLETA NO ENCONTRADA',
+                WRONG_EVENT: 'BOLETA DE OTRO EVENTO'
             })[resCode] || 'RESULTADO DESCONOCIDO';
         }
 
@@ -541,6 +547,7 @@
             } finally {
                 validateBtn.disabled = false;
                 validateBtn.innerHTML = originalLabel;
+                isProcessing = false;
                 qrInput.select();
             }
         }
