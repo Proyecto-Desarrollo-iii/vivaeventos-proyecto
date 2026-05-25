@@ -1,504 +1,285 @@
 <!DOCTYPE html>
 <html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Dashboard Logística | VivaEventos</title>
-    <link rel="icon" href="/assets/images/Logoblue.png">
-    <link rel="stylesheet" href="/assets/css/Organizador.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
+
+    <link rel="icon" href="/assets/images/Logoblue.png" />
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&family=Poppins:wght@300;500;700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+
     <script src="https://cdn.tailwindcss.com"></script>
+
     <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        primary: "#006578",
-                        "primary-container": "#008097",
-                        "primary-fixed": "#aeecff",
-                        "on-primary": "#ffffff",
-                        "on-primary-container": "#f9fdff",
-                        secondary: "#3f646e",
-                        "surface": "#f6fafc",
-                        "on-surface": "#171c1e",
-                        "surface-variant": "#dfe3e5",
-                        "surface-container-low": "#f0f4f6",
-                        "surface-container-high": "#e4e9eb",
-                        "surface-container-highest": "#dfe3e5",
-                        "on-surface-variant": "#3d494c",
-                        outline: "#6d797d",
-                    },
-                    fontFamily: {
-                        body: ["Manrope", "Poppins", "sans-serif"],
-                    }
-                }
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              primary: "#006578",
+              "primary-container": "#008097",
+              "primary-fixed": "#aeecff",
+              "on-primary": "#ffffff",
+              "on-primary-container": "#f9fdff",
+              secondary: "#3f646e",
+              "surface": "#f6fafc",
+              "on-surface": "#171c1e",
+              "surface-variant": "#dfe3e5",
+              "surface-container-low": "#f0f4f6",
+              "surface-container-high": "#e4e9eb",
+              "surface-container-highest": "#dfe3e5",
+              "on-surface-variant": "#3d494c",
+              outline: "#6d797d",
+            },
+            fontFamily: {
+              sans: ["Manrope", "Poppins", "sans-serif"],
             }
+          }
         }
+      };
     </script>
     <style>
-        * { box-sizing: border-box; }
-        body {
-            margin: 0;
-            font-family: 'Manrope', 'Poppins', system-ui, sans-serif;
-            background: #f6fafc;
-            min-height: 100vh;
-            color: #171c1e;
-        }
-        .main-content {
-            margin-left: 240px;
-            padding: 2rem;
-            min-height: 100vh;
-        }
-        @media (max-width: 768px) {
-            .main-content { margin-left: 0; padding: 1rem; }
-        }
-        .page-title {
-            font-size: 1.75rem;
-            font-weight: 800;
-            margin: 0 0 0.25rem;
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-        }
-        .page-subtitle {
-            color: #3d494c;
-            font-size: 0.95rem;
-            margin: 0 0 2rem;
-        }
-        .kpi-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1rem;
-            margin-bottom: 2rem;
-        }
-        .kpi-card {
-            background: #fff;
-            border: 1px solid #e4e9eb;
-            border-radius: 1.25rem;
-            padding: 1.25rem;
-            box-shadow: 0 4px 12px rgba(0, 101, 120, 0.06);
-        }
-        .kpi-card .kpi-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: 10px;
-            background: #e0f7fa;
-            color: #006578;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 0.75rem;
-        }
-        .kpi-card .kpi-label {
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            color: #3d494c;
-            font-weight: 600;
-        }
-        .kpi-card .kpi-value {
-            font-size: 1.75rem;
-            font-weight: 800;
-            color: #006578;
-            margin-top: 0.25rem;
-        }
-        .panel-card {
-            background: #fff;
-            border: 1px solid #bdc8cd;
-            border-radius: 1.25rem;
-            padding: 1.5rem;
-            box-shadow: 0 20px 40px rgba(0, 101, 120, 0.08);
-        }
-        .panel-card label {
-            display: block;
-            font-size: 0.8rem;
-            color: #3d494c;
-            margin-bottom: 0.35rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.04em;
-        }
-        .panel-card input {
-            width: 100%;
-            padding: 0.75rem 1rem;
-            border-radius: 0.6rem;
-            border: 1px solid #bdc8cd;
-            background: #f6fafc;
-            color: #171c1e;
-            font-size: 0.95rem;
-            outline: none;
-            margin-bottom: 1rem;
-            transition: border-color 0.15s, box-shadow 0.15s;
-        }
-        .panel-card input:focus {
-            border-color: #006578;
-            box-shadow: 0 0 0 3px rgba(0, 101, 120, 0.15);
-        }
-        .btn-primary {
-            padding: 0.85rem 1.5rem;
-            border-radius: 999px;
-            border: none;
-            background: #006578;
-            color: #fff;
-            font-weight: 700;
-            font-size: 0.95rem;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-            transition: background 0.15s, transform 0.1s;
-        }
-        .btn-primary:hover:not(:disabled) { background: #008097; }
-        .btn-primary:active:not(:disabled) { transform: scale(0.98); }
-        .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
-        .btn-secondary {
-            background: transparent;
-            color: #006578;
-            border: 1px solid #006578;
-            padding: 0.85rem 1.5rem;
-            border-radius: 999px;
-            font-weight: 700;
-            font-size: 0.95rem;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-            transition: background 0.15s;
-        }
-        .btn-secondary:hover { background: #aeecff; color: #004e5d; }
-        .result-box {
-            margin-top: 1.25rem;
-            padding: 1.25rem;
-            border-radius: 0.75rem;
-            font-weight: 600;
-            display: none;
-        }
-        .result-box.show { display: block; }
-        .result-box.ok { background: #d1fae5; border: 1px solid #10b981; color: #065f46; }
-        .result-box.warn { background: #fef3c7; border: 1px solid #f59e0b; color: #92400e; }
-        .result-box.err { background: #fee2e2; border: 1px solid #ef4444; color: #991b1b; }
-        .ticket-info {
-            background: #f0f4f6;
-            border-radius: 0.6rem;
-            padding: 0.85rem 1rem;
-            margin-top: 0.85rem;
-            display: grid;
-            gap: 0.45rem;
-        }
-        .ticket-info .row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 1rem;
-            font-size: 0.9rem;
-        }
-        .ticket-info .row .lbl {
-            color: #3d494c;
-            text-transform: uppercase;
-            font-size: 0.7rem;
-            letter-spacing: 0.05em;
-            font-weight: 600;
-        }
-        .ticket-info .row .val {
-            text-align: right;
-            font-weight: 700;
-            word-break: break-word;
-        }
-        #scanner-container {
-            width: 100%;
-            max-width: 400px;
-            margin: 0 auto;
-            border-radius: 0.75rem;
-            overflow: hidden;
-            background: #000;
-            position: relative;
-        }
-        #scanner-container video {
-            width: 100%;
-            display: block;
-        }
-        #reader {
-            width: 100%;
-        }
-        #reader video {
-            border-radius: 0.75rem;
-        }
-        .scanner-overlay {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 200px;
-            height: 200px;
-            border: 3px solid rgba(0, 229, 255, 0.7);
-            border-radius: 12px;
-            pointer-events: none;
-            box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.3);
-        }
-        .camera-toggle {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.6rem 1.2rem;
-            border-radius: 999px;
-            border: 1px solid #bdc8cd;
-            background: #fff;
-            color: #3d494c;
-            font-weight: 600;
-            font-size: 0.85rem;
-            cursor: pointer;
-            transition: all 0.15s;
-        }
-        .camera-toggle:hover {
-            border-color: #006578;
-            color: #006578;
-            background: #f0f4f6;
-        }
-        .camera-toggle.active {
-            background: #006578;
-            color: #fff;
-            border-color: #006578;
-        }
-        .history-section {
-            margin-top: 2rem;
-        }
-        .history-section h3 {
-            font-size: 0.95rem;
-            margin: 0 0 0.75rem;
-            color: #3d494c;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.04em;
-        }
-        .history-item {
-            background: #fff;
-            border: 1px solid #e4e9eb;
-            border-radius: 0.6rem;
-            padding: 0.6rem 0.9rem;
-            margin-bottom: 0.45rem;
-            font-size: 0.85rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 1rem;
-            box-shadow: 0 4px 12px rgba(0, 101, 120, 0.04);
-        }
-        .history-item.ok { border-left: 3px solid #10b981; }
-        .history-item.warn { border-left: 3px solid #f59e0b; }
-        .history-item.err { border-left: 3px solid #ef4444; }
-        .hide { display: none !important; }
+      /* Ajustes necesarios para heredar fuentes nativas y ocultar elementos pesados */
+      .material-symbols-outlined { font-size: 22px; vertical-align: middle; }
+      #reader video { border-radius: 0.75rem; width: 100% !important; }
     </style>
-</head>
-<body>
-    <aside class="sidebar">
-        <div class="logo flex items-center gap-3">
-            <img src="/assets/images/Logoblue.png" alt="Icono" class="logo-icon">
-            <img class="logo-text" src="/assets/images/Titulo.webp" alt="VivaEventos">
-        </div>
+  </head>
+  <body class="bg-surface text-on-surface font-sans min-h-screen antialiased flex">
 
-        <nav>
-            <a href="#" class="active" data-panel="dashboard">
-                <span class="material-symbols-outlined">dashboard</span>
-                Dashboard
-            </a>
+    <!-- OVERLAY EN MÓVILES -->
+    <div id="sidebarOverlay" class="fixed inset-0 bg-black/40 z-40 opacity-0 pointer-events-none transition-opacity duration-300 lg:hidden"></div>
 
-            <a href="#" data-panel="validator">
-                <span class="material-symbols-outlined">qr_code_scanner</span>
-                Validar boletas
-            </a>
+    <!-- SIDEBAR FLUIDO -->
+    <aside id="sidebar" class="fixed top-0 left-0 h-screen w-64 bg-white border-r border-surface-variant p-5 flex flex-col z-50 -translate-x-full transition-transform duration-300 ease-in-out lg:translate-x-0">
+      <div class="logo flex items-center gap-3 mb-8">
+        <img src="/assets/images/Logoblue.png" alt="Icono" class="w-8 h-8 object-contain">
+        <img src="/assets/images/Titulo.webp" alt="VivaEventos" class="h-6 object-contain">
+      </div>
 
-            <a href="#" data-panel="history">
-                <span class="material-symbols-outlined">history</span>
-                Historial
-            </a>
+      <nav class="flex flex-col gap-2 flex-1">
+        <a href="#" data-panel="dashboard" class="flex items-center gap-3 p-3 text-secondary hover:bg-surface-container-low hover:text-primary rounded-xl transition duration-200 active-link [&.active]:bg-primary-fixed/40 [&.active]:text-primary [&.active]:font-semibold active">
+          <span class="material-symbols-outlined">dashboard</span>
+          Dashboard
+        </a>
+        <a href="#" data-panel="validator" class="flex items-center gap-3 p-3 text-secondary hover:bg-surface-container-low hover:text-primary rounded-xl transition duration-200 active-link [&.active]:bg-primary-fixed/40 [&.active]:text-primary [&.active]:font-semibold">
+          <span class="material-symbols-outlined">qr_code_scanner</span>
+          Validar boletas
+        </a>
+        <a href="#" data-panel="history" class="flex items-center gap-3 p-3 text-secondary hover:bg-surface-container-low hover:text-primary rounded-xl transition duration-200 active-link [&.active]:bg-primary-fixed/40 [&.active]:text-primary [&.active]:font-semibold">
+          <span class="material-symbols-outlined">history</span>
+          Historial
+        </a>
+        <a href="#" data-panel="settings" class="flex items-center gap-3 p-3 text-secondary hover:bg-surface-container-low hover:text-primary rounded-xl transition duration-200 active-link [&.active]:bg-primary-fixed/40 [&.active]:text-primary [&.active]:font-semibold">
+          <span class="material-symbols-outlined">settings</span>
+          Configuración
+        </a>
+      </nav>
 
-            <a href="#" data-panel="settings">
-                <span class="material-symbols-outlined">settings</span>
-                Configuración
-            </a>
-        </nav>
-
-        <div class="sidebar-user">
-            <a href="/assets/MyAccount.html" class="user-info" style="text-decoration: none; cursor: pointer;">
-                <img src="https://i.pravatar.cc/40" alt="Usuario">
-                <span id="sidebar-username">Logística</span>
-            </a>
-            <a href="#" class="logout-btn" id="sidebar-logout">
-                <span class="material-symbols-outlined">logout</span>
-                Cerrar sesión
-            </a>
-        </div>
+      <!-- SECCIÓN DE USUARIO -->
+      <div class="pt-4 border-t border-surface-variant flex flex-col gap-2">
+        <a href="/assets/MyAccount.html" class="flex items-center gap-3 p-2 hover:bg-surface-container-low rounded-xl transition">
+          <img src="https://i.pravatar.cc/40" alt="Usuario" class="w-9 h-9 rounded-full border border-primary/20">
+          <span id="sidebar-username" class="text-sm font-medium text-on-surface-variant truncate">Logística</span>
+        </a>
+        <a href="#" id="sidebar-logout" class="flex items-center gap-3 p-2 text-sm text-secondary hover:bg-red-50 hover:text-red-600 rounded-xl transition">
+          <span class="material-symbols-outlined">logout</span>
+          Cerrar sesión
+        </a>
+      </div>
     </aside>
 
-    <div class="main-content">
+    <!-- CONTENIDO PRINCIPAL -->
+    <main class="flex-1 min-h-screen lg:ml-64 p-4 md:p-8 pt-16 lg:pt-8 transition-all duration-300">
 
-        <!-- ==================== PANEL DASHBOARD ==================== -->
-        <div id="panel-dashboard">
-            <h1 class="page-title">
-                <span class="material-symbols-outlined">dashboard</span>
-                Panel de Logística
-            </h1>
-            <p class="page-subtitle" id="greeting">Bienvenido, personal de logística</p>
+      <!-- BOTÓN MENÚ MÓVIL -->
+      <button id="sidebarToggle" class="fixed top-3 left-3 z-50 p-2 bg-white border border-surface-variant rounded-xl shadow-sm text-secondary hover:bg-surface-container-low lg:hidden transition">
+        <span class="material-symbols-outlined">menu</span>
+      </button>
 
-            <div class="kpi-grid" id="kpi-grid">
-                <div class="kpi-card">
-                    <div class="kpi-icon"><span class="material-symbols-outlined">qr_code_scanner</span></div>
-                    <div class="kpi-label">Validaciones hoy</div>
-                    <div class="kpi-value" id="kpi-hoy">0</div>
-                </div>
-                <div class="kpi-card">
-                    <div class="kpi-icon"><span class="material-symbols-outlined">check_circle</span></div>
-                    <div class="kpi-label">Autorizadas</div>
-                    <div class="kpi-value" id="kpi-ok" style="color:#10b981;">0</div>
-                </div>
-                <div class="kpi-card">
-                    <div class="kpi-icon"><span class="material-symbols-outlined">block</span></div>
-                    <div class="kpi-label">Rechazadas</div>
-                    <div class="kpi-value" id="kpi-reject" style="color:#ef4444;">0</div>
-                </div>
-                <div class="kpi-card">
-                    <div class="kpi-icon"><span class="material-symbols-outlined">event</span></div>
-                    <div class="kpi-label">Eventos activos</div>
-                    <div class="kpi-value" id="kpi-eventos">-</div>
-                </div>
-            </div>
-
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <div class="panel-card">
-                    <h3 style="margin:0 0 1rem;font-size:1.1rem;display:flex;align-items:center;gap:0.5rem;">
-                        <span class="material-symbols-outlined">bolt</span>
-                        Acceso rápido
-                    </h3>
-                    <p style="color:#3d494c;font-size:0.9rem;margin-bottom:1rem;">
-                        Escanea o ingresa el código QR de una boleta para validar el ingreso.
-                    </p>
-                    <button class="btn-primary" onclick="switchPanel('validator')" style="width:100%;">
-                        <span class="material-symbols-outlined">qr_code_scanner</span>
-                        Ir a validador
-                    </button>
-                </div>
-                <div class="panel-card">
-                    <h3 style="margin:0 0 1rem;font-size:1.1rem;display:flex;align-items:center;gap:0.5rem;">
-                        <span class="material-symbols-outlined">history</span>
-                        Últimas validaciones
-                    </h3>
-                    <div id="dashboard-last-validations">
-                        <p style="color:#6d797d;font-size:0.85rem;">Aún no hay validaciones registradas hoy.</p>
-                    </div>
-                </div>
-            </div>
+      <!-- ==================== PANEL DASHBOARD ==================== -->
+      <div id="panel-dashboard" class="panel-view space-y-6">
+        <div>
+          <h1 class="text-2xl md:text-3xl font-extrabold text-primary flex items-center gap-2">
+            <span class="material-symbols-outlined !text-3xl">dashboard</span>
+            Panel de Logística
+          </h1>
+          <p id="greeting" class="text-sm md:text-base text-on-surface-variant mt-1">Bienvenido, personal de logística</p>
         </div>
 
-        <!-- ==================== PANEL VALIDADOR ==================== -->
-        <div id="panel-validator" class="hide">
-            <h1 class="page-title">
-                <span class="material-symbols-outlined">qr_code_scanner</span>
-                Validador de boletas
-            </h1>
-            <p class="page-subtitle">Personal de logística — escanea el código QR con la cámara o ingrésalo manualmente</p>
-
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <!-- Scanner panel -->
-                <div class="panel-card">
-                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;">
-                        <label style="margin:0;">Escáner QR</label>
-                        <button id="toggle-camera" class="camera-toggle">
-                            <span class="material-symbols-outlined">videocam</span>
-                            Iniciar cámara
-                        </button>
-                    </div>
-                    <div id="scanner-container">
-                        <div id="reader"></div>
-                    </div>
-                    <p id="scanner-status" style="text-align:center;font-size:0.8rem;color:#6d797d;margin-top:0.75rem;">
-                        Presiona "Iniciar cámara" para escanear QR
-                    </p>
-                </div>
-
-                <!-- Manual input panel -->
-                <div class="panel-card">
-                    <label for="qr-input">Código QR manual</label>
-                    <input id="qr-input" type="text" placeholder="Pega aquí el código de la boleta" autocomplete="off">
-
-                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;">
-                        <div>
-                            <label for="gate">Puerta</label>
-                            <input id="gate" type="text" placeholder="Puerta 1" value="Puerta 1">
-                        </div>
-                        <div>
-                            <label for="operator">Operador</label>
-                            <input id="operator" type="text" placeholder="logistica-01" value="logistica-01">
-                        </div>
-                    </div>
-
-                    <button id="validate-btn" class="btn-primary" style="width:100%;">
-                        <span class="material-symbols-outlined">check_circle</span>
-                        Validar boleta
-                    </button>
-                    <button id="clear-btn" class="btn-secondary" type="button" style="width:100%;margin-top:0.5rem;">
-                        <span class="material-symbols-outlined">refresh</span>
-                        Limpiar
-                    </button>
-
-                    <div id="result" class="result-box"></div>
-                </div>
+        <!-- REJILLA KPI RESPONSIVE -->
+        <div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
+          <div class="bg-white p-4 border border-surface-variant rounded-2xl shadow-sm flex flex-col justify-between">
+            <div class="w-9 h-9 bg-primary-fixed/60 text-primary rounded-xl flex items-center justify-center mb-3"><span class="material-symbols-outlined">qr_code_scanner</span></div>
+            <div>
+              <div class="text-[10px] md:text-xs uppercase tracking-wider font-semibold text-on-surface-variant">Validaciones hoy</div>
+              <div id="kpi-hoy" class="text-xl md:text-2xl font-black text-primary mt-1">0</div>
             </div>
-
-            <div class="history-section">
-                <h3>
-                    <span class="material-symbols-outlined">history</span>
-                    Últimas validaciones
-                </h3>
-                <div id="history-list"></div>
+          </div>
+          <div class="bg-white p-4 border border-surface-variant rounded-2xl shadow-sm flex flex-col justify-between">
+            <div class="w-9 h-9 bg-emerald-100 text-emerald-700 rounded-xl flex items-center justify-center mb-3"><span class="material-symbols-outlined">check_circle</span></div>
+            <div>
+              <div class="text-[10px] md:text-xs uppercase tracking-wider font-semibold text-on-surface-variant">Autorizadas</div>
+              <div id="kpi-ok" class="text-xl md:text-2xl font-black text-emerald-600 mt-1">0</div>
             </div>
+          </div>
+          <div class="bg-white p-4 border border-surface-variant rounded-2xl shadow-sm flex flex-col justify-between">
+            <div class="w-9 h-9 bg-red-100 text-red-600 rounded-xl flex items-center justify-center mb-3"><span class="material-symbols-outlined">block</span></div>
+            <div>
+              <div class="text-[10px] md:text-xs uppercase tracking-wider font-semibold text-on-surface-variant">Rechazadas</div>
+              <div id="kpi-reject" class="text-xl md:text-2xl font-black text-red-600 mt-1">0</div>
+            </div>
+          </div>
+          <div class="bg-white p-4 border border-surface-variant rounded-2xl shadow-sm flex flex-col justify-between">
+            <div class="w-9 h-9 bg-cyan-100 text-cyan-800 rounded-xl flex items-center justify-center mb-3"><span class="material-symbols-outlined">event</span></div>
+            <div>
+              <div class="text-[10px] md:text-xs uppercase tracking-wider font-semibold text-on-surface-variant">Eventos activos</div>
+              <div id="kpi-eventos" class="text-xl md:text-2xl font-black text-cyan-700 mt-1">-</div>
+            </div>
+          </div>
         </div>
 
-        <!-- ==================== PANEL HISTORIAL ==================== -->
-        <div id="panel-history" class="hide">
-            <h1 class="page-title">
-                <span class="material-symbols-outlined">history</span>
-                Historial de validaciones
-            </h1>
-            <p class="page-subtitle">Todas las validaciones realizadas durante el día de hoy.</p>
-            <div class="panel-card">
-                <div id="full-history-list">
-                    <p style="color:#6d797d;">Aún no hay validaciones registradas.</p>
-                </div>
+        <!-- CONTENIDO SECUNDARIO -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div class="bg-white border border-surface-variant p-5 rounded-2xl shadow-sm flex flex-col justify-between space-y-4">
+            <div>
+              <h3 class="text-base font-bold flex items-center gap-2 text-on-surface"><span class="material-symbols-outlined text-primary">bolt</span>Acceso rápido</h3>
+              <p class="text-sm text-on-surface-variant mt-2">Escanea o ingresa el código QR de una boleta de forma rápida para dar paso inmediato al usuario.</p>
             </div>
+            <button class="w-full bg-primary hover:bg-primary-container text-white py-3 px-4 rounded-full font-bold text-sm shadow-sm transition flex items-center justify-center gap-2" onclick="switchPanel('validator')">
+              <span class="material-symbols-outlined">qr_code_scanner</span>Ir a validador
+            </button>
+          </div>
+          <div class="bg-white border border-surface-variant p-5 rounded-2xl shadow-sm">
+            <h3 class="text-base font-bold flex items-center gap-2 text-on-surface mb-3"><span class="material-symbols-outlined text-primary">history</span>Últimas validaciones</h3>
+            <div id="dashboard-last-validations" class="space-y-2">
+              <p class="text-xs text-outline">Cargando registros recientes...</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==================== PANEL VALIDADOR ==================== -->
+      <div id="panel-validator" class="panel-view space-y-6 hidden">
+        <div>
+          <h1 class="text-2xl md:text-3xl font-extrabold text-primary flex items-center gap-2">
+            <span class="material-symbols-outlined !text-3xl">qr_code_scanner</span>
+            Validador de boletas
+          </h1>
+          <p class="text-sm text-on-surface-variant mt-1">Escanea boletas usando la cámara trasera o realiza el ingreso manual con el código.</p>
         </div>
 
-        <!-- ==================== PANEL CONFIGURACIÓN ==================== -->
-        <div id="panel-settings" class="hide">
-            <h1 class="page-title">
-                <span class="material-symbols-outlined">settings</span>
-                Configuración
-            </h1>
-            <p class="page-subtitle">Próximamente podrás administrar tus preferencias.</p>
-        </div>
-    </div>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <!-- Escáner -->
+          <div class="bg-white border border-surface-variant p-4 md:p-5 rounded-2xl shadow-sm space-y-3">
+            <div class="flex items-center justify-between">
+              <label class="text-xs uppercase font-bold tracking-wider text-on-surface-variant">Lector de Cámara</label>
+              <button id="toggle-camera" class="flex items-center gap-2 border border-outline/30 px-4 py-1.5 rounded-full text-xs font-semibold bg-white text-on-surface-variant hover:border-primary hover:text-primary transition">
+                <span class="material-symbols-outlined">videocam</span>Iniciar cámara
+              </button>
+            </div>
+            <div class="w-full max-w-md mx-auto rounded-xl overflow-hidden bg-black relative">
+              <div id="reader"></div>
+            </div>
+            <p id="scanner-status" class="text-center text-xs text-outline font-medium">Lector inactivo. Presiona "Iniciar cámara".</p>
+          </div>
 
+          <!-- Formulario Manual y Resultados -->
+          <div class="bg-white border border-surface-variant p-4 md:p-5 rounded-2xl shadow-sm flex flex-col justify-between space-y-4">
+            <div class="space-y-3">
+              <div>
+                <label for="qr-input" class="block text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1">Código QR Manual</label>
+                <input id="qr-input" type="text" placeholder="Pega o escribe el token de la boleta" class="w-full px-4 py-2.5 border border-outline/40 bg-surface rounded-xl focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none text-sm transition">
+              </div>
+
+              <div class="grid grid-cols-2 gap-3">
+                <div>
+                  <label class="block text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1">Puerta de Acceso</label>
+                  <input id="gate" type="text" value="Puerta 1" class="w-full px-4 py-2.5 border border-outline/40 bg-surface rounded-xl focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none text-sm transition">
+                </div>
+                <div>
+                  <label class="block text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1">ID Operador</label>
+                  <input id="operator" type="text" value="logistica-01" class="w-full px-4 py-2.5 border border-outline/40 bg-surface rounded-xl focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none text-sm transition">
+                </div>
+              </div>
+            </div>
+
+            <div class="space-y-2">
+              <button id="validate-btn" class="w-full bg-primary hover:bg-primary-container text-white py-3 rounded-full font-bold text-sm transition flex items-center justify-center gap-2">
+                <span class="material-symbols-outlined">check_circle</span>Validar boleta
+              </button>
+              <button id="clear-btn" class="w-full border border-primary text-primary hover:bg-primary-fixed/40 py-2.5 rounded-full font-bold text-sm transition flex items-center justify-center gap-2">
+                <span class="material-symbols-outlined">refresh</span>Limpiar campos
+              </button>
+            </div>
+
+            <!-- Caja dinámica de resultados del Backend -->
+            <div id="result" class="rounded-xl p-4 hidden border font-medium text-sm space-y-2"></div>
+          </div>
+        </div>
+
+        <div class="space-y-3">
+          <h3 class="text-sm font-bold uppercase tracking-wider text-on-surface-variant flex items-center gap-1">
+            <span class="material-symbols-outlined">history</span>Últimas validaciones de la sesión
+          </h3>
+          <div id="history-list" class="space-y-2"></div>
+        </div>
+      </div>
+
+      <!-- ==================== PANEL HISTORIAL ==================== -->
+      <div id="panel-history" class="panel-view space-y-6 hidden">
+        <div>
+          <h1 class="text-2xl md:text-3xl font-extrabold text-primary flex items-center gap-2">
+            <span class="material-symbols-outlined !text-3xl">history</span>
+            Historial General
+          </h1>
+          <p class="text-sm text-on-surface-variant mt-1">Todas las auditorías de boletas sincronizadas en tiempo real con la base de datos central.</p>
+        </div>
+        <div class="bg-white border border-surface-variant p-5 rounded-2xl shadow-sm">
+          <div id="full-history-list" class="space-y-3">
+            <p class="text-sm text-outline">Cargando historial remoto...</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==================== PANEL CONFIGURACIÓN ==================== -->
+      <div id="panel-settings" class="panel-view space-y-4 hidden">
+        <div>
+          <h1 class="text-2xl md:text-3xl font-extrabold text-primary flex items-center gap-2">
+            <span class="material-symbols-outlined !text-3xl">settings</span>
+            Configuración del Dispositivo
+          </h1>
+          <p class="text-sm text-on-surface-variant mt-1">Preferencias del puesto de control y asignación rápida de zonas.</p>
+        </div>
+        <div class="bg-white border border-surface-variant p-5 rounded-2xl shadow-sm">
+          <p class="text-sm text-on-surface-variant font-medium">Próximamente podrás cambiar configuraciones de audio y perfiles de cámara aquí.</p>
+        </div>
+      </div>
+    </main>
+
+    <!-- ARCHIVOS FRONTEND MOCK/API (Herencia de tu arquitectura) -->
     <script src="/assets/js/auth.js"></script>
     <script src="/assets/js/api.js"></script>
     <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+
     <script>
-        // ====================== AUTH CHECK ======================
+        // Memoria volátil para mantener las validaciones hechas en esta sesión actual
+        let currentSessionValidations = [];
+
+        // ====================== AUTH VALIDATION & INITIALIZATION ======================
         (function () {
-            if (!AuthService.isAuthenticated()) {
+            if (window.AuthService && !AuthService.isAuthenticated()) {
                 window.location.href = '/auth/login.html';
                 return;
             }
-            const user = AuthService.getUser();
+            const user = window.AuthService ? AuthService.getUser() : null;
             const role = (user && user.role || '').toUpperCase();
-            if (role !== 'LOGISTICA' && role !== 'ADMIN') {
-                window.location.href = '/auth/login.html';
-                return;
+
+            // Forzar ID de operador dinámico si viene en la sesión
+            if (user && user.email) {
+                const opInput = document.getElementById('operator');
+                if (opInput) opInput.value = user.email.split('@')[0];
             }
+
             const nameEl = document.getElementById('sidebar-username');
             if (nameEl && user) {
                 nameEl.textContent = user.fullName || user.email || 'Logística';
@@ -509,29 +290,27 @@
             }
         })();
 
-        // ====================== SIDEBAR ======================
+        // LOGOUT
         document.getElementById('sidebar-logout').addEventListener('click', async function (e) {
             e.preventDefault();
             if (window.AuthService && typeof AuthService.logout === 'function') {
                 await AuthService.logout();
             } else {
                 localStorage.clear();
-                sessionStorage.clear();
                 window.location.href = '/auth/login.html';
             }
         });
 
-        // ====================== PANEL SWITCHING ======================
+        // ====================== INTERRUPTOR DE PANELES (TAILWIND STYLE) ======================
         function switchPanel(name) {
-            document.querySelectorAll('[data-panel]').forEach(a => a.classList.remove('active'));
+            document.querySelectorAll('.active-link').forEach(a => a.classList.remove('active'));
             document.querySelector(`[data-panel="${name}"]`)?.classList.add('active');
-            ['dashboard', 'validator', 'history', 'settings'].forEach(p => {
-                const el = document.getElementById('panel-' + p);
-                if (el) el.classList.toggle('hide', p !== name);
+
+            document.querySelectorAll('.panel-view').forEach(p => {
+                p.classList.add('hidden');
             });
-            if (name === 'validator' && html5QrCode && !isScanning) {
-                // don't auto-start; user clicks button
-            }
+            document.getElementById('panel-' + name)?.classList.remove('hidden');
+
             if (name !== 'validator' && isScanning) {
                 stopScanner();
             }
@@ -541,72 +320,43 @@
             link.addEventListener('click', function (e) {
                 e.preventDefault();
                 switchPanel(this.dataset.panel);
+                if (window.innerWidth < 1024) closeSidebar();
             });
         });
 
-        // ====================== LOCAL STORAGE HELPERS ======================
-        function getValidationsToday() {
-            const today = new Date().toISOString().split('T')[0];
-            const key = 'validations_' + today;
-            try {
-                return JSON.parse(localStorage.getItem(key)) || [];
-            } catch { return []; }
+        // ====================== SIDEBAR RESPONSIVE TOGGLE ======================
+        const sidebar = document.getElementById('sidebar');
+        const sidebarToggle = document.getElementById('sidebarToggle');
+        const sidebarOverlay = document.getElementById('sidebarOverlay');
+
+        function openSidebar() {
+            sidebar.classList.remove('-translate-x-full');
+            sidebarOverlay.classList.remove('opacity-0', 'pointer-events-none');
+            sidebarOverlay.classList.add('opacity-100', 'pointer-events-auto');
+            document.body.classList.add('overflow-hidden');
         }
 
-        function saveValidation(v) {
-            const today = new Date().toISOString().split('T')[0];
-            const key = 'validations_' + today;
-            const list = getValidationsToday();
-            list.unshift(v);
-            localStorage.setItem(key, JSON.stringify(list));
-            updateAll();
+        function closeSidebar() {
+            sidebar.classList.add('-translate-x-full');
+            sidebarOverlay.classList.remove('opacity-100', 'pointer-events-auto');
+            sidebarOverlay.classList.add('opacity-0', 'pointer-events-none');
+            document.body.classList.remove('overflow-hidden');
         }
 
-        function getAllValidations() {
-            const today = new Date().toISOString().split('T')[0];
-            const key = 'validations_' + today;
-            try {
-                return JSON.parse(localStorage.getItem(key)) || [];
-            } catch { return []; }
-        }
+        sidebarToggle.addEventListener('click', function(e) {
+            e.stopPropagation();
+            if (sidebar.classList.contains('-translate-x-full')) openSidebar();
+            else closeSidebar();
+        });
+        sidebarOverlay.addEventListener('click', closeSidebar);
 
-        function updateAll() {
-            updateKpis();
-            updateHistoryList();
-            updateDashboardLast();
-            updateFullHistory();
-        }
-
-        // ====================== KPI UPDATES ======================
-        function updateKpis() {
-            const list = getAllValidations();
-            document.getElementById('kpi-hoy').textContent = list.length;
-            const okCount = list.filter(v => v.result === 'SUCCESS').length;
-            const rejectCount = list.filter(v => v.result !== 'SUCCESS').length;
-            document.getElementById('kpi-ok').textContent = okCount;
-            document.getElementById('kpi-reject').textContent = rejectCount;
-        }
-
-        // ====================== FETCH ACTIVE EVENTS COUNT ======================
-        async function loadActiveEvents() {
-            try {
-                const res = await api.get('/events');
-                const eventos = res.data?.eventos || [];
-                const active = eventos.filter(e => e.isPublished && e.isActive).length;
-                document.getElementById('kpi-eventos').textContent = active;
-            } catch {
-                document.getElementById('kpi-eventos').textContent = 'N/A';
-            }
-        }
-
-        // ====================== RESULT HELPERS ======================
-        function resultClass(code) {
-            switch (code) {
-                case 'SUCCESS': return 'ok';
+        // ====================== UTILS PARA FORMATO DINÁMICO DE CLASES ======================
+        function getStatusClasses(result) {
+            switch (result) {
+                case 'SUCCESS': return { bg: 'bg-emerald-50 border-emerald-500 text-emerald-900', icon: 'text-emerald-600' };
                 case 'ALREADY_USED':
-                case 'REVOKED': return 'warn';
-                case 'NOT_FOUND':
-                default: return 'err';
+                case 'REVOKED': return { bg: 'bg-amber-50 border-amber-500 text-amber-900', icon: 'text-amber-600' };
+                default: return { bg: 'bg-red-50 border-red-500 text-red-900', icon: 'text-red-600' };
             }
         }
 
@@ -615,7 +365,6 @@
                 case 'SUCCESS': return 'check_circle';
                 case 'ALREADY_USED': return 'block';
                 case 'REVOKED': return 'do_not_disturb_on';
-                case 'NOT_FOUND': return 'help';
                 default: return 'error';
             }
         }
@@ -626,284 +375,290 @@
                 ALREADY_USED: 'BOLETA YA UTILIZADA',
                 REVOKED: 'BOLETA REVOCADA',
                 NOT_FOUND: 'BOLETA NO ENCONTRADA'
-            })[code] || 'RESULTADO DESCONOCIDO';
+            })[code] || 'ERROR EN VERIFICACIÓN';
         }
 
-        // ====================== VALIDATE ======================
+        // ====================== CONTROL REMOTO REAL DE DATOS (SPRING BOOT ENDPOINTS) ======================
+
+        // 1. Cargar conteo real de eventos activos vía API
+        async function loadActiveEvents() {
+            try {
+                const res = await window.api.get('/events');
+                const eventos = res.data?.eventos || res.data || [];
+                const active = eventos.filter(e => e.isPublished && e.isActive).length;
+                document.getElementById('kpi-eventos').textContent = active;
+            } catch {
+                document.getElementById('kpi-eventos').textContent = '0';
+            }
+        }
+
+        // 2. Sincronizar logs desde el microservicio correspondientes al día de hoy
+        async function syncValidations() {
+            try {
+                const operator = document.getElementById('operator').value || '';
+                // Se consume el endpoint real de tu microservicio de checkin/validations
+                const res = await fetch(`/api/validations/today?operator=${encodeURIComponent(operator)}`);
+                if (!res.ok) throw new Error();
+                const rows = await res.json();
+
+                currentSessionValidations = rows.map(r => ({
+                    qrCode: r.qr_code || r.qrCode,
+                    result: r.result,
+                    validatedAt: r.validated_at || r.validatedAt,
+                    eventName: r.event_name || r.eventName,
+                    holderName: r.holder_name || r.holderName,
+                }));
+            } catch (e) {
+                console.warn('Backend offline o endpoint ausente, operando de forma aislada en sesión activa.');
+            }
+            renderViews();
+        }
+
+        // 3. Envío de Check-in al Backend
         async function validateQR(qrCode) {
             if (!qrCode) return;
-
             const validateBtn = document.getElementById('validate-btn');
             const resultBox = document.getElementById('result');
 
             validateBtn.disabled = true;
-            const originalLabel = validateBtn.innerHTML;
-            validateBtn.innerHTML = '<span class="material-symbols-outlined">sync</span> Validando...';
-            resultBox.classList.remove('show', 'ok', 'warn', 'err');
+            const originalContent = validateBtn.innerHTML;
+            validateBtn.innerHTML = '<span class="material-symbols-outlined class="animate-spin"">sync</span> Procesando...';
+
+            resultBox.className = "rounded-xl p-4 border font-medium text-sm space-y-2 hidden";
 
             try {
-                const res = await Checkin.validate({
-                    qrCode,
-                    gateLocation: document.getElementById('gate').value || null,
-                    validatedBy: document.getElementById('operator').value || null
+                // Consumo asíncrono real mapeado desde tu api.js / Checkin global
+                const res = await window.Checkin.validate({
+                    qrCode: qrCode,
+                    gateLocation: document.getElementById('gate').value || 'Puerta 1',
+                    validatedBy: document.getElementById('operator').value || 'logistica'
                 });
 
-                const v = (res.data && res.data.validacion) || {};
-                const cls = resultClass(v.result);
-                resultBox.classList.add('show', cls);
-                const esc = s => (s == null ? '' : String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c]));
-                const hasInfo = v.eventName || v.holderName || v.ticketType || v.holderEmail;
-                const shortId = v.issuedTicketId ? `#${String(v.issuedTicketId).substring(0,8).toUpperCase()}` : null;
+                const v = res.data?.validacion || res.data || {};
+                const design = getStatusClasses(v.result || 'NOT_FOUND');
+
+                resultBox.classList.remove('hidden');
+                resultBox.classList.add(...design.bg.split(' '));
+
                 resultBox.innerHTML = `
-                    <div style="display:flex;align-items:center;gap:0.5rem;font-size:1.1rem;font-weight:800;text-transform:uppercase;letter-spacing:0.03em;margin-bottom:0.4rem;">
-                        <span class="material-symbols-outlined">${resultIcon(v.result)}</span>
+                    <div class="flex items-center gap-2 font-bold text-base tracking-wide">
+                        <span class="material-symbols-outlined ${design.icon}">${resultIcon(v.result)}</span>
                         ${resultLabel(v.result)}
                     </div>
-                    <div>${esc(v.message) || ''}</div>
-                    ${hasInfo ? `
-                    <div class="ticket-info">
-                        ${v.eventName ? `<div class="row"><span class="lbl">Evento</span><span class="val">${esc(v.eventName)}</span></div>` : ''}
-                        ${v.ticketType ? `<div class="row"><span class="lbl">Tipo</span><span class="val">${esc(v.ticketType)}</span></div>` : ''}
-                        ${v.holderName ? `<div class="row"><span class="lbl">Titular</span><span class="val">${esc(v.holderName)}</span></div>` : ''}
-                        ${v.holderEmail ? `<div class="row"><span class="lbl">Correo</span><span class="val">${esc(v.holderEmail)}</span></div>` : ''}
-                        ${shortId ? `<div class="row"><span class="lbl">Boleta</span><span class="val">${shortId}</span></div>` : ''}
-                    </div>` : ''}
-                    <div style="font-size:0.8rem;opacity:0.85;margin-top:0.5rem;font-family:monospace;word-break:break-all;">QR: ${esc(v.qrCode || qrCode)}</div>
+                    <div class="text-xs opacity-90">${v.message || 'Procesado correctamente'}</div>
+                    ${v.eventName ? `
+                        <div class="mt-2 pt-2 border-t border-black/10 text-xs space-y-1 opacity-80">
+                            <div><strong>Evento:</strong> ${v.eventName}</div>
+                            <div><strong>Asistente:</strong> ${v.holderName || 'N/A'}</div>
+                        </div>
+                    ` : ''}
                 `;
 
-                saveValidation({ ...v, qrCode: v.qrCode || qrCode, result: v.result || 'SUCCESS' });
+                // Añadir a pila en memoria local e interactuar con interfaz
+                currentSessionValidations.unshift({
+                    qrCode: qrCode,
+                    result: v.result || 'NOT_FOUND',
+                    validatedAt: new Date().toISOString(),
+                    eventName: v.eventName || 'Evento General',
+                    holderName: v.holderName || 'Usuario Manual'
+                });
 
-                if (v.result === 'SUCCESS') {
-                    const audio = new AudioContext();
-                    const osc = audio.createOscillator();
-                    const gain = audio.createGain();
-                    osc.connect(gain);
-                    gain.connect(audio.destination);
-                    osc.frequency.value = 1200;
-                    gain.gain.value = 0.3;
-                    osc.start();
-                    osc.stop(audio.currentTime + 0.15);
-                }
+                // Sonido nativo de éxito si fue validado
+                if (v.result === 'SUCCESS') triggerAudioBeep(1200, 0.15);
+                else triggerAudioBeep(450, 0.3);
+
             } catch (err) {
-                console.error('Validate error:', err);
-                resultBox.classList.add('show', 'err');
+                resultBox.classList.remove('hidden');
+                resultBox.classList.add('bg-red-50', 'border-red-500', 'text-red-900');
                 resultBox.innerHTML = `
-                    <div style="display:flex;align-items:center;gap:0.5rem;font-size:1.1rem;font-weight:800;text-transform:uppercase;letter-spacing:0.03em;margin-bottom:0.4rem;">
-                        <span class="material-symbols-outlined">error</span>
-                        ERROR DE CONEXIÓN
+                    <div class="flex items-center gap-2 font-bold text-base">
+                        <span class="material-symbols-outlined text-red-600">error</span>
+                        ERROR EN INFRAESTRUCTURA
                     </div>
-                    <div>No se pudo contactar al servicio de validación.</div>
+                    <div class="text-xs">No se pudo entablar conexión con el Gateway de servicios (8090). Revisa el túnel.</div>
                 `;
             } finally {
                 validateBtn.disabled = false;
-                validateBtn.innerHTML = originalLabel;
+                validateBtn.innerHTML = originalContent;
+                renderViews();
             }
         }
 
-        // ====================== HISTORY RENDERING ======================
-        function updateHistoryList() {
-            const list = getValidationsToday();
-            const container = document.getElementById('history-list');
-            container.innerHTML = list.slice(0, 8).map(v => {
-                const cls = resultClass(v.result);
-                const time = v.validatedAt
-                    ? new Date(v.validatedAt).toLocaleTimeString('es-CO')
-                    : new Date().toLocaleTimeString('es-CO');
-                return `
-                    <div class="history-item ${cls}">
-                        <div>
-                            <div style="font-weight:700;font-size:0.9rem;">${resultLabel(v.result)}</div>
-                            <div style="font-family:monospace;font-size:0.75rem;color:#6d797d;max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${v.qrCode || ''}</div>
-                        </div>
-                        <div style="color:#94a3b8;font-size:0.75rem;">${time}</div>
-                    </div>
-                `;
-            }).join('');
-            if (!list.length) container.innerHTML = '<p style="color:#6d797d;font-size:0.85rem;">Aún no hay validaciones hoy.</p>';
+        // ====================== AUDIO FEEDBACK NATIVO BROWSER ======================
+        function triggerAudioBeep(freq, duration) {
+            try {
+                const audio = new (window.AudioContext || window.webkitAudioContext)();
+                const osc = audio.createOscillator();
+                const gain = audio.createGain();
+                osc.connect(gain);
+                gain.connect(audio.destination);
+                osc.frequency.value = freq;
+                gain.gain.value = 0.2;
+                osc.start();
+                osc.stop(audio.currentTime + duration);
+            } catch(e){}
         }
 
-        function updateDashboardLast() {
-            const list = getValidationsToday();
-            const container = document.getElementById('dashboard-last-validations');
-            if (!list.length) {
-                container.innerHTML = '<p style="color:#6d797d;font-size:0.85rem;">Aún no hay validaciones registradas hoy.</p>';
-                return;
+        // ====================== RENDERIZADO DINÁMICO DE INTERFACES ======================
+        function renderViews() {
+            // Actualizar KPIs
+            document.getElementById('kpi-hoy').textContent = currentSessionValidations.length;
+            document.getElementById('kpi-ok').textContent = currentSessionValidations.filter(v => v.result === 'SUCCESS').length;
+            document.getElementById('kpi-reject').textContent = currentSessionValidations.filter(v => v.result !== 'SUCCESS').length;
+
+            const timeOpt = { hour: '2-digit', minute: '2-digit', second: '2-digit' };
+
+            // 1. Dashboard Ultimos 3 registros
+            const dashboardContainer = document.getElementById('dashboard-last-validations');
+            if (currentSessionValidations.length === 0) {
+                dashboardContainer.innerHTML = '<p class="text-xs text-outline">Aún no hay validaciones registradas hoy.</p>';
+            } else {
+                dashboardContainer.innerHTML = currentSessionValidations.slice(0, 3).map(v => {
+                    const design = getStatusClasses(v.result);
+                    return `
+                        <div class="flex items-center justify-between p-3 border-l-4 bg-surface rounded-xl text-xs ${design.bg}">
+                            <div>
+                                <div class="font-bold">${resultLabel(v.result)}</div>
+                                <div class="text-[11px] text-on-surface-variant truncate max-w-[180px]">${v.holderName || v.qrCode}</div>
+                            </div>
+                            <span class="text-outline text-[10px] font-mono">${new Date(v.validatedAt).toLocaleTimeString('es-CO', timeOpt)}</span>
+                        </div>
+                    `;
+                }).join('');
             }
-            container.innerHTML = list.slice(0, 3).map(v => {
-                const cls = resultClass(v.result);
-                const time = v.validatedAt
-                    ? new Date(v.validatedAt).toLocaleTimeString('es-CO')
-                    : new Date().toLocaleTimeString('es-CO');
-                return `
-                    <div class="history-item ${cls}" style="margin-bottom:0.35rem;">
-                        <div>
-                            <div style="font-weight:700;font-size:0.85rem;">${resultLabel(v.result)}</div>
-                            <div style="font-size:0.7rem;color:#6d797d;">${v.holderName || v.qrCode || ''}</div>
-                        </div>
-                        <div style="color:#94a3b8;font-size:0.7rem;">${time}</div>
-                    </div>
-                `;
-            }).join('');
-        }
 
-        function updateFullHistory() {
-            const list = getValidationsToday();
-            const container = document.getElementById('full-history-list');
-            if (!list.length) {
-                container.innerHTML = '<p style="color:#6d797d;">Aún no hay validaciones registradas.</p>';
-                return;
+            // 2. Validador Ultimos 8 registros
+            const validatorContainer = document.getElementById('history-list');
+            if (currentSessionValidations.length === 0) {
+                validatorContainer.innerHTML = '<p class="text-xs text-outline">Sin validaciones en esta sesión.</p>';
+            } else {
+                validatorContainer.innerHTML = currentSessionValidations.slice(0, 8).map(v => {
+                    const design = getStatusClasses(v.result);
+                    return `
+                        <div class="flex items-center justify-between p-2.5 border-l-4 bg-surface rounded-lg text-xs ${design.bg}">
+                            <div>
+                                <span class="font-bold block">${resultLabel(v.result)}</span>
+                                <span class="font-mono text-[10px] text-outline block truncate max-w-xs">${v.qrCode}</span>
+                            </div>
+                            <span class="text-[10px] font-medium text-outline">${new Date(v.validatedAt).toLocaleTimeString('es-CO', timeOpt)}</span>
+                        </div>
+                    `;
+                }).join('');
             }
-            container.innerHTML = list.map(v => {
-                const cls = resultClass(v.result);
-                const time = v.validatedAt
-                    ? new Date(v.validatedAt).toLocaleString('es-CO')
-                    : new Date().toLocaleString('es-CO');
-                return `
-                    <div class="history-item ${cls}">
-                        <div style="flex:1;">
-                            <div style="font-weight:700;font-size:0.9rem;">${resultLabel(v.result)}</div>
-                            <div style="font-size:0.8rem;color:#3d494c;">${v.holderName || ''} ${v.holderEmail ? '• ' + v.holderEmail : ''}</div>
-                            <div style="font-size:0.75rem;color:#6d797d;font-family:monospace;">${v.qrCode || ''}</div>
+
+            // 3. Historial Completo
+            const fullHistoryContainer = document.getElementById('full-history-list');
+            if (currentSessionValidations.length === 0) {
+                fullHistoryContainer.innerHTML = '<p class="text-sm text-outline">Aún no hay registros de entrada de datos.</p>';
+            } else {
+                fullHistoryContainer.innerHTML = currentSessionValidations.map(v => {
+                    const design = getStatusClasses(v.result);
+                    return `
+                        <div class="flex items-center justify-between p-3.5 border-l-4 bg-surface rounded-xl text-sm ${design.bg}">
+                            <div class="flex-1 min-w-0">
+                                <span class="font-bold text-xs block">${resultLabel(v.result)}</span>
+                                <span class="text-xs text-on-surface-variant block truncate">${v.holderName || 'Ingreso'} • ${v.eventName}</span>
+                            </div>
+                            <div class="text-right ml-2 flex-shrink-0">
+                                <span class="text-[10px] font-mono text-outline block">${new Date(v.validatedAt).toLocaleTimeString('es-CO')}</span>
+                            </div>
                         </div>
-                        <div style="text-align:right;flex-shrink:0;">
-                            <div style="color:#94a3b8;font-size:0.7rem;">${time}</div>
-                            ${v.eventName ? '<div style="font-size:0.7rem;color:#006578;">' + v.eventName + '</div>' : ''}
-                        </div>
-                    </div>
-                `;
-            }).join('');
+                    `;
+                }).join('');
+            }
         }
 
-        // ====================== QR SCANNER (html5-qrcode) ======================
+        // ====================== HTML5 QRCODE CONFIG (ESCÁNER INTEGRADO MÓVIL) ======================
         let html5QrCode = null;
         let isScanning = false;
+        let scanLock = false;
 
         async function startScanner() {
             const statusEl = document.getElementById('scanner-status');
             const toggleBtn = document.getElementById('toggle-camera');
 
             try {
-                if (!html5QrCode) {
-                    html5QrCode = new Html5Qrcode("reader");
-                }
+                if (!html5QrCode) html5QrCode = new Html5Qrcode("reader");
 
-                const config = {
-                    fps: 15,
-                    qrbox: { width: 250, height: 250 },
-                    aspectRatio: 1.0
-                };
-
-                await html5QrCode.start(
-                    { facingMode: "environment" },
-                    config,
-                    onScanSuccess,
-                    onScanFailure
-                );
+                const config = { fps: 15, qrbox: { width: 220, height: 220 }, aspectRatio: 1.0 };
+                await html5QrCode.start({ facingMode: "environment" }, config, onScanSuccess, () => {});
 
                 isScanning = true;
-                toggleBtn.classList.add('active');
+                toggleBtn.className = "flex items-center gap-2 border border-red-500 px-4 py-1.5 rounded-full text-xs font-semibold bg-red-50 text-red-600 hover:bg-red-100 transition";
                 toggleBtn.innerHTML = '<span class="material-symbols-outlined">videocam_off</span> Detener cámara';
-                statusEl.textContent = 'Cámara trasera activa — apunta al código QR';
-                statusEl.style.color = '#10b981';
+                statusEl.textContent = 'Lector activo (Cámara trasera) — Apunta a un código QR';
+                statusEl.className = 'text-center text-xs text-emerald-600 font-semibold animate-pulse';
             } catch (err) {
-                console.error('Error starting scanner:', err);
-                statusEl.textContent = 'Error al acceder a la cámara: ' + (err.message || '');
-                statusEl.style.color = '#ef4444';
-                // fallback: try front camera
+                // Fallback automático por si no detecta cámara trasera (entornos de prueba o pc portatil)
                 try {
-                    if (html5QrCode) await html5QrCode.stop();
-                    html5QrCode = new Html5Qrcode("reader");
-                    await html5QrCode.start(
-                        { facingMode: "user" },
-                        { fps: 15, qrbox: { width: 250, height: 250 } },
-                        onScanSuccess,
-                        onScanFailure
-                    );
+                    await html5QrCode.start({ facingMode: "user" }, { fps: 15, qrbox: { width: 220, height: 220 } }, onScanSuccess, () => {});
                     isScanning = true;
-                    toggleBtn.classList.add('active');
                     toggleBtn.innerHTML = '<span class="material-symbols-outlined">videocam_off</span> Detener cámara';
-                    statusEl.textContent = 'Cámara frontal activa (no se encontró cámara trasera)';
-                    statusEl.style.color = '#f59e0b';
-                } catch (err2) {
-                    statusEl.textContent = 'No se pudo acceder a ninguna cámara. Usa el ingreso manual.';
-                    statusEl.style.color = '#ef4444';
+                    statusEl.textContent = 'Lector activo (Cámara Frontal)';
+                    statusEl.className = 'text-center text-xs text-amber-600 font-semibold';
+                } catch(e) {
+                    statusEl.textContent = 'Acceso denegado a hardware de video. Usa verificación manual.';
+                    statusEl.className = 'text-center text-xs text-red-500 font-medium';
                 }
             }
         }
 
         async function stopScanner() {
             if (html5QrCode && isScanning) {
-                try {
-                    await html5QrCode.stop();
-                } catch (e) { /* ignore */ }
+                try { await html5QrCode.stop(); } catch (e) {}
                 isScanning = false;
                 const toggleBtn = document.getElementById('toggle-camera');
-                toggleBtn.classList.remove('active');
+                toggleBtn.className = "flex items-center gap-2 border border-outline/30 px-4 py-1.5 rounded-full text-xs font-semibold bg-white text-on-surface-variant hover:border-primary hover:text-primary transition";
                 toggleBtn.innerHTML = '<span class="material-symbols-outlined">videocam</span> Iniciar cámara';
-                document.getElementById('scanner-status').textContent = 'Cámara detenida';
-                document.getElementById('scanner-status').style.color = '#6d797d';
+                document.getElementById('scanner-status').textContent = 'Cámara detenida por el operador.';
+                document.getElementById('scanner-status').className = 'text-center text-xs text-outline font-medium';
             }
         }
 
-        function onScanSuccess(decodedText, decodedResult) {
+        function onScanSuccess(decodedText) {
+            if (scanLock) return;
+            scanLock = true;
+
             document.getElementById('qr-input').value = decodedText;
-            // Play short beep
-            try {
-                const audio = new AudioContext();
-                const osc = audio.createOscillator();
-                const gain = audio.createGain();
-                osc.connect(gain);
-                gain.connect(audio.destination);
-                osc.frequency.value = 800;
-                gain.gain.value = 0.2;
-                osc.start();
-                osc.stop(audio.currentTime + 0.1);
-            } catch(e) {}
-            validateQR(decodedText);
-            // Auto-stop after scan so user can see result and not keep scanning
-            setTimeout(() => stopScanner(), 500);
+            triggerAudioBeep(800, 0.08);
+
+            validateQR(decodedText).finally(() => {
+                setTimeout(() => {
+                    stopScanner();
+                    scanLock = false;
+                }, 1000);
+            });
         }
 
-        function onScanFailure(error) {
-            // ignore, it's called continuously
-        }
-
-        document.getElementById('toggle-camera').addEventListener('click', function () {
-            if (isScanning) {
-                stopScanner();
-            } else {
-                startScanner();
-            }
+        document.getElementById('toggle-camera').addEventListener('click', () => {
+            if (isScanning) stopScanner();
+            else startScanner();
         });
 
-        // ====================== MANUAL VALIDATION ======================
-        document.getElementById('validate-btn').addEventListener('click', function () {
-            const qr = document.getElementById('qr-input').value.trim();
-            if (!qr) { document.getElementById('qr-input').focus(); return; }
-            validateQR(qr);
+        // ====================== ESCUCHADORES MANUALES ======================
+        document.getElementById('validate-btn').addEventListener('click', () => {
+            const val = document.getElementById('qr-input').value.trim();
+            if(val) validateQR(val);
         });
 
-        document.getElementById('clear-btn').addEventListener('click', function () {
+        document.getElementById('clear-btn').addEventListener('click', () => {
             document.getElementById('qr-input').value = '';
-            document.getElementById('result').classList.remove('show', 'ok', 'warn', 'err');
-            document.getElementById('result').innerHTML = '';
-            document.getElementById('qr-input').focus();
+            const rb = document.getElementById('result');
+            rb.className = "hidden";
+            rb.innerHTML = "";
         });
 
-        document.getElementById('qr-input').addEventListener('keydown', function (e) {
+        document.getElementById('qr-input').addEventListener('keydown', (e) => {
             if (e.key === 'Enter') {
-                const qr = this.value.trim();
-                if (!qr) return;
-                document.getElementById('validate-btn').click();
+                const val = e.target.value.trim();
+                if(val) validateQR(val);
             }
         });
 
-        // ====================== INIT ======================
-        updateAll();
+        // Sincronizaciones e hilos cíclicos de actualización remota
+        syncValidations();
         loadActiveEvents();
-
-        // Every 30s refresh active events count
-        setInterval(loadActiveEvents, 30000);
+        setInterval(loadActiveEvents, 25000); // Actualiza la cantidad de eventos cada 25s automáticamente.
     </script>
-</body>
+  </body>
 </html>

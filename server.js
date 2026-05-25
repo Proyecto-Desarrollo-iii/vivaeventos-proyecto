@@ -10,18 +10,16 @@ const app = express();
 const PORT = 5000;
 const SSL_PORT = 5443;
 
-// Función para obtener la dirección IP local
 function getLocalIP() {
     const interfaces = os.networkInterfaces();
     for (const name of Object.keys(interfaces)) {
         for (const iface of interfaces[name]) {
-            // Ignorar interna (127.0.0.1) y direcciones no IPv4
             if (iface.family === 'IPv4' && !iface.internal && !iface.address.startsWith('169.254')) {
                 return iface.address;
             }
         }
     }
-    return 'localhost'; // fallback si no se encuentra IP
+    return 'localhost';
 }
 
 const LOCAL_IP = getLocalIP();
