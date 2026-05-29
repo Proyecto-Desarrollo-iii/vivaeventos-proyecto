@@ -122,7 +122,8 @@ app.listen(PORT, '0.0.0.0', () => {
     console.log('==========================================\n');
 });
 
-https.createServer({
-    key: fs.readFileSync(path.join(__dirname, 'key.pem')),
-    cert: fs.readFileSync(path.join(__dirname, 'cert.pem')),
-}, app).listen(SSL_PORT, '0.0.0.0');
+// HTTPS server disabled due to missing certificates
+// https.createServer({
+//     key: fs.readFileSync(path.join(__dirname, 'key.pem')),
+//     cert: fs.readFileSync(path.join(__dirname, 'cert.pem')),
+// }, app).listen(SSL_PORT, '0.0.0.0');
