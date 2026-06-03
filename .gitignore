@@ -1,2 +1,20 @@
 node_modules/
 *.pem
+
+# Sub-repos independientes
+vivaeventos-auth/
+vivaeventos-checkin/
+vivaeventos-events/
+vivaeventos-gateway/
+vivaeventos-infra/
+vivaeventos-notifications/
+vivaeventos-orders/
+vivaeventos-payments/
+vivaeventos-tickets/
+
+# Directorio duplicado
+vivaeventos-proyecto/
+
+# Archivos generados
+logs-*.txt
+skills-lock.json
