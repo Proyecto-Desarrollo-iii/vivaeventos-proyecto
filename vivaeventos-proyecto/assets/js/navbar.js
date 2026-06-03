@@ -31,7 +31,7 @@ const Navbar = {
 
         if (isAuth) {
             const role = this.getUserRole();
-            const canValidate = role === 'LOGISTICA';
+            const canValidate = role === 'ORGANIZER' || role === 'ORGANIZADOR' || role === 'ADMIN';
             const validatorLink = canValidate
                 ? `<a href="/validator/index.html" class="${currentPage === 'validador' ? 'active' : ''}">Validar boletas</a>`
                 : '';
