@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Mi cuenta | VivaEventos</title>
+    <link rel="icon" href="/assets/images/Logoblue.png">
+    <link rel="stylesheet" href="/assets/css/landingpage.css">
+    <link rel="stylesheet" href="/assets/css/main.css">
+    <link rel="stylesheet" href="/assets/css/MyAccount.css">
+    <link rel="stylesheet" href="/assets/css/toast.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
+</head>
+
+<body>
+    <!-- NAVBAR SIMPLE -->
+    <header style="position: fixed; top: 0; left: 0; right: 0; z-index: 50; background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-bottom: 1px solid rgba(0,0,0,0.05); display: flex; justify-content: space-between; align-items: center; padding: 15px 40px;">
+        <div style="display: flex; align-items: center; gap: 20px;">
+            <a id="back-btn" href="/" style="display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 50%; color: #006578; text-decoration: none; transition: all 0.3s">
+                <span class="material-symbols-outlined" style="font-size: 24px;">arrow_back</span>
+            </a>
+            <img src="/assets/images/Titulo.webp" alt="VivaEventos" style="width: 150px;">
+        </div>
+    </header>
+
+    <section class="account-header" style="margin-top: 74px; padding-top: 40px;">
+        <div class="account-header-content">
+            <h1>Mi cuenta</h1>
+            <p>Administra tu información personal, seguridad y preferencias.</p>
+        </div>
+    </section>
+
+    <main class="account-container">
+        <!-- Sidebar -->
+        <aside class="account-sidebar">
+            <h3>Opciones de cuenta</h3>
+            <ul>
+                <li><a href="#" class="active" data-seccion="info">
+                        <span class="material-symbols-outlined">person</span>
+                        Información personal
+                    </a></li>
+
+                <li><a href="#" data-seccion="password">
+                        <span class="material-symbols-outlined">lock</span>
+                        Contraseña
+                    </a></li>
+
+                <li><a href="#" data-seccion="security">
+                        <span class="material-symbols-outlined">shield</span>
+                        Seguridad
+                    </a></li>
+
+                <li><a href="#" data-seccion="sessions">
+                        <span class="material-symbols-outlined">devices</span>
+                        Sesiones abiertas
+                    </a></li>
+
+                <li><a href="#" data-seccion="ayuda">
+                        <span class="material-symbols-outlined">help</span>
+                        ¿Necesitas ayuda?
+                    </a></li>
+            </ul>
+        </aside>
+
+        <!-- Main content -->
+        <section class="account-main">
+
+            <!-- INFO PERSONAL -->
+            <div id="section-info" class="account-section active">
+
+                <div class="section-header">
+                    <h2>Información personal</h2>
+                    <p>Modifica tus datos personales y de contacto.</p>
+                </div>
+                <form>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="nombre">Nombre</label>
+                            <input type="text" id="nombre" placeholder="Nombre">
+                            <small class="input-hint">Nombre como figura en tu documento.</small>
+                        </div>
+                        <div class="form-group">
+                            <label for="apellido">Apellido</label>
+                            <input type="text" id="apellido" placeholder="Apellido">
+                            <small class="input-hint">Apellido como figura en tu documento.</small>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="email">E-Mail</label>
+                            <input type="email" id="email" placeholder="email@example.com" readonly>
+                            <small class="input-hint">
+                                El correo no se puede modificar.
+                            </small>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="tipo-doc">Tipo de documento</label>
+                            <select id="tipo-doc">
+                                <option value="">Selecciona</option>
+                                <option value="CC">C.C</option>
+                                <option value="CE">C.E</option>
+                                <option value="TI">T.I</option>
+                                <option value="Pasaporte">Pasaporte</option>
+                            </select>
+                            <small class="input-hint">
+                                El tipo de tu documento de identidad.
+                            </small>
+                        </div>
+                        <div class="form-group">
+                            <label for="doc">Cédula de Ciudadanía</label>
+                            <input type="text" id="doc" placeholder="110567890">
+                            <small class="input-hint">
+                                Tu número de documento sin puntos ni comas.
+                            </small>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="caracteristica">Prefijo</label>
+                            <select id="caracteristica">
+                                <option value="">Selecciona</option>
+                                <option value="+57">+57</option>
+                                <option value="+52">+52</option>
+                                <option value="+54">+54</option>
+                                <option value="+56">+56</option>
+                            </select>
+                            <small class="input-hint">
+                                Código de país para tu número de teléfono.
+                            </small>
+                        </div>
+                        <div class="form-group">
+                            <label for="telefono">Teléfono</label>
+                            <input type="tel" id="telefono" placeholder="Tu número de teléfono">
+                            <small class="input-hint">
+                                Telefono de contacto para notificaciones.
+                            </small>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="pais">País de residencia</label>
+                            <select id="pais">
+                                <option value="">Selecciona tu país</option>
+                                <option value="Colombia">Colombia</option>
+                                <option value="México">México</option>
+                                <option value="Argentina">Argentina</option>
+                                <option value="Chile">Chile</option>
+                                <option value="Otro">Otro</option>
+                            </select>
+                            <small class="input-hint">
+                                El país donde vives.
+                            </small>
+                        </div>
+                        <div class="form-group">
+                            <label for="fecha-nac">Fecha de nacimiento</label>
+                            <input type="date" id="fecha-nac">
+                            <small class="input-hint">
+                                Tu fecha de nacimiento en formato día/mes/año.
+                            </small>
+                        </div>
+                    </div>
+                    <div style="margin-top: 32px;">
+                        <button type="submit" class="btn btn-primary">Guardar cambios</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- CONTRASEÑA -->
+            <div id="section-password" class="account-section">
+                <div class="section-header">
+                    <h2>Contraseña</h2>
+                </div>
+
+                <form id="password-form" class="password-form">
+
+                    <div class="form-group full-width">
+                        <label for="password-actual">Contraseña actual</label>
+                        <input type="password" id="password-actual">
+                        <a href="#" class="forgot-link">¿Olvidaste tu contraseña?</a>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="nueva-password">Contraseña nueva</label>
+                            <input type="password" id="nueva-password">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="confirmar-password">Repetir contraseña</label>
+                            <input type="password" id="confirmar-password">
+                        </div>
+                    </div>
+
+                    <div class="form-check">
+                        <input type="checkbox" id="logout-all">
+                        <label for="logout-all">Cerrar todas las otras sesiones</label>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" class="btn-secondary" id="cancel-password">Cancelar</button>
+                        <button type="submit" class="btn btn-primary btn-sm">Cambiar contraseña</button>
+                    </div>
+
+                </form>
+            </div>
+
+            <!-- SEGURIDAD -->
+            <div id="section-security" class="account-section">
+
+                <div class="section-header">
+                    <h2>Seguridad de cuenta</h2>
+                </div>
+
+                <div class="security-container">
+
+                    <div class="security-intro">
+                        <h4>Autenticación de dos factores (2FA)</h4>
+                        <p>Añade una capa extra de seguridad a tu cuenta.</p>
+                        <p>Estado: <strong id="twofa-status">Cargando...</strong> | Método: <strong id="twofa-method">-</strong></p>
+                    </div>
+
+                    <div style="margin-bottom: 20px;">
+                        <p style="font-weight: 500; margin-bottom: 8px;">Elige tu método 2FA:</p>
+                        <div id="twofa-method-selector" style="display: flex; gap: 12px;">
+                            <button id="method-app" class="role-btn active" style="flex: 1; padding: 12px; border: 2px solid #0097b2; border-radius: 10px; background: rgba(0,151,178,0.08); cursor: pointer;">
+                                <span class="material-symbols-outlined" style="display: block; font-size: 28px; margin-bottom: 4px;">verified_user</span>
+                                App de autenticación
+                            </button>
+                            <button id="method-email" class="role-btn" style="flex: 1; padding: 12px; border: 2px solid #e2e8f0; border-radius: 10px; background: #fff; cursor: pointer;">
+                                <span class="material-symbols-outlined" style="display: block; font-size: 28px; margin-bottom: 4px;">mail</span>
+                                Código por email
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Setup 2FA con App -->
+                    <div id="twofa-setup-area" style="display: none;">
+                        <button id="twofa-setup-btn" class="btn btn-primary">Configurar 2FA</button>
+
+                        <div id="twofa-qr-area" style="display: none; margin-top: 20px;">
+                            <p>Escanea este código QR con tu app de autenticación (Google Authenticator, Authy, etc.):</p>
+                            <img id="twofa-qr-img" src="" alt="QR Code" style="margin: 16px auto; display: block; max-width: 200px;">
+                            <p style="text-align: center; font-size: 14px; color: #666;">
+                                O ingresa manualmente el secreto: <code id="twofa-secret" style="background: #f4f4f4; padding: 4px 8px; border-radius: 4px;"></code>
+                            </p>
+                        </div>
+
+                        <div id="twofa-verify-area" style="display: none; margin-top: 20px;">
+                            <div class="form-group" style="max-width: 250px;">
+                                <label for="twofa-verify-code">Código de verificación</label>
+                                <input type="text" id="twofa-verify-code" placeholder="000000" maxlength="6" style="font-size: 1.3rem; letter-spacing: 6px; text-align: center;">
+                            </div>
+                            <button id="twofa-verify-btn" class="btn btn-primary" style="margin-top: 12px;">Verificar y activar</button>
+                        </div>
+                    </div>
+
+                    <!-- Setup 2FA con Email -->
+                    <div id="twofa-email-setup-area" style="display: none;">
+                        <p style="margin-bottom: 12px;">Se enviará un código de verificación a tu correo electrónico.</p>
+                        <button id="twofa-email-setup-btn" class="btn btn-primary">Enviar código de verificación</button>
+                        <div id="twofa-email-verify-area" style="display: none; margin-top: 16px;">
+                            <div class="form-group" style="max-width: 250px;">
+                                <label for="twofa-email-code">Código recibido por email</label>
+                                <input type="text" id="twofa-email-code" placeholder="000000" maxlength="6" style="font-size: 1.3rem; letter-spacing: 6px; text-align: center;">
+                            </div>
+                            <button id="twofa-email-verify-btn" class="btn btn-primary" style="margin-top: 12px;">Verificar y activar</button>
+                        </div>
+                    </div>
+
+                    <!-- Disable 2FA -->
+                    <div id="twofa-disable-area" style="display: none;">
+                        <p style="margin-bottom: 8px;">2FA activo con <strong id="twofa-active-method">App</strong></p>
+                        <button id="twofa-disable-btn" class="btn btn-secondary" style="border-color: #dc3545; color: #dc3545;">Deshabilitar 2FA</button>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- SESIONES ABIERTAS -->
+            <div id="section-sessions" class="account-section">
+
+                <div class="section-header">
+                    <h2>Sesiones abiertas</h2>
+                </div>
+
+                <!-- Botón superior -->
+                <div class="sessions-header">
+                    <button class="btn btn-outline">Cerrar todas las sesiones</button>
+                </div>
+
+                <!-- Lista de sesiones -->
+                <div class="sessions-list">
+
+                    <!-- Sesión actual -->
+                    <div class="session-card active">
+                        <div class="session-top">
+                            <div class="session-left">
+                                <span class="material-symbols-outlined">desktop_windows</span>
+                                <span>Desktop, Windows NT, Chrome</span>
+                                <span class="badge">ACTUAL</span>
+                            </div>
+                        </div>
+                        <div class="session-bottom">
+                            · 23/04/2026 23:37
+                        </div>
+                    </div>
+
+                    <!-- Otra sesión -->
+                    <div class="session-card">
+                        <div class="session-top">
+                            <div class="session-left">
+                                <span class="material-symbols-outlined">desktop_windows</span>
+                                <span>Desktop, Windows NT, Edge</span>
+                            </div>
+                            <span class="close-session material-symbols-outlined">close</span>
+                        </div>
+                        <div class="session-bottom">
+                            · 04/04/2026 13:59
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+    <script>
+        // Debug: mostrar el token guardado
+        var _t = localStorage.getItem('token') || sessionStorage.getItem('token');
+        console.log('Token almacenado:', _t);
+        console.log('Tipo:', typeof _t);
+        console.log('Longitud:', _t ? _t.length : 0);
+    </script>
+    <script src="/assets/js/toast.js"></script>
+    <script src="/assets/js/auth.js?v=7"></script>
+    <script src="/assets/js/navbar.js?v=7"></script>
+    <script src="/assets/js/MyAccount.js?v=7"></script>
+</body>
+
+</html>

@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+
+<html class="light" lang="es"><head>
+        <meta charset="utf-8" />
+        <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+        <title>VivaEventos - Crear Nuevo Evento</title>
+        <script
+            src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+        <link
+            href="https://fonts.googleapis.com/css2?family=Epilogue:wght@400;600;700;800;900&amp;family=Manrope:wght@400;500;600;700&amp;display=swap"
+            rel="stylesheet" />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+            rel="stylesheet" />
+        <link href="/assets/css/newEvent.css" rel="stylesheet" />
+        <link rel="icon" href="/assets/images/Logoblue.png">
+        <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-dim": "#d6dbdd",
+                        "on-surface": "#171c1e",
+                        "on-tertiary-fixed": "#2e1600",
+                        "surface-container-high": "#e4e9eb",
+                        "secondary-container": "#c2e9f6",
+                        "primary-fixed": "#aeecff",
+                        "error-container": "#ffdad6",
+                        "surface-container-highest": "#dfe3e5",
+                        "on-tertiary-container": "#fffbff",
+                        "surface-container": "#eaeff1",
+                        "primary": "#006578",
+                        "on-primary-container": "#f9fdff",
+                        "on-primary-fixed": "#001f26",
+                        "error": "#ba1a1a",
+                        "tertiary-fixed-dim": "#ffb877",
+                        "tertiary-container": "#a96418",
+                        "surface-variant": "#dfe3e5",
+                        "on-secondary": "#ffffff",
+                        "on-error-container": "#93000a",
+                        "on-secondary-fixed-variant": "#264c56",
+                        "primary-fixed-dim": "#66d5f1",
+                        "surface-container-lowest": "#ffffff",
+                        "secondary-fixed-dim": "#a6cdd9",
+                        "inverse-surface": "#2c3133",
+                        "on-surface-variant": "#3d494c",
+                        "on-tertiary": "#ffffff",
+                        "secondary-fixed": "#c2e9f6",
+                        "primary-container": "#008097",
+                        "surface-container-low": "#f0f4f6",
+                        "on-secondary-fixed-variant": "#264c56",
+                        "outline-variant": "#bdc8cd",
+                        "outline": "#6d797d",
+                        "inverse-primary": "#66d5f1",
+                        "background": "#f6fafc",
+                        "on-secondary-fixed": "#001f26",
+                        "on-primary": "#ffffff",
+                        "on-error": "#ffffff",
+                        "on-background": "#171c1e",
+                        "surface": "#f6fafc",
+                        "surface-bright": "#f6fafc"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "fontFamily": {
+                        "headline": ["Epilogue"],
+                        "display": ["Epilogue"],
+                        "body": ["Manrope"],
+                        "label": ["Manrope"]
+                    }
+                }
+            }
+        }
+    </script>
+    </head>
+    <body class="bg-surface text-on-surface min-h-screen">
+        <!-- Top Navigation Anchor -->
+        <header
+            class="fixed top-0 w-full z-50 bg-surface/80 dark:bg-slate-900/80 backdrop-blur-xl shadow-[0_20px_40px_rgba(0,101,120,0.08)] flex justify-between items-center px-6 py-4">
+            <div class="flex items-center gap-4">
+                <a href="/assets/DashboardOrganizer.html?panel=events"
+                    class="material-symbols-outlined text-primary cursor-pointer hover:bg-surface-container-high p-2 rounded-full transition-all flex items-center justify-center">arrow_back</a>
+                <div class="logo">
+                    <img class="logo-text" src="/assets/images/Titulo.webp" alt="VivaEventos">
+                </div>
+            </div>
+            <div class="flex items-center gap-6">
+                <button id="saveDraftBtn" type="button"
+                    class="bg-surface-container-high text-on-surface px-6 py-2 rounded-full font-bold transition-transform hover:scale-105 active:scale-95 shadow-lg border-2 border-outline">
+                    Guardar Borrador
+                </button>
+                <button id="saveEventBtn" type="button"
+                    class="kinetic-gradient text-on-primary px-8 py-2 rounded-full font-bold transition-transform hover:scale-105 active:scale-95 shadow-lg">
+                    Publicar Evento
+                </button>
+            </div>
+        </header>
+        <!-- Main Content Shell -->
+        <main
+            class="pt-24 pb-12 px-6 max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-8">
+            <!-- Sidebar Progress Navigation -->
+            <nav class="md:col-span-3 hidden md:block">
+                <div class="sticky top-28 space-y-2 flex flex-col h-full py-8">
+                    <div
+                        class="nav-item active text-cyan-700 dark:text-cyan-300 font-bold py-2 font-headline text-lg"
+                        data-section="basic-info">1. Información Básica</div>
+                    <div
+                        class="nav-item text-secondary dark:text-slate-500 py-2 hover:bg-cyan-50 dark:hover:bg-cyan-950/30 transition-all font-medium"
+                        data-section="ticketing">2. Entradas y Precios</div>
+                    <div
+                        class="nav-item text-secondary dark:text-slate-500 py-2 hover:bg-cyan-50 dark:hover:bg-cyan-950/30 transition-all font-medium"
+                        data-section="location">3. Ubicación del Evento</div>
+                    <div
+                        class="nav-item text-secondary dark:text-slate-500 py-2 hover:bg-cyan-50 dark:hover:bg-cyan-950/30 transition-all font-medium"
+                        data-section="social">4. Artista y RRSS</div>
+                </div>
+            </nav>
+            <!-- Form Canvas -->
+            <div class="md:col-span-9 space-y-12">
+                <!-- Section 1: Basic Info -->
+                <section
+                    class="form-section active bg-surface-container-lowest p-8 rounded-xl shadow-sm space-y-8"
+                    id="basic-info">
+                    <div class="space-y-2">
+                        <h2
+                            class="text-3xl font-extrabold tracking-tight text-on-surface font-headline">Información
+                            Básica</h2>
+                        <p class="text-secondary font-body">Define la identidad
+                            de tu evento para atraer a la audiencia
+                            correcta.</p>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="col-span-2 space-y-2">
+                            <label>Nombre del Evento</label>
+                            <input id="eventName" placeholder="Ej: Festival de Verano 2024"
+                                type="text" />
+                        </div>
+                        <div class="space-y-2">
+                            <label>Categoría</label>
+                            <select id="eventCategory">
+                                <option value="">Seleccionar...</option>
+                                <option value="Concierto">Concierto</option>
+                                <option value="Taller">Taller</option>
+                                <option value="Feria">Feria</option>
+                                <option value="Conferencia">Conferencia</option>
+                            </select>
+                        </div>
+                        <div class="space-y-2">
+                            <label>Fecha y Hora</label>
+                            <input id="eventDate" type="datetime-local" />
+                        </div>
+                        <div class="col-span-2 space-y-2">
+                            <label>Descripción</label>
+                            <textarea id="eventDescription"
+                                placeholder="Describe los detalles, el ambiente y por qué nadie debería perdérselo..."
+                                rows="4"></textarea>
+                        </div>
+                        <div
+                            class="col-span-2 space-y-6 mt-8 pt-8 border-t border-outline-variant">
+                            <h3
+                                class="text-2xl font-extrabold tracking-tight text-on-surface font-headline">Material
+                                Visual</h3>
+                            <p class="text-secondary font-body">Sube el banner
+                                principal y la miniatura para tu evento.</p>
+                            <div id="bannerPreview"
+                                class="aspect-[21/9] w-full rounded-2xl overflow-hidden bg-surface-container-high relative group cursor-pointer border-2 border-dashed border-outline hover:border-primary transition-all">
+                                <img id="bannerImage"
+                                    class="w-full h-full object-cover opacity-60 group-hover:scale-105 transition-transform duration-700"
+                                    data-alt="Banner del evento"
+                                    src="https://lh3.googleusercontent.com/aida/ADBb0uhq-zRvOBT9hMbN6lh8kY26tgGNh7XH3s-wMZaZcKYtRVtiIwC0AiNL-Rh1--JG7VfxJt1gaqzczM5yfWYMD05Ns6PyPXMszTLl8z65TsA18qvC0uUE_gsZMUj2XWKLewFgu8XfdiabWuuiBz0ll9SmhVoKbo-IEeo5sc-4GTFxD8qXhwCQuSkEAR_We6g2fmVcqi2MBt3t3pE0DFoMc06QSW1ba__BOYgVKY-34MN256xIJr73W9sMEtBHVyxbuc7uqi4frSAGNA" />
+                                <div
+                                    class="absolute inset-0 flex flex-col items-center justify-center text-on-surface-variant group-hover:text-primary">
+                                    <span
+                                        class="material-symbols-outlined text-5xl mb-2">add_a_photo</span>
+                                    <span class="font-bold">Subir Banner
+                                        Principal (1920x820)</span>
+                                </div>
+                            </div>
+                            <input id="eventBannerUrl" type="hidden" />
+                            <div class="flex items-start gap-6">
+                                <div class="w-48 flex-shrink-0">
+                                    <h4
+                                        class="text-lg font-bold font-headline mb-2">Miniatura</h4>
+                                    <div
+                                        class="aspect-square w-full rounded-2xl overflow-hidden bg-surface-container-high relative group cursor-pointer border-2 border-dashed border-outline hover:border-primary transition-all">
+                                        <div
+                                            class="absolute inset-0 flex flex-col items-center justify-center text-on-surface-variant group-hover:text-primary">
+                                            <span
+                                                class="material-symbols-outlined text-4xl mb-2">image</span>
+                                            <span
+                                                class="font-bold text-center px-4 text-sm">Thumbnail
+                                                (1:1)</span>
+                                        </div>
+                                    </div>
+                                    <p
+                                        class="text-xs text-secondary text-center mt-2">Se
+                                        usará en listados y búsquedas
+                                        móviles.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <!-- Section 2: Ticketing (Dynamic Layout) -->
+                <section
+                    class="form-section bg-surface-container-lowest p-8 rounded-xl shadow-sm space-y-8"
+                    id="ticketing">
+                    <div class="flex justify-between items-end">
+                        <div class="space-y-2">
+                            <h2
+                                class="text-3xl font-extrabold tracking-tight text-on-surface font-headline">Entradas</h2>
+                            <p class="text-secondary font-body">Gestiona los
+                                diferentes tipos de acceso para tus
+                                asistentes.</p>
+                        </div>
+                        <button id="addTicketBtn" type="button"
+                            class="flex items-center gap-2 text-primary font-bold hover:bg-primary-fixed/30 px-4 py-2 rounded-full transition-all">
+                            <span
+                                class="material-symbols-outlined">add_circle</span>
+                            Añadir Clase
+                        </button>
+                    </div>
+                    <div class="space-y-4">
+                        <div id="ticketsContainer" class="space-y-4">
+                            <!-- Ticket Card 1 -->
+                            <div class="ticket-row grid grid-cols-1 md:grid-cols-4 gap-4 p-6 bg-surface-container-low rounded-xl relative overflow-hidden group">
+                                <div class="absolute left-0 top-0 bottom-0 w-1 bg-primary group-hover:w-2 transition-all"></div>
+                                <div class="space-y-2">
+                                    <label>Tipo</label>
+                                    <input class="ticket-type" type="text" value="General" />
+                                </div>
+                                <div class="space-y-2">
+                                    <label>Precio</label>
+                                    <input class="ticket-price" type="number" value="50000" step="0.01" />
+                                </div>
+                                <div class="space-y-2">
+                                    <label>Capacidad</label>
+                                    <input class="ticket-capacity" type="number" value="500" />
+                                </div>
+                                <div class="flex items-center justify-end gap-4">
+                                    <span class="material-symbols-outlined text-secondary cursor-pointer hover:text-error transition-colors delete-ticket">delete</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <!-- Section 3: Location -->
+                <section
+                    class="form-section bg-surface-container-lowest p-8 rounded-xl shadow-sm space-y-6"
+                    id="location">
+                    <div class="space-y-2">
+                        <h2
+                            class="text-3xl font-extrabold tracking-tight text-on-surface font-headline">Ubicación</h2>
+                        <p class="text-secondary font-body">¿Dónde ocurrirá la
+                            magia?</p>
+                    </div>
+                    <div class="space-y-4">
+                        <div class="space-y-2">
+                            <label>Recinto / Venue</label>
+                            <input id="eventVenue" placeholder="Ej: Palacio de Congresos"
+                                type="text" />
+                        </div>
+                        <div class="space-y-2">
+                            <label>Dirección</label>
+                            <input id="eventAddress" data-location="Madrid, Spain"
+                                placeholder="Calle Ejemplo, 123, Madrid"
+                                type="text" />
+                        </div>
+                        <div class="space-y-2">
+                            <label>Ciudad</label>
+                            <input id="eventCity" placeholder="Ej: Madrid"
+                                type="text" />
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Section 4: Artist & Social -->
+                <section
+                    class="form-section bg-surface-container-lowest p-8 rounded-xl shadow-sm space-y-6"
+                    id="social">
+                    <div class="space-y-2">
+                        <h2
+                            class="text-3xl font-extrabold tracking-tight text-on-surface font-headline">Artista
+                            y RRSS</h2>
+                        <p class="text-secondary font-body">Conecta con los
+                            perfiles sociales.</p>
+                    </div>
+                    <div class="space-y-4">
+                        <div
+                            class="flex items-center gap-3 bg-surface-container-high p-4 rounded-xl">
+                            <span
+                                class="material-symbols-outlined text-[#1DB954]">brand_awareness</span>
+                            <input id="eventSpotify" placeholder="Enlace de Spotify del Artista"
+                                type="text" />
+                        </div>
+
+                        <div class="space-y-3">
+                            <label class="text-sm font-semibold text-on-surface">Otras redes sociales</label>
+                            <div id="social-links-container" class="space-y-2">
+                                <!-- Dynamic social link rows go here -->
+                            </div>
+                            <button type="button" id="addSocialBtn"
+                                class="flex items-center gap-2 text-sm text-primary font-semibold hover:underline">
+                                <span class="material-symbols-outlined text-lg">add_circle</span>
+                                Agregar red social
+                            </button>
+                        </div>
+
+                        <div
+                            class="p-4 bg-primary-fixed/20 rounded-xl flex items-center gap-4">
+                            <div
+                                class="h-10 w-10 bg-primary rounded-full flex items-center justify-center text-on-primary">
+                                <span
+                                    class="material-symbols-outlined">person</span>
+                            </div>
+                            <div>
+                                <p
+                                    class="text-xs font-bold text-primary uppercase">Organizador
+                                    Hub</p>
+                                <p class="text-sm font-semibold">CulturaViva
+                                    Productions</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+        <!-- Contextual FAB (Only for specific primary action) -->
+        <button
+            class="fixed bottom-10 right-10 kinetic-gradient text-on-primary w-16 h-16 rounded-full shadow-2xl flex items-center justify-center hover:scale-110 active:scale-95 transition-transform z-40 group md:hidden">
+            <span class="material-symbols-outlined text-3xl">save</span>
+            <span
+                class="absolute right-20 bg-inverse-surface text-inverse-on-surface px-4 py-2 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap text-sm">Guardar
+                Borrador</span>
+        </button>
+        <!-- Bottom Navigation Shell (Mobile Only) -->
+        <nav
+            class="md:hidden fixed bottom-0 left-0 w-full flex justify-around items-center px-4 pb-6 pt-2 bg-surface/90 backdrop-blur-lg shadow-2xl z-50 rounded-t-3xl">
+            <div
+                class="flex flex-col items-center justify-center bg-cyan-100 dark:bg-cyan-900/40 text-cyan-800 dark:text-cyan-100 rounded-full px-5 py-2 font-label text-[10px] font-semibold uppercase tracking-wider">
+                <span class="material-symbols-outlined"
+                    data-icon="event">event</span>
+                <span>Events</span>
+            </div>
+            <div
+                class="flex flex-col items-center justify-center text-slate-500 dark:text-slate-400 px-4 py-2 font-label text-[10px] font-semibold uppercase tracking-wider hover:text-cyan-600 transition-colors">
+                <span class="material-symbols-outlined"
+                    data-icon="confirmation_number">confirmation_number</span>
+                <span>Tickets</span>
+            </div>
+            <div
+                class="flex flex-col items-center justify-center text-slate-500 dark:text-slate-400 px-4 py-2 font-label text-[10px] font-semibold uppercase tracking-wider hover:text-cyan-600 transition-colors">
+                <span class="material-symbols-outlined"
+                    data-icon="explore">explore</span>
+                <span>Explore</span>
+            </div>
+            <div
+                class="flex flex-col items-center justify-center text-slate-500 dark:text-slate-400 px-4 py-2 font-label text-[10px] font-semibold uppercase tracking-wider hover:text-cyan-600 transition-colors">
+                <span class="material-symbols-outlined"
+                    data-icon="person">person</span>
+                <span>Profile</span>
+            </div>
+        </nav>
+
+    <script src="/assets/js/auth.js"></script>
+    <script src="/assets/js/api.js"></script>
+    <script src="/assets/js/newEvent.js"></script>
+    <script>
+// Step-by-step form navigation
+document.addEventListener('DOMContentLoaded', function() {
+    const navItems = document.querySelectorAll('.nav-item');
+    const sections = document.querySelectorAll('.form-section');
+
+    navItems.forEach(item => {
+        item.addEventListener('click', function() {
+            const targetSection = this.getAttribute('data-section');
+
+            navItems.forEach(nav => nav.classList.remove('active'));
+            sections.forEach(section => section.classList.remove('active'));
+
+            this.classList.add('active');
+            const target = document.getElementById(targetSection);
+            if (target) target.classList.add('active');
+        });
+    });
+});
+</script>
+
+    </body></html>

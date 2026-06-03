@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard Logística | VivaEventos</title>
+
+    <link rel="icon" href="/assets/images/Logoblue.png" />
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&family=Poppins:wght@300;500;700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              primary: "#006578",
+              "primary-container": "#008097",
+              "primary-fixed": "#aeecff",
+              "on-primary": "#ffffff",
+              "on-primary-container": "#f9fdff",
+              secondary: "#3f646e",
+              "surface": "#f6fafc",
+              "on-surface": "#171c1e",
+              "surface-variant": "#dfe3e5",
+              "surface-container-low": "#f0f4f6",
+              "surface-container-high": "#e4e9eb",
+              "surface-container-highest": "#dfe3e5",
+              "on-surface-variant": "#3d494c",
+              outline: "#6d797d",
+            },
+            fontFamily: {
+              sans: ["Manrope", "Poppins", "sans-serif"],
+            }
+          }
+        }
+      };
+    </script>
+    <style>
+      /* Ajustes necesarios para heredar fuentes nativas y ocultar elementos pesados */
+      .material-symbols-outlined { font-size: 22px; vertical-align: middle; }
+      #reader video { border-radius: 0.75rem; width: 100% !important; }
+    </style>
+  </head>
+  <body class="bg-surface text-on-surface font-sans min-h-screen antialiased flex">
+
+    <!-- OVERLAY EN MÓVILES -->
+    <div id="sidebarOverlay" class="fixed inset-0 bg-black/40 z-40 opacity-0 pointer-events-none transition-opacity duration-300 lg:hidden"></div>
+
+    <!-- SIDEBAR FLUIDO -->
+    <aside id="sidebar" class="fixed top-0 left-0 h-screen w-64 bg-white border-r border-surface-variant p-5 flex flex-col z-50 -translate-x-full transition-transform duration-300 ease-in-out lg:translate-x-0">
+      <div class="logo flex items-center gap-3 mb-8">
+        <img src="/assets/images/Logoblue.png" alt="Icono" class="w-8 h-8 object-contain">
+        <img src="/assets/images/Titulo.webp" alt="VivaEventos" class="h-6 object-contain">
+      </div>
+
+      <nav class="flex flex-col gap-2 flex-1">
+        <a href="#" data-panel="dashboard" class="flex items-center gap-3 p-3 text-secondary hover:bg-surface-container-low hover:text-primary rounded-xl transition duration-200 active-link [&.active]:bg-primary-fixed/40 [&.active]:text-primary [&.active]:font-semibold active">
+          <span class="material-symbols-outlined">dashboard</span>
+          Dashboard
+        </a>
+        <a href="#" data-panel="validator" class="flex items-center gap-3 p-3 text-secondary hover:bg-surface-container-low hover:text-primary rounded-xl transition duration-200 active-link [&.active]:bg-primary-fixed/40 [&.active]:text-primary [&.active]:font-semibold">
+          <span class="material-symbols-outlined">qr_code_scanner</span>
+          Validar boletas
+        </a>
+        <a href="#" data-panel="history" class="flex items-center gap-3 p-3 text-secondary hover:bg-surface-container-low hover:text-primary rounded-xl transition duration-200 active-link [&.active]:bg-primary-fixed/40 [&.active]:text-primary [&.active]:font-semibold">
+          <span class="material-symbols-outlined">history</span>
+          Historial
+        </a>
+        <a href="#" data-panel="settings" class="flex items-center gap-3 p-3 text-secondary hover:bg-surface-container-low hover:text-primary rounded-xl transition duration-200 active-link [&.active]:bg-primary-fixed/40 [&.active]:text-primary [&.active]:font-semibold">
+          <span class="material-symbols-outlined">settings</span>
+          Configuración
+        </a>
+      </nav>
+
+      <!-- SECCIÓN DE USUARIO -->
+      <div class="pt-4 border-t border-surface-variant flex flex-col gap-2">
+        <a href="/assets/MyAccount.html" class="flex items-center gap-3 p-2 hover:bg-surface-container-low rounded-xl transition">
+          <img src="https://i.pravatar.cc/40" alt="Usuario" class="w-9 h-9 rounded-full border border-primary/20">
+          <span id="sidebar-username" class="text-sm font-medium text-on-surface-variant truncate">Logística</span>
+        </a>
+        <a href="#" id="sidebar-logout" class="flex items-center gap-3 p-2 text-sm text-secondary hover:bg-red-50 hover:text-red-600 rounded-xl transition">
+          <span class="material-symbols-outlined">logout</span>
+          Cerrar sesión
+        </a>
+      </div>
+    </aside>
+
+    <!-- CONTENIDO PRINCIPAL -->
+    <main class="flex-1 min-h-screen lg:ml-64 p-4 md:p-8 pt-16 lg:pt-8 transition-all duration-300">
+
+      <!-- BOTÓN MENÚ MÓVIL -->
+      <button id="sidebarToggle" class="fixed top-3 left-3 z-50 p-2 bg-white border border-surface-variant rounded-xl shadow-sm text-secondary hover:bg-surface-container-low lg:hidden transition">
+        <span class="material-symbols-outlined">menu</span>
+      </button>
+
+      <!-- ==================== PANEL DASHBOARD ==================== -->
+      <div id="panel-dashboard" class="panel-view space-y-6">
+        <div>
+          <h1 class="text-2xl md:text-3xl font-extrabold text-primary flex items-center gap-2">
+            <span class="material-symbols-outlined !text-3xl">dashboard</span>
+            Panel de Logística
+          </h1>
+          <p id="greeting" class="text-sm md:text-base text-on-surface-variant mt-1">Bienvenido, personal de logística</p>
+        </div>
+
+        <!-- REJILLA KPI RESPONSIVE -->
+        <div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
+          <div class="bg-white p-4 border border-surface-variant rounded-2xl shadow-sm flex flex-col justify-between">
+            <div class="w-9 h-9 bg-primary-fixed/60 text-primary rounded-xl flex items-center justify-center mb-3"><span class="material-symbols-outlined">qr_code_scanner</span></div>
+            <div>
+              <div class="text-[10px] md:text-xs uppercase tracking-wider font-semibold text-on-surface-variant">Validaciones hoy</div>
+              <div id="kpi-hoy" class="text-xl md:text-2xl font-black text-primary mt-1">0</div>
+            </div>
+          </div>
+          <div class="bg-white p-4 border border-surface-variant rounded-2xl shadow-sm flex flex-col justify-between">
+            <div class="w-9 h-9 bg-emerald-100 text-emerald-700 rounded-xl flex items-center justify-center mb-3"><span class="material-symbols-outlined">check_circle</span></div>
+            <div>
+              <div class="text-[10px] md:text-xs uppercase tracking-wider font-semibold text-on-surface-variant">Autorizadas</div>
+              <div id="kpi-ok" class="text-xl md:text-2xl font-black text-emerald-600 mt-1">0</div>
+            </div>
+          </div>
+          <div class="bg-white p-4 border border-surface-variant rounded-2xl shadow-sm flex flex-col justify-between">
+            <div class="w-9 h-9 bg-red-100 text-red-600 rounded-xl flex items-center justify-center mb-3"><span class="material-symbols-outlined">block</span></div>
+            <div>
+              <div class="text-[10px] md:text-xs uppercase tracking-wider font-semibold text-on-surface-variant">Rechazadas</div>
+              <div id="kpi-reject" class="text-xl md:text-2xl font-black text-red-600 mt-1">0</div>
+            </div>
+          </div>
+          <div class="bg-white p-4 border border-surface-variant rounded-2xl shadow-sm flex flex-col justify-between">
+            <div class="w-9 h-9 bg-cyan-100 text-cyan-800 rounded-xl flex items-center justify-center mb-3"><span class="material-symbols-outlined">event</span></div>
+            <div>
+              <div class="text-[10px] md:text-xs uppercase tracking-wider font-semibold text-on-surface-variant">Eventos activos</div>
+              <div id="kpi-eventos" class="text-xl md:text-2xl font-black text-cyan-700 mt-1">-</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- CONTENIDO SECUNDARIO -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div class="bg-white border border-surface-variant p-5 rounded-2xl shadow-sm flex flex-col justify-between space-y-4">
+            <div>
+              <h3 class="text-base font-bold flex items-center gap-2 text-on-surface"><span class="material-symbols-outlined text-primary">bolt</span>Acceso rápido</h3>
+              <p class="text-sm text-on-surface-variant mt-2">Escanea o ingresa el código QR de una boleta de forma rápida para dar paso inmediato al usuario.</p>
+            </div>
+            <button class="w-full bg-primary hover:bg-primary-container text-white py-3 px-4 rounded-full font-bold text-sm shadow-sm transition flex items-center justify-center gap-2" onclick="switchPanel('validator')">
+              <span class="material-symbols-outlined">qr_code_scanner</span>Ir a validador
+            </button>
+          </div>
+          <div class="bg-white border border-surface-variant p-5 rounded-2xl shadow-sm">
+            <h3 class="text-base font-bold flex items-center gap-2 text-on-surface mb-3"><span class="material-symbols-outlined text-primary">history</span>Últimas validaciones</h3>
+            <div id="dashboard-last-validations" class="space-y-2">
+              <p class="text-xs text-outline">Cargando registros recientes...</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==================== PANEL VALIDADOR ==================== -->
+      <div id="panel-validator" class="panel-view space-y-6 hidden">
+        <div>
+          <h1 class="text-2xl md:text-3xl font-extrabold text-primary flex items-center gap-2">
+            <span class="material-symbols-outlined !text-3xl">qr_code_scanner</span>
+            Validador de boletas
+          </h1>
+          <p class="text-sm text-on-surface-variant mt-1">Escanea boletas usando la cámara trasera o realiza el ingreso manual con el código.</p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <!-- Escáner -->
+          <div class="bg-white border border-surface-variant p-4 md:p-5 rounded-2xl shadow-sm space-y-3">
+            <div class="flex items-center justify-between">
+              <label class="text-xs uppercase font-bold tracking-wider text-on-surface-variant">Lector de Cámara</label>
+              <button id="toggle-camera" class="flex items-center gap-2 border border-outline/30 px-4 py-1.5 rounded-full text-xs font-semibold bg-white text-on-surface-variant hover:border-primary hover:text-primary transition">
+                <span class="material-symbols-outlined">videocam</span>Iniciar cámara
+              </button>
+            </div>
+            <div class="w-full max-w-md mx-auto rounded-xl overflow-hidden bg-black relative">
+              <div id="reader"></div>
+            </div>
+            <p id="scanner-status" class="text-center text-xs text-outline font-medium">Lector inactivo. Presiona "Iniciar cámara".</p>
+          </div>
+
+          <!-- Formulario Manual y Resultados -->
+          <div class="bg-white border border-surface-variant p-4 md:p-5 rounded-2xl shadow-sm flex flex-col justify-between space-y-4">
+            <div class="space-y-3">
+              <div>
+                <label for="qr-input" class="block text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1">Código QR Manual</label>
+                <input id="qr-input" type="text" placeholder="Pega o escribe el token de la boleta" class="w-full px-4 py-2.5 border border-outline/40 bg-surface rounded-xl focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none text-sm transition">
+              </div>
+
+              <div class="grid grid-cols-2 gap-3">
+                <div>
+                  <label class="block text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1">Puerta de Acceso</label>
+                  <input id="gate" type="text" value="Puerta 1" class="w-full px-4 py-2.5 border border-outline/40 bg-surface rounded-xl focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none text-sm transition">
+                </div>
+                <div>
+                  <label class="block text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1">ID Operador</label>
+                  <input id="operator" type="text" value="logistica-01" class="w-full px-4 py-2.5 border border-outline/40 bg-surface rounded-xl focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none text-sm transition">
+                </div>
+              </div>
+            </div>
+
+            <div class="space-y-2">
+              <button id="validate-btn" class="w-full bg-primary hover:bg-primary-container text-white py-3 rounded-full font-bold text-sm transition flex items-center justify-center gap-2">
+                <span class="material-symbols-outlined">check_circle</span>Validar boleta
+              </button>
+              <button id="clear-btn" class="w-full border border-primary text-primary hover:bg-primary-fixed/40 py-2.5 rounded-full font-bold text-sm transition flex items-center justify-center gap-2">
+                <span class="material-symbols-outlined">refresh</span>Limpiar campos
+              </button>
+            </div>
+
+            <!-- Caja dinámica de resultados del Backend -->
+            <div id="result" class="rounded-xl p-4 hidden border font-medium text-sm space-y-2"></div>
+          </div>
+        </div>
+
+        <div class="space-y-3">
+          <h3 class="text-sm font-bold uppercase tracking-wider text-on-surface-variant flex items-center gap-1">
+            <span class="material-symbols-outlined">history</span>Últimas validaciones de la sesión
+          </h3>
+          <div id="history-list" class="space-y-2"></div>
+        </div>
+      </div>
+
+      <!-- ==================== PANEL HISTORIAL ==================== -->
+      <div id="panel-history" class="panel-view space-y-6 hidden">
+        <div>
+          <h1 class="text-2xl md:text-3xl font-extrabold text-primary flex items-center gap-2">
+            <span class="material-symbols-outlined !text-3xl">history</span>
+            Historial General
+          </h1>
+          <p class="text-sm text-on-surface-variant mt-1">Todas las auditorías de boletas sincronizadas en tiempo real con la base de datos central.</p>
+        </div>
+        <div class="bg-white border border-surface-variant p-5 rounded-2xl shadow-sm">
+          <div id="full-history-list" class="space-y-3">
+            <p class="text-sm text-outline">Cargando historial remoto...</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==================== PANEL CONFIGURACIÓN ==================== -->
+      <div id="panel-settings" class="panel-view space-y-4 hidden">
+        <div>
+          <h1 class="text-2xl md:text-3xl font-extrabold text-primary flex items-center gap-2">
+            <span class="material-symbols-outlined !text-3xl">settings</span>
+            Configuración del Dispositivo
+          </h1>
+          <p class="text-sm text-on-surface-variant mt-1">Preferencias del puesto de control y asignación rápida de zonas.</p>
+        </div>
+        <div class="bg-white border border-surface-variant p-5 rounded-2xl shadow-sm">
+          <p class="text-sm text-on-surface-variant font-medium">Próximamente podrás cambiar configuraciones de audio y perfiles de cámara aquí.</p>
+        </div>
+      </div>
+    </main>
+
+    <!-- ARCHIVOS FRONTEND MOCK/API (Herencia de tu arquitectura) -->
+    <script src="/assets/js/auth.js"></script>
+    <script src="/assets/js/api.js"></script>
+    <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+
+    <script>
+        // Memoria volátil para mantener las validaciones hechas en esta sesión actual
+        let currentSessionValidations = [];
+
+        // ====================== AUTH VALIDATION & INITIALIZATION ======================
+        (function () {
+            if (window.AuthService && !AuthService.isAuthenticated()) {
+                window.location.href = '/auth/login.html';
+                return;
+            }
+            const user = window.AuthService ? AuthService.getUser() : null;
+            const role = (user && user.role || '').toUpperCase();
+
+            // Forzar ID de operador dinámico si viene en la sesión
+            if (user && user.email) {
+                const opInput = document.getElementById('operator');
+                if (opInput) opInput.value = user.email.split('@')[0];
+            }
+
+            const nameEl = document.getElementById('sidebar-username');
+            if (nameEl && user) {
+                nameEl.textContent = user.fullName || user.email || 'Logística';
+            }
+            const greeting = document.getElementById('greeting');
+            if (greeting && user) {
+                greeting.textContent = `Bienvenido, ${user.fullName || user.email || 'personal de logística'}`;
+            }
+        })();
+
+        // LOGOUT
+        document.getElementById('sidebar-logout').addEventListener('click', async function (e) {
+            e.preventDefault();
+            if (window.AuthService && typeof AuthService.logout === 'function') {
+                await AuthService.logout();
+            } else {
+                localStorage.clear();
+                window.location.href = '/auth/login.html';
+            }
+        });
+
+        // ====================== INTERRUPTOR DE PANELES (TAILWIND STYLE) ======================
+        function switchPanel(name) {
+            document.querySelectorAll('.active-link').forEach(a => a.classList.remove('active'));
+            document.querySelector(`[data-panel="${name}"]`)?.classList.add('active');
+
+            document.querySelectorAll('.panel-view').forEach(p => {
+                p.classList.add('hidden');
+            });
+            document.getElementById('panel-' + name)?.classList.remove('hidden');
+
+            if (name !== 'validator' && isScanning) {
+                stopScanner();
+            }
+        }
+
+        document.querySelectorAll('[data-panel]').forEach(link => {
+            link.addEventListener('click', function (e) {
+                e.preventDefault();
+                switchPanel(this.dataset.panel);
+                if (window.innerWidth < 1024) closeSidebar();
+            });
+        });
+
+        // ====================== SIDEBAR RESPONSIVE TOGGLE ======================
+        const sidebar = document.getElementById('sidebar');
+        const sidebarToggle = document.getElementById('sidebarToggle');
+        const sidebarOverlay = document.getElementById('sidebarOverlay');
+
+        function openSidebar() {
+            sidebar.classList.remove('-translate-x-full');
+            sidebarOverlay.classList.remove('opacity-0', 'pointer-events-none');
+            sidebarOverlay.classList.add('opacity-100', 'pointer-events-auto');
+            document.body.classList.add('overflow-hidden');
+        }
+
+        function closeSidebar() {
+            sidebar.classList.add('-translate-x-full');
+            sidebarOverlay.classList.remove('opacity-100', 'pointer-events-auto');
+            sidebarOverlay.classList.add('opacity-0', 'pointer-events-none');
+            document.body.classList.remove('overflow-hidden');
+        }
+
+        sidebarToggle.addEventListener('click', function(e) {
+            e.stopPropagation();
+            if (sidebar.classList.contains('-translate-x-full')) openSidebar();
+            else closeSidebar();
+        });
+        sidebarOverlay.addEventListener('click', closeSidebar);
+
+        // ====================== UTILS PARA FORMATO DINÁMICO DE CLASES ======================
+        function getStatusClasses(result) {
+            switch (result) {
+                case 'SUCCESS': return { bg: 'bg-emerald-50 border-emerald-500 text-emerald-900', icon: 'text-emerald-600' };
+                case 'ALREADY_USED':
+                case 'REVOKED': return { bg: 'bg-amber-50 border-amber-500 text-amber-900', icon: 'text-amber-600' };
+                default: return { bg: 'bg-red-50 border-red-500 text-red-900', icon: 'text-red-600' };
+            }
+        }
+
+        function resultIcon(code) {
+            switch (code) {
+                case 'SUCCESS': return 'check_circle';
+                case 'ALREADY_USED': return 'block';
+                case 'REVOKED': return 'do_not_disturb_on';
+                case 'WRONG_EVENT': return 'block';
+                default: return 'error';
+            }
+        }
+
+        function resultLabel(code) {
+            return ({
+                SUCCESS: 'INGRESO AUTORIZADO',
+                ALREADY_USED: 'BOLETA YA UTILIZADA',
+                REVOKED: 'BOLETA REVOCADA',
+                NOT_FOUND: 'BOLETA NO ENCONTRADA',
+                WRONG_EVENT: 'BOLETA DE OTRO EVENTO'
+            })[code] || 'ERROR EN VERIFICACIÓN';
+        }
+
+        // ====================== CONTROL REMOTO REAL DE DATOS (SPRING BOOT ENDPOINTS) ======================
+
+        // 1. Cargar conteo real de eventos activos vía API
+        async function loadActiveEvents() {
+            try {
+                const res = await window.api.get('/events');
+                const eventos = res.data?.eventos || res.data || [];
+                const active = eventos.filter(e => e.isPublished && e.isActive).length;
+                document.getElementById('kpi-eventos').textContent = active;
+            } catch {
+                document.getElementById('kpi-eventos').textContent = '0';
+            }
+        }
+
+        // 2. Sincronizar logs desde el microservicio correspondientes al día de hoy
+        async function syncValidations() {
+            try {
+                const operator = document.getElementById('operator').value || '';
+                // Se consume el endpoint real de tu microservicio de checkin/validations
+                const res = await fetch(`/api/validations/today?operator=${encodeURIComponent(operator)}`);
+                if (!res.ok) throw new Error();
+                const rows = await res.json();
+
+                currentSessionValidations = rows.map(r => ({
+                    qrCode: r.qr_code || r.qrCode,
+                    result: r.result,
+                    validatedAt: r.validated_at || r.validatedAt,
+                    eventName: r.event_name || r.eventName,
+                    holderName: r.holder_name || r.holderName,
+                }));
+            } catch (e) {
+                console.warn('Backend offline o endpoint ausente, operando de forma aislada en sesión activa.');
+            }
+            renderViews();
+        }
+
+        // 3. Envío de Check-in al Backend
+        async function validateQR(qrCode) {
+            if (!qrCode) return;
+            const validateBtn = document.getElementById('validate-btn');
+            const resultBox = document.getElementById('result');
+
+            validateBtn.disabled = true;
+            const originalContent = validateBtn.innerHTML;
+            validateBtn.innerHTML = '<span class="material-symbols-outlined class="animate-spin"">sync</span> Procesando...';
+
+            resultBox.className = "rounded-xl p-4 border font-medium text-sm space-y-2 hidden";
+
+            try {
+                // Consumo asíncrono real mapeado desde tu api.js / Checkin global
+                const res = await window.Checkin.validate({
+                    qrCode: qrCode,
+                    gateLocation: document.getElementById('gate').value || 'Puerta 1',
+                    validatedBy: document.getElementById('operator').value || 'logistica'
+                });
+
+                const v = res.data?.validacion || res.data || {};
+                const design = getStatusClasses(v.result || 'NOT_FOUND');
+
+                resultBox.classList.remove('hidden');
+                resultBox.classList.add(...design.bg.split(' '));
+
+                resultBox.innerHTML = `
+                    <div class="flex items-center gap-2 font-bold text-base tracking-wide">
+                        <span class="material-symbols-outlined ${design.icon}">${resultIcon(v.result)}</span>
+                        ${resultLabel(v.result)}
+                    </div>
+                    <div class="text-xs opacity-90">${v.message || 'Procesado correctamente'}</div>
+                    ${v.eventName ? `
+                        <div class="mt-2 pt-2 border-t border-black/10 text-xs space-y-1 opacity-80">
+                            <div><strong>Evento:</strong> ${v.eventName}</div>
+                            <div><strong>Asistente:</strong> ${v.holderName || 'N/A'}</div>
+                        </div>
+                    ` : ''}
+                `;
+
+                // Añadir a pila en memoria local e interactuar con interfaz
+                currentSessionValidations.unshift({
+                    qrCode: qrCode,
+                    result: v.result || 'NOT_FOUND',
+                    validatedAt: new Date().toISOString(),
+                    eventName: v.eventName || 'Evento General',
+                    holderName: v.holderName || 'Usuario Manual'
+                });
+
+                // Sonido nativo de éxito si fue validado
+                if (v.result === 'SUCCESS') triggerAudioBeep(1200, 0.15);
+                else triggerAudioBeep(450, 0.3);
+
+            } catch (err) {
+                resultBox.classList.remove('hidden');
+                resultBox.classList.add('bg-red-50', 'border-red-500', 'text-red-900');
+                resultBox.innerHTML = `
+                    <div class="flex items-center gap-2 font-bold text-base">
+                        <span class="material-symbols-outlined text-red-600">error</span>
+                        ERROR EN INFRAESTRUCTURA
+                    </div>
+                    <div class="text-xs">No se pudo entablar conexión con el Gateway de servicios (8090). Revisa el túnel.</div>
+                `;
+            } finally {
+                validateBtn.disabled = false;
+                validateBtn.innerHTML = originalContent;
+                renderViews();
+            }
+        }
+
+        // ====================== AUDIO FEEDBACK NATIVO BROWSER ======================
+        function triggerAudioBeep(freq, duration) {
+            try {
+                const audio = new (window.AudioContext || window.webkitAudioContext)();
+                const osc = audio.createOscillator();
+                const gain = audio.createGain();
+                osc.connect(gain);
+                gain.connect(audio.destination);
+                osc.frequency.value = freq;
+                gain.gain.value = 0.2;
+                osc.start();
+                osc.stop(audio.currentTime + duration);
+            } catch(e){}
+        }
+
+        // ====================== RENDERIZADO DINÁMICO DE INTERFACES ======================
+        function renderViews() {
+            // Actualizar KPIs
+            document.getElementById('kpi-hoy').textContent = currentSessionValidations.length;
+            document.getElementById('kpi-ok').textContent = currentSessionValidations.filter(v => v.result === 'SUCCESS').length;
+            document.getElementById('kpi-reject').textContent = currentSessionValidations.filter(v => v.result !== 'SUCCESS').length;
+
+            const timeOpt = { hour: '2-digit', minute: '2-digit', second: '2-digit' };
+
+            // 1. Dashboard Ultimos 3 registros
+            const dashboardContainer = document.getElementById('dashboard-last-validations');
+            if (currentSessionValidations.length === 0) {
+                dashboardContainer.innerHTML = '<p class="text-xs text-outline">Aún no hay validaciones registradas hoy.</p>';
+            } else {
+                dashboardContainer.innerHTML = currentSessionValidations.slice(0, 3).map(v => {
+                    const design = getStatusClasses(v.result);
+                    return `
+                        <div class="flex items-center justify-between p-3 border-l-4 bg-surface rounded-xl text-xs ${design.bg}">
+                            <div>
+                                <div class="font-bold">${resultLabel(v.result)}</div>
+                                <div class="text-[11px] text-on-surface-variant truncate max-w-[180px]">${v.holderName || v.qrCode}</div>
+                            </div>
+                            <span class="text-outline text-[10px] font-mono">${new Date(v.validatedAt).toLocaleTimeString('es-CO', timeOpt)}</span>
+                        </div>
+                    `;
+                }).join('');
+            }
+
+            // 2. Validador Ultimos 8 registros
+            const validatorContainer = document.getElementById('history-list');
+            if (currentSessionValidations.length === 0) {
+                validatorContainer.innerHTML = '<p class="text-xs text-outline">Sin validaciones en esta sesión.</p>';
+            } else {
+                validatorContainer.innerHTML = currentSessionValidations.slice(0, 8).map(v => {
+                    const design = getStatusClasses(v.result);
+                    return `
+                        <div class="flex items-center justify-between p-2.5 border-l-4 bg-surface rounded-lg text-xs ${design.bg}">
+                            <div>
+                                <span class="font-bold block">${resultLabel(v.result)}</span>
+                                <span class="font-mono text-[10px] text-outline block truncate max-w-xs">${v.qrCode}</span>
+                            </div>
+                            <span class="text-[10px] font-medium text-outline">${new Date(v.validatedAt).toLocaleTimeString('es-CO', timeOpt)}</span>
+                        </div>
+                    `;
+                }).join('');
+            }
+
+            // 3. Historial Completo
+            const fullHistoryContainer = document.getElementById('full-history-list');
+            if (currentSessionValidations.length === 0) {
+                fullHistoryContainer.innerHTML = '<p class="text-sm text-outline">Aún no hay registros de entrada de datos.</p>';
+            } else {
+                fullHistoryContainer.innerHTML = currentSessionValidations.map(v => {
+                    const design = getStatusClasses(v.result);
+                    return `
+                        <div class="flex items-center justify-between p-3.5 border-l-4 bg-surface rounded-xl text-sm ${design.bg}">
+                            <div class="flex-1 min-w-0">
+                                <span class="font-bold text-xs block">${resultLabel(v.result)}</span>
+                                <span class="text-xs text-on-surface-variant block truncate">${v.holderName || 'Ingreso'} • ${v.eventName}</span>
+                            </div>
+                            <div class="text-right ml-2 flex-shrink-0">
+                                <span class="text-[10px] font-mono text-outline block">${new Date(v.validatedAt).toLocaleTimeString('es-CO')}</span>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            }
+        }
+
+        // ====================== HTML5 QRCODE CONFIG (ESCÁNER INTEGRADO MÓVIL) ======================
+        let html5QrCode = null;
+        let isScanning = false;
+        let scanLock = false;
+
+        async function startScanner() {
+            const statusEl = document.getElementById('scanner-status');
+            const toggleBtn = document.getElementById('toggle-camera');
+
+            try {
+                if (!html5QrCode) html5QrCode = new Html5Qrcode("reader");
+
+                const config = { fps: 15, qrbox: { width: 220, height: 220 }, aspectRatio: 1.0 };
+                await html5QrCode.start({ facingMode: "environment" }, config, onScanSuccess, () => {});
+
+                isScanning = true;
+                toggleBtn.className = "flex items-center gap-2 border border-red-500 px-4 py-1.5 rounded-full text-xs font-semibold bg-red-50 text-red-600 hover:bg-red-100 transition";
+                toggleBtn.innerHTML = '<span class="material-symbols-outlined">videocam_off</span> Detener cámara';
+                statusEl.textContent = 'Lector activo (Cámara trasera) — Apunta a un código QR';
+                statusEl.className = 'text-center text-xs text-emerald-600 font-semibold animate-pulse';
+            } catch (err) {
+                // Fallback automático por si no detecta cámara trasera (entornos de prueba o pc portatil)
+                try {
+                    await html5QrCode.start({ facingMode: "user" }, { fps: 15, qrbox: { width: 220, height: 220 } }, onScanSuccess, () => {});
+                    isScanning = true;
+                    toggleBtn.innerHTML = '<span class="material-symbols-outlined">videocam_off</span> Detener cámara';
+                    statusEl.textContent = 'Lector activo (Cámara Frontal)';
+                    statusEl.className = 'text-center text-xs text-amber-600 font-semibold';
+                } catch(e) {
+                    statusEl.textContent = 'Acceso denegado a hardware de video. Usa verificación manual.';
+                    statusEl.className = 'text-center text-xs text-red-500 font-medium';
+                }
+            }
+        }
+
+        async function stopScanner() {
+            if (html5QrCode && isScanning) {
+                try { await html5QrCode.stop(); } catch (e) {}
+                isScanning = false;
+                const toggleBtn = document.getElementById('toggle-camera');
+                toggleBtn.className = "flex items-center gap-2 border border-outline/30 px-4 py-1.5 rounded-full text-xs font-semibold bg-white text-on-surface-variant hover:border-primary hover:text-primary transition";
+                toggleBtn.innerHTML = '<span class="material-symbols-outlined">videocam</span> Iniciar cámara';
+                document.getElementById('scanner-status').textContent = 'Cámara detenida por el operador.';
+                document.getElementById('scanner-status').className = 'text-center text-xs text-outline font-medium';
+            }
+        }
+
+        function onScanSuccess(decodedText) {
+            if (scanLock) return;
+            scanLock = true;
+
+            document.getElementById('qr-input').value = decodedText;
+            triggerAudioBeep(800, 0.08);
+
+            validateQR(decodedText).finally(() => {
+                setTimeout(() => {
+                    stopScanner();
+                    scanLock = false;
+                }, 1000);
+            });
+        }
+
+        document.getElementById('toggle-camera').addEventListener('click', () => {
+            if (isScanning) stopScanner();
+            else startScanner();
+        });
+
+        // ====================== ESCUCHADORES MANUALES ======================
+        document.getElementById('validate-btn').addEventListener('click', () => {
+            const val = document.getElementById('qr-input').value.trim();
+            if(val) validateQR(val);
+        });
+
+        document.getElementById('clear-btn').addEventListener('click', () => {
+            document.getElementById('qr-input').value = '';
+            const rb = document.getElementById('result');
+            rb.className = "hidden";
+            rb.innerHTML = "";
+        });
+
+        document.getElementById('qr-input').addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                const val = e.target.value.trim();
+                if(val) validateQR(val);
+            }
+        });
+
+        // Sincronizaciones e hilos cíclicos de actualización remota
+        syncValidations();
+        loadActiveEvents();
+        setInterval(loadActiveEvents, 25000); // Actualiza la cantidad de eventos cada 25s automáticamente.
+    </script>
+  </body>
+</html>

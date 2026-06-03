@@ -1,0 +1,116 @@
+/* Material Symbols Base */
+.material-symbols-outlined {
+    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+}
+
+body {
+    padding-top: 74px;
+}
+
+/* Kinetic Gradient Button */
+.kinetic-gradient {
+    background: linear-gradient(135deg, #006578 0%, #008097 100%);
+}
+
+/* Glass Navigation */
+.glass-nav {
+    backdrop-filter: blur(24px);
+    background: rgba(246, 250, 252, 0.8);
+}
+
+/* Soft Pulse Animation */
+.soft-pulse {
+    box-shadow: 0 0 0 0 rgba(174, 236, 255, 0.7);
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    70% {
+        box-shadow: 0 0 0 10px rgba(174, 236, 255, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(174, 236, 255, 0);
+    }
+}
+
+/* NAVBAR - From landingpage.css */
+:root {
+    --primary: #0097A7;
+    --secondary: #587D8B;
+    --accent: #C3792D;
+    --bg: #F4F7F9;
+    --text: #1E1E1E;
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 40px;
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+}
+
+.navbar .logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.navbar .logo img {
+    width: 40px;
+}
+
+.navbar .logo .logo-text {
+    width: 150px;
+}
+
+.navbar nav {
+    display: flex;
+    gap: 30px;
+}
+
+.navbar nav a {
+    text-decoration: none;
+    color: var(--secondary);
+    font-weight: 500;
+    position: relative;
+    padding: 8px 0;
+}
+
+.navbar nav a::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 0;
+    height: 2px;
+    background: var(--primary);
+    transition: all 0.3s ease;
+    transform: translateX(-50%);
+    border-radius: 2px;
+}
+
+.navbar nav a:hover::after {
+    width: 60%;
+}
+
+.navbar nav a:hover {
+    color: var(--primary);
+}
+
+.navbar nav .active {
+    color: var(--primary);
+    font-weight: bold;
+}
+
+.navbar nav .active::after {
+    width: 100%;
+}
