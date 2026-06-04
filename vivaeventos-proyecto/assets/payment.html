@@ -109,7 +109,7 @@
 
         <div class="flex items-center gap-4">
             <span class="text-secondary font-semibold text-sm">Cancel Order</span>
-            <a href="/assets/Event.html" class="h-10 w-10 rounded-full bg-surface-container-high flex items-center justify-center text-secondary hover:text-primary transition-colors" aria-label="Cerrar y volver a Event">
+            <a id="cancel-order-btn" href="/assets/Event.html" class="h-10 w-10 rounded-full bg-surface-container-high flex items-center justify-center text-secondary hover:text-primary transition-colors" aria-label="Cerrar y volver a Event">
                 <span class="material-symbols-outlined">close</span>
             </a>
         </div>
@@ -346,6 +346,10 @@
 <script>
         const urlParams = new URLSearchParams(window.location.search);
         const eventId = urlParams.get('eventId');
+        const cancelBtn = document.getElementById('cancel-order-btn');
+        if (cancelBtn && eventId) {
+            cancelBtn.href = `/assets/Event.html?id=${eventId}`;
+        }
         const ticketId = urlParams.get('ticketId');
         const tipo = urlParams.get('type') || 'General';
         const cantidad = parseInt(urlParams.get('cantidad')) || 1;
