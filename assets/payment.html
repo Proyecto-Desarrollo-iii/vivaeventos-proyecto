@@ -501,7 +501,7 @@
                 email.classList.add('ring-2', 'ring-red-500');
                 email.nextElementSibling.textContent = 'El email es obligatorio';
                 email.nextElementSibling.classList.remove('hidden');
-            } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value.trim())) {
+            } else if (!/^[^\s@]+@[^\s.@]+(?:\.[^\s.@]+)+$/.test(email.value.trim())) {
                 errors.push('El correo electrónico no es válido');
                 email.classList.add('ring-2', 'ring-red-500');
                 email.nextElementSibling.textContent = 'Formato de email inválido';

@@ -279,7 +279,7 @@
             });
         });
         
-        const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        const EMAIL_REGEX = /^[^\s@]+@[^\s.@]+(?:\.[^\s.@]+)+$/;
         const SOLO_DIGITOS = /^\d+$/;
 
         document.getElementById('registerForm').addEventListener('submit', async (e) => {
