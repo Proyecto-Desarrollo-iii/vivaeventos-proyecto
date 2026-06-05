@@ -289,6 +289,11 @@
         <label for="qr-input">Código QR manual</label>
         <input id="qr-input" type="text" placeholder="Pega aquí el código de la boleta" autocomplete="off" />
 
+        <label for="event-select">Evento</label>
+        <select id="event-select">
+            <option value="">Todos los eventos</option>
+        </select>
+
         <div class="row">
             <div>
                 <label for="gate">Puerta</label>
@@ -352,6 +357,7 @@
         const historyList = document.getElementById('history-list');
         const toggleCameraBtn = document.getElementById('toggle-camera');
         const scannerStatus = document.getElementById('scanner-status');
+        const eventSelect = document.getElementById('event-select');
 
         // ====================== QR SCANNER (html5-qrcode) ======================
         let html5QrCode = null;
@@ -411,6 +417,11 @@
 
         async function onScanSuccess(decodedText, decodedResult) {
             if (isProcessing) return;
+            if (!eventSelect.value) {
+                scannerStatus.textContent = 'Primero selecciona un evento';
+                scannerStatus.style.color = '#ef4444';
+                return;
+            }
             isProcessing = true;
             stopScanner();
             qrInput.value = decodedText;
@@ -429,6 +440,23 @@
         }
 
         function onScanFailure(error) {}
+
+        // ====================== LOAD EVENTS ======================
+        async function loadEvents() {
+            try {
+                const res = await window.API.get('/events');
+                const eventos = res.data?.eventos || res.data || [];
+                const select = document.getElementById('event-select');
+                eventos.forEach(ev => {
+                    const opt = document.createElement('option');
+                    opt.value = ev.id;
+                    opt.textContent = ev.name;
+                    select.appendChild(opt);
+                });
+            } catch (e) {
+                console.warn('No se pudieron cargar los eventos', e);
+            }
+        }
 
         toggleCameraBtn.addEventListener('click', function () {
             if (isScanning) {
@@ -498,6 +526,20 @@
                 return;
             }
 
+            const eventId = document.getElementById('event-select').value;
+            if (!eventId) {
+                resultBox.classList.remove('show', 'ok', 'warn', 'err');
+                resultBox.classList.add('show', 'err');
+                resultBox.innerHTML = `
+                    <div class="result-headline">
+                        <span class="material-symbols-outlined">event</span>
+                        SELECCIONA UN EVENTO
+                    </div>
+                    <div>Debes elegir un evento antes de validar una boleta.</div>
+                `;
+                return;
+            }
+
             validateBtn.disabled = true;
             const originalLabel = validateBtn.innerHTML;
             validateBtn.innerHTML = '<span class="material-symbols-outlined">sync</span> Validando...';
@@ -506,6 +548,7 @@
             try {
                 const res = await Checkin.validate({
                     qrCode,
+                    eventId,
                     gateLocation: gateInput.value || null,
                     validatedBy: operatorInput.value || null
                 });
@@ -559,11 +602,19 @@
             qrInput.focus();
         }
 
+        function toggleValidateButton() {
+            validateBtn.disabled = !eventSelect.value;
+        }
+        toggleValidateButton();
+        eventSelect.addEventListener('change', toggleValidateButton);
+
         validateBtn.addEventListener('click', validate);
         clearBtn.addEventListener('click', clear);
         qrInput.addEventListener('keydown', e => {
             if (e.key === 'Enter') validate();
         });
+
+        loadEvents();
 
         if (!AuthService.getToken()) {
             console.warn('Sin token JWT — el gateway puede rechazar las validaciones.');

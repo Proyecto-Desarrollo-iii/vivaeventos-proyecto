@@ -130,17 +130,19 @@
                             <div class="space-y-2">
                                 <label class="font-label text-xs font-bold uppercase tracking-wider text-secondary">Full
                                     Name</label>
-                                <input
+                                <input id="buyer-name"
                                     class="w-full bg-surface-container-highest border-none rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary-fixed transition-all outline-none"
                                     placeholder="John Doe" type="text" />
+                                <div class="field-error text-red-600 text-xs mt-1 hidden">El nombre es obligatorio</div>
                             </div>
                             <div class="space-y-2">
                                 <label
                                     class="font-label text-xs font-bold uppercase tracking-wider text-secondary">Email
                                     Address</label>
-                                <input
+                                <input id="buyer-email"
                                     class="w-full bg-surface-container-highest border-none rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary-fixed transition-all outline-none"
                                     placeholder="john@example.com" type="email" />
+                                <div class="field-error text-red-600 text-xs mt-1 hidden">El email es obligatorio</div>
                             </div>
                         </div>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -148,16 +150,17 @@
                                 <label
                                     class="font-label text-xs font-bold uppercase tracking-wider text-secondary">Phone
                                     Number</label>
-                                <input
+                                <input id="buyer-phone"
                                     class="w-full bg-surface-container-highest border-none rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary-fixed transition-all outline-none"
-                                    placeholder="+1 (555) 000-0000" type="tel" />
+                                    placeholder="+1 (555) 000-0000" type="tel" inputmode="numeric" pattern="\d*" />
                             </div>
                             <div class="space-y-2">
                                 <label class="font-label text-xs font-bold uppercase tracking-wider text-secondary">ID /
                                     Passport</label>
-                                <input
+                                <input id="buyer-document"
                                     class="w-full bg-surface-container-highest border-none rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary-fixed transition-all outline-none"
-                                    placeholder="Document Number" type="text" />
+                                    placeholder="Document Number" type="text" inputmode="numeric" pattern="\d*" />
+                                <div class="field-error text-red-600 text-xs mt-1 hidden">El documento es obligatorio</div>
                             </div>
                         </div>
                     </div>
@@ -203,6 +206,7 @@
                                 <input id="cardholder-name"
                                     class="w-full bg-surface-container-highest border-none rounded-xl px-4 py-3 outline-none"
                                     type="text" placeholder="Name on card" />
+                                <div class="field-error text-red-600 text-xs mt-1 hidden">El nombre del titular es obligatorio</div>
                             </div>
                             <div class="space-y-2 relative">
                                 <label class="font-label text-xs font-bold uppercase tracking-wider text-secondary">Card
@@ -439,16 +443,78 @@
                 }
 
                 if (user) {
-                    const nameInput = document.querySelector('input[placeholder="John Doe"]');
-                    const emailInput = document.querySelector('input[placeholder="john@example.com"]');
-                    if (nameInput && user.nombre) nameInput.value = user.nombre;
-                    if (emailInput && user.email) emailInput.value = user.email;
+                    if (user.nombre) document.getElementById('buyer-name').value = user.nombre;
+                    if (user.email) document.getElementById('buyer-email').value = user.email;
                 }
 
                 document.getElementById('purchase-btn').addEventListener('click', () => completePurchase(event.id, ticket?.id || ticketId, unitPrice, event.name));
             } catch (err) {
                 console.error('Error loading event:', err);
             }
+        }
+
+        function validatePaymentForm() {
+            const errors = [];
+
+            document.querySelectorAll('.field-error').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.ring-2.ring-red-500').forEach(el => {
+                el.classList.remove('ring-2', 'ring-red-500');
+            });
+
+            const name = document.getElementById('buyer-name');
+            if (!name.value.trim()) {
+                errors.push('El nombre del comprador es obligatorio');
+                name.classList.add('ring-2', 'ring-red-500');
+                name.nextElementSibling.textContent = 'El nombre es obligatorio';
+                name.nextElementSibling.classList.remove('hidden');
+            }
+
+            const email = document.getElementById('buyer-email');
+            if (!email.value.trim()) {
+                errors.push('El correo electrónico es obligatorio');
+                email.classList.add('ring-2', 'ring-red-500');
+                email.nextElementSibling.textContent = 'El email es obligatorio';
+                email.nextElementSibling.classList.remove('hidden');
+            } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value.trim())) {
+                errors.push('El correo electrónico no es válido');
+                email.classList.add('ring-2', 'ring-red-500');
+                email.nextElementSibling.textContent = 'Formato de email inválido';
+                email.nextElementSibling.classList.remove('hidden');
+            }
+
+            const doc = document.getElementById('buyer-document');
+            if (!doc.value.trim()) {
+                errors.push('El documento de identidad es obligatorio');
+                doc.classList.add('ring-2', 'ring-red-500');
+                doc.nextElementSibling.textContent = 'El documento es obligatorio';
+                doc.nextElementSibling.classList.remove('hidden');
+            } else if (!/^\d+$/.test(doc.value.trim())) {
+                errors.push('El documento solo debe contener números');
+                doc.classList.add('ring-2', 'ring-red-500');
+                doc.nextElementSibling.textContent = 'Solo números';
+                doc.nextElementSibling.classList.remove('hidden');
+            }
+
+            const phone = document.getElementById('buyer-phone');
+            if (phone.value.trim() && !/^\d+$/.test(phone.value.trim())) {
+                errors.push('El teléfono solo debe contener números');
+                phone.classList.add('ring-2', 'ring-red-500');
+            }
+
+            const cardholder = document.getElementById('cardholder-name');
+            if (!cardholder.value.trim()) {
+                errors.push('El nombre del titular de la tarjeta es obligatorio');
+                cardholder.classList.add('ring-2', 'ring-red-500');
+                cardholder.nextElementSibling.textContent = 'El nombre del titular es obligatorio';
+                cardholder.nextElementSibling.classList.remove('hidden');
+            }
+
+            if (errors.length > 0) {
+                const firstError = document.querySelector('.ring-2.ring-red-500');
+                if (firstError) firstError.focus();
+            }
+
+            return errors;
         }
 
         async function completePurchase(eventId, ticketTypeId, unitPrice, eventName) {
@@ -461,11 +527,17 @@
             currentUnitPrice = unitPrice;
             currentEventName = eventName;
 
+            const errors = validatePaymentForm();
+            if (errors.length > 0) {
+                showToast(errors[0], 'error');
+                btn.disabled = false;
+                btn.innerHTML = 'Complete Purchase <span class="material-symbols-outlined">arrow_forward</span>';
+                return;
+            }
+
             try {
-                const nameInput = document.querySelector('input[placeholder="John Doe"]');
-                const emailInput = document.querySelector('input[placeholder="john@example.com"]');
-                const buyerName = (nameInput && nameInput.value) || user.nombre || user.email || 'Comprador';
-                const buyerEmail = (emailInput && emailInput.value) || user.email || 'comprador@vivaeventos.test';
+                const buyerName = document.getElementById('buyer-name').value.trim();
+                const buyerEmail = document.getElementById('buyer-email').value.trim();
 
                 const orderData = {
                     userId: user.id,
