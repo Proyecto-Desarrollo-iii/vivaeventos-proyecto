@@ -149,9 +149,12 @@ document.addEventListener('DOMContentLoaded', function() {
     const user = AuthService.getUser();
     const backBtn = document.getElementById('back-btn');
     if (backBtn && user) {
-        if (user.role === 'ORGANIZER') {
+        const role = (user.role || '').toUpperCase();
+        if (role === 'ORGANIZER' || role === 'ORGANIZADOR') {
             backBtn.href = '/assets/DashboardOrganizer.html';
-        } else if (user.role === 'ADMIN') {
+        } else if (role === 'LOGISTICA') {
+            backBtn.href = '/assets/DashboardLogistica.html';
+        } else if (role === 'ADMIN') {
             backBtn.href = '/assets/DashboardManager.html';
         } else {
             backBtn.href = '/';
