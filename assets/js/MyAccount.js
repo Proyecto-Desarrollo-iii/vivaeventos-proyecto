@@ -35,6 +35,18 @@ async function saveProfile(e) {
     const nombre = document.getElementById('nombre').value;
     const apellido = document.getElementById('apellido').value;
 
+    const doc = document.getElementById('doc').value;
+    const telefono = document.getElementById('telefono').value;
+
+    if (doc && !/^\d+$/.test(doc)) {
+        Toast.error('Documento inválido', 'La cédula solo debe contener números');
+        return;
+    }
+    if (telefono && !/^\d+$/.test(telefono)) {
+        Toast.error('Teléfono inválido', 'El teléfono solo debe contener números');
+        return;
+    }
+
     const body = {
         fullName: (nombre + ' ' + apellido).trim(),
         phonePrefix: document.getElementById('caracteristica').value || null,
@@ -161,6 +173,13 @@ document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('password-form').reset();
         });
     }
+
+    document.getElementById('doc').addEventListener('input', function() {
+        this.value = this.value.replace(/\D/g, '');
+    });
+    document.getElementById('telefono').addEventListener('input', function() {
+        this.value = this.value.replace(/\D/g, '');
+    });
 });
 
 const menuLinks = document.querySelectorAll('.account-sidebar a');
