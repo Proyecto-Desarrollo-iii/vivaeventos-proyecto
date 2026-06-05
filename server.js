@@ -68,7 +68,7 @@ app.use('/assets', express.static(path.join(__dirname, 'assets')));
 
 const apiProxy = createProxyMiddleware({
     target: GATEWAY,
-    changeOrigin: true,
+    changeOrigin: false,
     secure: false,
     onError: (err, req, res) => {
         console.error('[Proxy Error]', err.message);
