@@ -67,6 +67,9 @@ jobs:
     needs: docker-build-and-push
     if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
     steps:
       - id: auth
         name: Authenticate to Google Cloud
@@ -82,13 +85,13 @@ jobs:
           region: us-central1
           env_vars: |
             GATEWAY_URL=${{ secrets.GATEWAY_URL }}
-            DB_TICKETS_HOST=${{ secrets.DB_TICKETS_HOST }}
-            DB_TICKETS_PORT=${{ secrets.DB_TICKETS_PORT }}
-            DB_TICKETS_DATABASE=${{ secrets.DB_TICKETS_DATABASE }}
-            DB_TICKETS_USER=${{ secrets.DB_TICKETS_USER }}
-            DB_TICKETS_PASSWORD=${{ secrets.DB_TICKETS_PASSWORD }}
-            DB_CHECKIN_HOST=${{ secrets.DB_CHECKIN_HOST }}
-            DB_CHECKIN_PORT=${{ secrets.DB_CHECKIN_PORT }}
-            DB_CHECKIN_DATABASE=${{ secrets.DB_CHECKIN_DATABASE }}
-            DB_CHECKIN_USER=${{ secrets.DB_CHECKIN_USER }}
-            DB_CHECKIN_PASSWORD=${{ secrets.DB_CHECKIN_PASSWORD }}
+            DB_TICKETS_HOST=${{ secrets.DB_HOST }}
+            DB_TICKETS_PORT=5432
+            DB_TICKETS_DATABASE=vivaeventos_tickets
+            DB_TICKETS_USER=${{ secrets.DB_USER }}
+            DB_TICKETS_PASSWORD=${{ secrets.DB_PASSWORD }}
+            DB_CHECKIN_HOST=${{ secrets.DB_HOST }}
+            DB_CHECKIN_PORT=5432
+            DB_CHECKIN_DATABASE=vivaeventos_checkin
+            DB_CHECKIN_USER=${{ secrets.DB_USER }}
+            DB_CHECKIN_PASSWORD=${{ secrets.DB_PASSWORD }}
