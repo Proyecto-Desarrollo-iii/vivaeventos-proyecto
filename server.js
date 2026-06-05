@@ -75,6 +75,8 @@ const apiProxy = createProxyMiddleware({
         res.status(502).json({ error: 'Gateway no disponible' });
     },
     onProxyReq: (proxyReq, req, res) => {
+        proxyReq.removeHeader('origin');
+        proxyReq.removeHeader('Origin');
         console.log('[Proxy]', req.method, req.url, '->', GATEWAY + req.url);
     },
     onProxyRes: (proxyRes, req, res) => {
