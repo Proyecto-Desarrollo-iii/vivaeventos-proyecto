@@ -320,6 +320,32 @@
                 </div>
             </div>
         </div>
+        <!-- Failure State (shown when payment fails) -->
+        <div id="failure-section" class="mt-20 hidden">
+            <div
+                class="max-w-2xl mx-auto bg-surface-container-lowest rounded-[2rem] p-12 text-center shadow-2xl relative overflow-hidden">
+                <div class="absolute top-0 left-0 w-2 h-full bg-red-500"></div>
+                <div
+                    class="mb-8 inline-flex items-center justify-center w-20 h-20 rounded-full bg-red-500/10 text-red-500">
+                    <span class="material-symbols-outlined text-4xl"
+                        style="font-variation-settings: 'FILL' 1;">cancel</span>
+                </div>
+                <h2 class="font-headline text-4xl font-black tracking-tighter mb-4">Pago Fallido</h2>
+                <p class="text-secondary mb-4 text-lg" id="failure-message">El pago no pudo procesarse. Puedes reintentarlo desde Mis Entradas.</p>
+                <p class="font-headline font-bold text-on-surface" id="failure-order-id"></p>
+                <div class="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
+                    <a href="/assets/Tickets.html"
+                        class="kinetic-gradient text-white px-8 py-4 rounded-full font-bold flex items-center gap-2">
+                        <span class="material-symbols-outlined" data-icon="confirmation_number">confirmation_number</span>
+                        Ir a Mis Entradas
+                    </a>
+                    <a href="/index.html"
+                        class="bg-surface-container-high text-on-surface px-8 py-4 rounded-full font-bold hover:bg-surface-container-highest transition-colors">
+                        Volver al inicio
+                    </a>
+                </div>
+            </div>
+        </div>
     </main>
     <!-- BottomNavBar (Visible on Mobile) -->
     <nav
@@ -666,6 +692,15 @@
             } catch (e) {
                 console.warn('No se pudo marcar FAILED', e);
             }
+
+            document.querySelector('.grid-cols-1.lg\\:grid-cols-12').classList.add('hidden');
+            document.getElementById('failure-section').classList.remove('hidden');
+            document.getElementById('failure-message').textContent = 'El pago no pudo procesarse. Puedes reintentarlo desde Mis Entradas.';
+            document.getElementById('failure-order-id').textContent = `Orden: ${orderId || '—'}`;
+
+            setTimeout(() => {
+                window.location.href = '/assets/Tickets.html';
+            }, 4000);
         }
 
         function showToast(message, type) {
