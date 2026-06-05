@@ -53,6 +53,13 @@ const checkinPool = createPool('DB_CHECKIN') || new Pool({
 });
 
 app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS, PATCH');
+    res.header('Access-Control-Allow-Headers', '*');
+    res.header('Access-Control-Expose-Headers', '*');
+    if (req.method === 'OPTIONS') {
+        return res.sendStatus(204);
+    }
     console.log('[Request]', req.method, req.url);
     next();
 });
