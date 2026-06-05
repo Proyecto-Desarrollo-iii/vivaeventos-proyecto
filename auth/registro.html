@@ -279,32 +279,87 @@
             });
         });
         
+        const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        const SOLO_DIGITOS = /^\d+$/;
+
         document.getElementById('registerForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            
+
+            const nombre = document.getElementById('nombre').value.trim();
+            const apellido = document.getElementById('apellido').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const prefijo = document.getElementById('caracteristica').value;
+            const telefono = document.getElementById('telefono').value.trim();
+            const documento = document.getElementById('doc').value.trim();
+            const fechaNac = document.getElementById('fecha-nac').value;
             const password = document.getElementById('password').value;
             const confirmPassword = document.getElementById('confirmPassword').value;
-            
-            if (password !== confirmPassword) {
-                Toast.warning('Contraseñas no coinciden', 'Las contraseñas ingresadas son diferentes');
+
+            // Nombre y apellido
+            if (!nombre || !apellido) {
+                Toast.warning('Datos incompletos', 'Debes ingresar tu nombre y apellido.');
                 return;
             }
-            
-            const nombre = document.getElementById('nombre').value;
-            const apellido = document.getElementById('apellido').value;
+
+            // Email
+            if (!email) {
+                Toast.warning('Email obligatorio', 'Debes ingresar tu correo electrónico.');
+                return;
+            }
+            if (!EMAIL_REGEX.test(email)) {
+                Toast.warning('Email inválido', 'Ingresa un correo electrónico válido, por ejemplo: tu@email.com');
+                return;
+            }
+
+            // Prefijo y teléfono
+            if (!prefijo) {
+                Toast.warning('Prefijo obligatorio', 'Selecciona el prefijo de tu país.');
+                return;
+            }
+            if (!telefono) {
+                Toast.warning('Teléfono obligatorio', 'Debes ingresar tu número de teléfono.');
+                return;
+            }
+            if (!SOLO_DIGITOS.test(telefono)) {
+                Toast.warning('Teléfono inválido', 'El teléfono solo debe contener números, sin espacios ni guiones.');
+                return;
+            }
+
+            // Documento (opcional, pero si se ingresa debe ser numérico)
+            if (documento && !SOLO_DIGITOS.test(documento)) {
+                Toast.warning('Documento inválido', 'El número de documento solo debe contener números.');
+                return;
+            }
+
+            // Fecha de nacimiento (opcional, pero no puede ser futura)
+            if (fechaNac && fechaNac > new Date().toISOString().slice(0, 10)) {
+                Toast.warning('Fecha inválida', 'La fecha de nacimiento no puede ser futura.');
+                return;
+            }
+
+            // Contraseña
+            if (!password || password.length < 8) {
+                Toast.warning('Contraseña muy corta', 'La contraseña debe tener al menos 8 caracteres.');
+                return;
+            }
+            if (password !== confirmPassword) {
+                Toast.warning('Contraseñas no coinciden', 'Las contraseñas ingresadas son diferentes.');
+                return;
+            }
+
             const formData = {
                 fullName: nombre + ' ' + apellido,
-                email: document.getElementById('email').value,
-                phonePrefix: document.getElementById('caracteristica').value,
-                phone: document.getElementById('telefono').value,
+                email: email,
+                phonePrefix: prefijo,
+                phone: telefono,
                 documentType: document.getElementById('tipo-doc').value,
-                documentNumber: document.getElementById('doc').value,
+                documentNumber: documento,
                 country: document.getElementById('pais').value,
-                birthDate: document.getElementById('fecha-nac').value || null,
+                birthDate: fechaNac || null,
                 password: password,
                 role: document.getElementById('role').value
             };
-            
+
             try {
                 const response = await fetch('/api/v1/auth/registro', {
                     method: 'POST',
