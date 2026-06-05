@@ -100,16 +100,32 @@ app.get('/api/validations/today', async (req, res) => {
     }
 });
 
-app.get('/auth/:page', (req, res) => {
-    res.sendFile(path.join(__dirname, 'auth', req.params.page));
+// ============================================
+// Servido de componentes estáticos del frontend
+// Solo se exponen las carpetas del frontend; nunca server.js,
+// package.json, node_modules ni cualquier otro archivo del backend.
+// ============================================
+const STATIC_DIRS = ['auth', 'admin', 'validator', 'shared'];
+STATIC_DIRS.forEach((dir) => {
+    app.use('/' + dir, express.static(path.join(__dirname, dir)));
 });
 
-app.get('/', (req, res) => {
+// Página de inicio
+app.get(['/', '/index.html'], (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
 });
 
-app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, req.path));
+// Fallback de navegación:
+//  - Rutas de página (sin extensión o .html)  -> index.html
+//  - Cualquier otro archivo no encontrado o ruta /api desconocida -> 404 limpio
+app.use((req, res) => {
+    if (req.method === 'GET' && !req.path.startsWith('/api')) {
+        const ext = path.extname(req.path);
+        if (ext === '' || ext === '.html') {
+            return res.sendFile(path.join(__dirname, 'index.html'));
+        }
+    }
+    res.status(404).json({ error: 'Recurso no encontrado' });
 });
 
 app.listen(PORT, '0.0.0.0', () => {
