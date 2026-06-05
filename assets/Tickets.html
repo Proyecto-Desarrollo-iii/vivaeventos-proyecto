@@ -395,8 +395,8 @@
                     let showRetry = false;
                     let showCancel = false;
                     if (orderStatus === 'PENDING') {
-                        if (paymentStatus === 'PENDING' || paymentStatus === 'FAILED' || paymentStatus === 'PROCESSING') {
-                            showRetry = true;
+                        if (paymentStatus === 'PENDING' || paymentStatus === 'FAILED' || paymentStatus === 'PROCESSING' || paymentStatus === 'TIMEOUT') {
+                            showRetry = paymentStatus !== 'TIMEOUT';
                             showCancel = true;
                         } else if (!paymentStatus) {
                             showCancel = true;
@@ -649,16 +649,17 @@
                     modal.classList.add('hidden');
                     const card = document.getElementById(`order-card-${orderId}`);
                     if (card) {
-                        card.style.opacity = '0.5';
-                        const statusSpan = card.querySelector('.ticket-card-header .status-pill');
-                        if (statusSpan) {
-                            statusSpan.className = 'status-pill status-cancelled';
-                            statusSpan.textContent = 'Cancelada';
+                        const paymentBadge = card.querySelector('.payment-status-badge');
+                        if (paymentBadge) {
+                            paymentBadge.className = 'payment-status-badge payment-status-cancelled';
+                            paymentBadge.textContent = 'Pago: Cancelado';
                         }
+                        setTimeout(() => { card.style.opacity = '0.5'; }, 300);
                     }
                     location.reload();
                 } else {
                     alert(res.data?.error || 'Error al cancelar la orden');
+                    location.reload();
                 }
             } catch (err) {
                 console.error('Cancel error:', err);
