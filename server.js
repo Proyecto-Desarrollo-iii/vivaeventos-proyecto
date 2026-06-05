@@ -68,7 +68,7 @@ app.use('/assets', express.static(path.join(__dirname, 'assets')));
 
 const apiProxy = createProxyMiddleware({
     target: GATEWAY,
-    changeOrigin: false,
+    changeOrigin: true,
     secure: false,
     onError: (err, req, res) => {
         console.error('[Proxy Error]', err.message);
@@ -78,6 +78,7 @@ const apiProxy = createProxyMiddleware({
         console.log('[Proxy]', req.method, req.url, '->', GATEWAY + req.url);
     },
     onProxyRes: (proxyRes, req, res) => {
+        proxyRes.headers['access-control-allow-origin'] = '*';
         console.log('[Proxy Response]', proxyRes.statusCode, req.method, req.url);
     },
 });
