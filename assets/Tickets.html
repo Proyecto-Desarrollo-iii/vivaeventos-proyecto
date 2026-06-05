@@ -362,7 +362,7 @@
             try {
                 const result = await Orders.getByUser(user.id);
                 const allOrders = Array.isArray(result) ? result : (result.ordenes || result.data || []);
-                const orders = allOrders;
+                const orders = allOrders.filter(o => (o.status || '').toUpperCase() !== 'FAILED');
 
                 document.getElementById('orders-loading').classList.add('hidden');
 
@@ -394,11 +394,11 @@
 
                     let showRetry = false;
                     let showCancel = false;
-                    if (orderStatus === 'PENDING' || orderStatus === 'FAILED') {
+                    if (orderStatus === 'PENDING') {
                         if (paymentStatus === 'PENDING' || paymentStatus === 'FAILED' || paymentStatus === 'PROCESSING') {
                             showRetry = true;
                             showCancel = true;
-                        } else if (!paymentStatus && orderStatus === 'PENDING') {
+                        } else if (!paymentStatus) {
                             showCancel = true;
                         }
                     }
@@ -644,7 +644,7 @@
             this.textContent = 'Cancelando...';
 
             try {
-                const res = await Orders.cancelOrder(orderId);
+                const res = await Payments.cancelByOrder(orderId);
                 if (res.ok) {
                     modal.classList.add('hidden');
                     const card = document.getElementById(`order-card-${orderId}`);
