@@ -7,8 +7,9 @@ const { createProxyMiddleware } = require('http-proxy-middleware');
 const os = require('os');
 
 const app = express();
-const PORT = 5000;
+const PORT = process.env.PORT || 5000;
 const SSL_PORT = 5443;
+const GATEWAY = process.env.GATEWAY_URL || 'http://localhost:8090';
 
 function getLocalIP() {
     const interfaces = os.networkInterfaces();
@@ -23,15 +24,27 @@ function getLocalIP() {
 }
 
 const LOCAL_IP = getLocalIP();
-const GATEWAY = 'http://localhost:8090';
-const pool = new Pool({
+
+function createPool(prefix) {
+    const host = process.env[prefix + '_HOST'];
+    if (!host) return null;
+    return new Pool({
+        host: host,
+        port: parseInt(process.env[prefix + '_PORT'] || '5432'),
+        database: process.env[prefix + '_DATABASE'],
+        user: process.env[prefix + '_USER'],
+        password: process.env[prefix + '_PASSWORD'],
+    });
+}
+
+const pool = createPool('DB_TICKETS') || new Pool({
     host: 'localhost',
     port: 5433,
     database: 'vivaeventos_tickets',
     user: 'devdb',
     password: 'a1b2c3d4',
 });
-const checkinPool = new Pool({
+const checkinPool = createPool('DB_CHECKIN') || new Pool({
     host: 'localhost',
     port: 5433,
     database: 'vivaeventos_checkin',

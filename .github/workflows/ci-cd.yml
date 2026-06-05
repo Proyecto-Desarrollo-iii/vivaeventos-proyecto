@@ -1,0 +1,94 @@
+name: CI/CD - vivaeventos-proyecto
+
+on:
+  push:
+    branches: [main, master, develop]
+    paths:
+      - '**'
+      - '.github/**'
+  pull_request:
+    branches: [main, master]
+  workflow_dispatch:
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '21'
+          cache: 'npm'
+      - name: Install dependencies
+        run: npm ci
+
+  docker-build-and-push:
+    needs: build
+    if: github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Extract metadata for Docker
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ghcr.io/${{ github.repository }}
+          tags: |
+            type=semver,pattern={{version}}
+            type=ref,event=branch
+            type=sha,format=short
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  deploy-to-cloud-run:
+    needs: docker-build-and-push
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
+    runs-on: ubuntu-latest
+    steps:
+      - id: auth
+        name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: projects/834797281102/locations/global/workloadIdentityPools/github-pool/providers/github-provider
+          service_account: cloud-run-admin@vivaeventos-498516.iam.gserviceaccount.com
+      - name: Deploy to Cloud Run
+        uses: google-github-actions/deploy-cloudrun@v2
+        with:
+          service: vivaeventos-proyecto
+          image: ghcr.io/${{ github.repository }}:${{ github.ref_name }}
+          region: us-central1
+          env_vars: |
+            GATEWAY_URL=${{ secrets.GATEWAY_URL }}
+            DB_TICKETS_HOST=${{ secrets.DB_TICKETS_HOST }}
+            DB_TICKETS_PORT=${{ secrets.DB_TICKETS_PORT }}
+            DB_TICKETS_DATABASE=${{ secrets.DB_TICKETS_DATABASE }}
+            DB_TICKETS_USER=${{ secrets.DB_TICKETS_USER }}
+            DB_TICKETS_PASSWORD=${{ secrets.DB_TICKETS_PASSWORD }}
+            DB_CHECKIN_HOST=${{ secrets.DB_CHECKIN_HOST }}
+            DB_CHECKIN_PORT=${{ secrets.DB_CHECKIN_PORT }}
+            DB_CHECKIN_DATABASE=${{ secrets.DB_CHECKIN_DATABASE }}
+            DB_CHECKIN_USER=${{ secrets.DB_CHECKIN_USER }}
+            DB_CHECKIN_PASSWORD=${{ secrets.DB_CHECKIN_PASSWORD }}
