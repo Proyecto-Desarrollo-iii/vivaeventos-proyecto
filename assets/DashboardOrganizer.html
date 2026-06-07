@@ -130,6 +130,11 @@
                         Estadísticas
                     </a>
 
+                    <a href="#" data-section="promocodes">
+                        <span class="material-symbols-outlined">local_offer</span>
+                        Promocodes
+                    </a>
+
                     <a href="#" data-section="settings">
                         <span class="material-symbols-outlined">settings</span>
                         Configuración
@@ -593,6 +598,108 @@
                         <p class="max-w-3xl text-secondary">Aquí podrás administrar las opciones y ajustes de tu Dashboard.</p>
                     </section>
                 </div>
+
+                <div id="promocodes-panel" class="max-w-7xl mx-auto space-y-12 hidden">
+                    <section class="space-y-2">
+                        <span class="font-label text-xs uppercase tracking-[0.2em] text-primary font-bold">Promocodes</span>
+                        <h2 class="font-headline text-5xl md:text-6xl font-black text-on-surface leading-none tracking-tight">Gestión de <span class="text-primary-container">Códigos Promocionales</span></h2>
+                        <p class="max-w-3xl text-secondary">Crea, edita y administra los códigos de descuento para tus eventos.</p>
+                    </section>
+                    <section class="space-y-6">
+                        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                            <div>
+                                <p class="text-secondary">Usa el botón para crear nuevos códigos promocionales.</p>
+                            </div>
+                            <button id="new-promocode-btn" class="inline-flex items-center gap-2 px-5 py-3 rounded-full bg-primary text-on-primary font-bold hover:bg-[#007c91] transition-all">
+                                <span class="material-symbols-outlined">add</span>
+                                Nuevo código
+                            </button>
+                        </div>
+                        <div class="overflow-x-auto bg-white rounded-[2.5rem] shadow-[0_20px_40px_rgba(0,0,0,0.06)]">
+                            <table class="w-full min-w-[920px] border-separate border-spacing-y-4">
+                                <thead class="text-left text-outline uppercase font-label text-[10px] tracking-[0.2em]">
+                                    <tr>
+                                        <th class="px-6 py-4">Código</th>
+                                        <th class="px-6 py-4">Tipo</th>
+                                        <th class="px-6 py-4 text-right">Valor</th>
+                                        <th class="px-6 py-4 text-center">Usos</th>
+                                        <th class="px-6 py-4 text-center">Estado</th>
+                                        <th class="px-6 py-4 text-right">Acción</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="promocodes-tbody">
+                                    <tr>
+                                        <td colspan="6" class="text-center text-secondary py-12">No hay códigos promocionales. ¡Crea uno!</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </section>
+                </div>
+
+                <!-- Modal overlay for creating/editing promo codes -->
+                <div id="promocode-modal" class="fixed inset-0 z-[100] flex items-center justify-center hidden">
+                    <div class="absolute inset-0 bg-black/40 backdrop-blur-sm" id="promocode-modal-backdrop"></div>
+                    <div class="relative bg-surface-container-lowest rounded-[2.5rem] shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto mx-4 p-8 space-y-6">
+                        <div class="flex items-center justify-between">
+                            <h3 class="font-headline text-2xl font-bold" id="promocode-modal-title">Nuevo código promocional</h3>
+                            <button id="promocode-modal-close" class="h-10 w-10 rounded-full bg-surface-container-high flex items-center justify-center text-secondary hover:text-primary transition-colors">
+                                <span class="material-symbols-outlined">close</span>
+                            </button>
+                        </div>
+                        <form id="promocode-form" class="space-y-4">
+                            <div class="space-y-2">
+                                <label class="font-label text-xs font-bold uppercase tracking-wider text-secondary">Código</label>
+                                <input id="promo-code-input" class="w-full bg-surface-container-high border-none rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary-fixed outline-none" placeholder="EJ: VERANO2024" required />
+                            </div>
+                            <div class="space-y-2">
+                                <label class="font-label text-xs font-bold uppercase tracking-wider text-secondary">Descripción</label>
+                                <textarea id="promo-desc-input" class="w-full bg-surface-container-high border-none rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary-fixed outline-none" placeholder="Descuento por temporada" rows="2"></textarea>
+                            </div>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div class="space-y-2">
+                                    <label class="font-label text-xs font-bold uppercase tracking-wider text-secondary">Tipo</label>
+                                    <select id="promo-type-input" class="w-full bg-surface-container-high border-none rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary-fixed outline-none">
+                                        <option value="PERCENTAGE">Porcentaje</option>
+                                        <option value="FIXED">Fijo</option>
+                                    </select>
+                                </div>
+                                <div class="space-y-2">
+                                    <label class="font-label text-xs font-bold uppercase tracking-wider text-secondary">Valor</label>
+                                    <input id="promo-value-input" type="number" step="0.01" min="0" class="w-full bg-surface-container-high border-none rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary-fixed outline-none" placeholder="10" required />
+                                </div>
+                            </div>
+                            <div class="space-y-2">
+                                <label class="font-label text-xs font-bold uppercase tracking-wider text-secondary">Compra mínima</label>
+                                <input id="promo-min-input" type="number" step="0.01" min="0" class="w-full bg-surface-container-high border-none rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary-fixed outline-none" placeholder="0" />
+                            </div>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div class="space-y-2">
+                                    <label class="font-label text-xs font-bold uppercase tracking-wider text-secondary">Inicio</label>
+                                    <input id="promo-start-input" type="datetime-local" class="w-full bg-surface-container-high border-none rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary-fixed outline-none" required />
+                                </div>
+                                <div class="space-y-2">
+                                    <label class="font-label text-xs font-bold uppercase tracking-wider text-secondary">Expira</label>
+                                    <input id="promo-end-input" type="datetime-local" class="w-full bg-surface-container-high border-none rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary-fixed outline-none" required />
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div class="space-y-2">
+                                    <label class="font-label text-xs font-bold uppercase tracking-wider text-secondary">Usos máx.</label>
+                                    <input id="promo-maxuses-input" type="number" min="1" class="w-full bg-surface-container-high border-none rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary-fixed outline-none" placeholder="100" />
+                                </div>
+                                <div class="space-y-2">
+                                    <label class="font-label text-xs font-bold uppercase tracking-wider text-secondary">Evento ID (opcional)</label>
+                                    <input id="promo-event-input" class="w-full bg-surface-container-high border-none rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary-fixed outline-none" placeholder="UUID del evento" />
+                                </div>
+                            </div>
+                            <button type="submit" class="w-full py-4 bg-primary text-on-primary font-black rounded-full flex items-center justify-center gap-3 transition-transform hover:scale-105 active:scale-95">
+                                <span class="material-symbols-outlined">add</span>
+                                Crear Código
+                            </button>
+                        </form>
+                    </div>
+                </div>
             </main>
             <!-- Mobile Navigation Bar -->
             <nav
@@ -644,10 +751,11 @@
 
         function showPanel(name) {
             const navLinks = document.querySelectorAll('.sidebar nav a[data-section]');
-            const panels = {
+            const             panels = {
                 dashboard: document.getElementById('dashboard-panel'),
                 events: document.getElementById('events-panel'),
                 analytics: document.getElementById('analytics-panel'),
+                promocodes: document.getElementById('promocodes-panel'),
                 settings: document.getElementById('settings-panel')
             };
             navLinks.forEach(nav => nav.classList.remove('active'));
@@ -688,6 +796,118 @@
                 const endDate = document.getElementById('analytics-date-end')?.value || 'Fin';
                 Toast.success('Informe generado', `${eventType} desde ${startDate} hasta ${endDate}`);
             });
+
+            // Promocodes — modal
+            const promocodesForm = document.getElementById('promocode-form');
+            const promocodesTbody = document.getElementById('promocodes-tbody');
+            const promocodeModal = document.getElementById('promocode-modal');
+            const promocodeModalClose = document.getElementById('promocode-modal-close');
+            const promocodeModalBackdrop = document.getElementById('promocode-modal-backdrop');
+            const newPromocodeBtn = document.getElementById('new-promocode-btn');
+
+            function openPromoModal() {
+                promocodeModal?.classList.remove('hidden');
+                promocodeForm?.reset();
+            }
+
+            function closePromoModal() {
+                promocodeModal?.classList.add('hidden');
+            }
+
+            newPromocodeBtn?.addEventListener('click', openPromoModal);
+            promocodeModalClose?.addEventListener('click', closePromoModal);
+            promocodeModalBackdrop?.addEventListener('click', closePromoModal);
+
+            async function loadPromoCodes() {
+                try {
+                    const codes = await Promocodes.getAll();
+                    if (!codes || codes.length === 0) {
+                        promocodesTbody.innerHTML = '<tr><td colspan="6" class="text-center text-secondary py-12">No hay códigos promocionales. ¡Crea uno!</td></tr>';
+                        return;
+                    }
+                    promocodesTbody.innerHTML = codes.map(pc => `
+                        <tr class="bg-surface-container-lowest rounded-3xl transition-all hover:scale-[1.01]">
+                            <td class="px-6 py-5 rounded-l-[2rem]">
+                                <p class="font-bold text-on-surface">${pc.code}</p>
+                                <p class="text-xs text-secondary">${pc.description || ''}</p>
+                            </td>
+                            <td class="px-6 py-5">
+                                <span class="px-3 py-1 rounded-full text-[10px] font-bold uppercase ${pc.discountType === 'PERCENTAGE' ? 'bg-primary-fixed/40 text-primary' : 'bg-tertiary-fixed/40 text-tertiary'}">${pc.discountType === 'PERCENTAGE' ? 'Porcentaje' : 'Fijo'}</span>
+                            </td>
+                            <td class="px-6 py-5 text-right font-bold">${pc.discountValue}${pc.discountType === 'PERCENTAGE' ? '%' : ''}</td>
+                            <td class="px-6 py-5 text-center text-secondary">${pc.usesCount || 0}${pc.maxUses ? `/${pc.maxUses}` : ''}</td>
+                            <td class="px-6 py-5 text-center">
+                                <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-[10px] font-bold uppercase ${pc.isActive !== false ? 'bg-primary-fixed/40 text-primary' : 'bg-red-500/10 text-error'}">
+                                    <span class="w-1.5 h-1.5 rounded-full ${pc.isActive !== false ? 'bg-primary kinetic-pulse' : 'bg-error'}"></span>
+                                    ${pc.isActive !== false ? 'Activo' : 'Inactivo'}
+                                </span>
+                            </td>
+                            <td class="px-6 py-5 rounded-r-[2rem] text-right">
+                                <button onclick="deletePromoCode('${pc.id}')" class="px-3 py-2 rounded-full bg-red-500/10 text-error text-xs font-semibold hover:bg-red-500/20 transition-colors">
+                                    Eliminar
+                                </button>
+                            </td>
+                        </tr>
+                    `).join('');
+                } catch (e) {
+                    console.error('Error loading promocodes:', e);
+                    promocodesTbody.innerHTML = '<tr><td colspan="6" class="text-center text-error py-12">Error al cargar códigos promocionales.</td></tr>';
+                }
+            }
+
+            window.deletePromoCode = async function(id) {
+                if (!confirm('¿Eliminar este código promocional?')) return;
+                try {
+                    await Promocodes.delete(id);
+                    Toast.success('Código eliminado', '');
+                    loadPromoCodes();
+                } catch (e) {
+                    Toast.error('Error al eliminar', '');
+                }
+            };
+
+            promocodesForm?.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                const data = {
+                    code: document.getElementById('promo-code-input').value.trim(),
+                    description: document.getElementById('promo-desc-input').value.trim(),
+                    discountType: document.getElementById('promo-type-input').value,
+                    discountValue: parseFloat(document.getElementById('promo-value-input').value),
+                    minPurchase: document.getElementById('promo-min-input').value ? parseFloat(document.getElementById('promo-min-input').value) : null,
+                    startsAt: new Date(document.getElementById('promo-start-input').value).toISOString(),
+                    expiresAt: new Date(document.getElementById('promo-end-input').value).toISOString(),
+                    maxUses: document.getElementById('promo-maxuses-input').value ? parseInt(document.getElementById('promo-maxuses-input').value) : null,
+                    eventId: document.getElementById('promo-event-input').value.trim() || null
+                };
+                try {
+                    const res = await Promocodes.create(data);
+                    if (res.ok) {
+                        Toast.success('Código creado', '');
+                        this.reset();
+                        closePromoModal();
+                        loadPromoCodes();
+                    } else {
+                        Toast.error(res.data?.error || 'Error al crear', '');
+                    }
+                } catch (e) {
+                    Toast.error('Error al crear código', '');
+                }
+            });
+
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && promocodeModal && !promocodeModal.classList.contains('hidden')) {
+                    closePromoModal();
+                }
+            });
+
+            // Load promocodes when panel is shown
+            const origShowPanel = showPanel;
+            showPanel = function(name) {
+                origShowPanel(name);
+                if (name === 'promocodes') {
+                    loadPromoCodes();
+                }
+            };
         });
     </script>
     <script src="/assets/js/toast.js"></script>

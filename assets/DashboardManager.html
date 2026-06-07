@@ -139,6 +139,11 @@
                         Estadísticas
                     </a>
 
+                    <a href="#" data-section="audit">
+                        <span class="material-symbols-outlined">history</span>
+                        Auditoría
+                    </a>
+
                     <a href="#" data-section="settings">
                         <span class="material-symbols-outlined">settings</span>
                         Configuración
@@ -541,6 +546,44 @@
                     </section>
                 </div>
 
+                <div id="audit-panel" class="max-w-7xl mx-auto space-y-12 hidden">
+                    <section class="space-y-2">
+                        <span class="font-label text-xs uppercase tracking-[0.2em] text-primary font-bold">Auditoría</span>
+                        <h2 class="font-headline text-5xl md:text-6xl font-black text-on-surface leading-none tracking-tight">Registro de <span class="text-primary-container">Auditoría</span></h2>
+                        <p class="max-w-3xl text-secondary">Visualiza los eventos de auditoría del sistema. Próximamente con filtros y exportación.</p>
+                    </section>
+                    <section class="bg-surface-container-lowest rounded-[2.5rem] editorial-shadow p-8 space-y-6">
+                        <div class="flex items-center justify-between">
+                            <h4 class="font-headline text-2xl font-bold">Eventos del Sistema</h4>
+                            <span class="text-xs text-secondary bg-surface-container-high px-3 py-1 rounded-full font-medium">Próximamente</span>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full border-separate border-spacing-y-3">
+                                <thead class="text-left text-outline uppercase font-label text-[10px] tracking-[0.2em]">
+                                    <tr>
+                                        <th class="px-4 py-3">Fecha/Hora</th>
+                                        <th class="px-4 py-3">Usuario</th>
+                                        <th class="px-4 py-3">Acción</th>
+                                        <th class="px-4 py-3">Entidad</th>
+                                        <th class="px-4 py-3">Detalle</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td colspan="5" class="text-center text-secondary py-12">
+                                            <div class="flex flex-col items-center gap-3">
+                                                <span class="material-symbols-outlined text-4xl text-outline">history</span>
+                                                <p>El módulo de auditoría está en desarrollo.</p>
+                                                <p class="text-xs text-outline">Los registros aparecerán aquí cuando el microservicio de auditoría esté disponible.</p>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </section>
+                </div>
+
                 <div id="settings-panel" class="max-w-7xl mx-auto space-y-12 hidden">
                     <section class="space-y-2">
                         <span class="font-label text-xs uppercase tracking-[0.2em] text-primary font-bold">Configuración</span>
@@ -587,6 +630,7 @@
             </nav>
         </div>
 
+    <script src="/assets/js/api.js"></script>
     <script src="/assets/js/auth.js"></script>
     <script>
         document.querySelector('.logout-btn')?.addEventListener('click', function(e) {
@@ -602,6 +646,7 @@
                 organizers: document.getElementById('organizers-panel'),
                 revenue: document.getElementById('revenue-panel'),
                 analytics: document.getElementById('analytics-panel'),
+                audit: document.getElementById('audit-panel'),
                 settings: document.getElementById('settings-panel')
             };
 

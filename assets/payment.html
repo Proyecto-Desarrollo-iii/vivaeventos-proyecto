@@ -282,6 +282,21 @@
                             </div>
                         </div>
                     </div>
+                    <!-- Promo Code -->
+                    <div class="bg-surface-container-lowest rounded-3xl p-6 shadow-[0_20px_40px_rgba(0,101,120,0.08)] space-y-4">
+                        <div class="flex items-center gap-2">
+                            <span class="material-symbols-outlined text-primary">local_offer</span>
+                            <h4 class="font-headline font-bold text-on-surface">¿Tienes un código?</h4>
+                        </div>
+                        <div class="flex gap-2">
+                            <input id="promo-code-input" type="text" class="flex-1 bg-surface-container-high border-none rounded-xl px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-primary-fixed" placeholder="Ingresa tu código" />
+                            <button id="apply-promo-btn" type="button" class="px-5 py-3 rounded-xl bg-primary text-on-primary text-sm font-bold hover:bg-[#007c91] transition-all whitespace-nowrap">Aplicar</button>
+                        </div>
+                        <div id="promo-message" class="text-xs hidden"></div>
+                        <input type="hidden" id="promo-discount-input" value="0" />
+                        <input type="hidden" id="promo-code-applied" value="" />
+                    </div>
+
                     <!-- Kinetic Action Button -->
                     <button id="purchase-btn"
                         class="w-full kinetic-gradient text-on-primary py-5 rounded-full font-headline font-extrabold text-lg flex items-center justify-center gap-3 hover:scale-105 active:scale-95 transition-transform soft-pulse">
@@ -474,6 +489,96 @@
                 }
 
                 document.getElementById('purchase-btn').addEventListener('click', () => completePurchase(event.id, ticket?.id || ticketId, unitPrice, event.name));
+
+                // Promo code logic
+                const promoInput = document.getElementById('promo-code-input');
+                const applyBtn = document.getElementById('apply-promo-btn');
+                const promoMsg = document.getElementById('promo-message');
+                const promoDiscount = document.getElementById('promo-discount-input');
+                let appliedPromo = null;
+
+                function updateTotalWithPromo() {
+                    const discount = parseFloat(promoDiscount.value) || 0;
+                    const originalTotal = unitPrice * cantidad;
+                    const discountedTotal = Math.max(0, originalTotal - discount);
+                    const totalItems = document.querySelectorAll('.pt-6.border-t .flex.justify-between.items-center');
+                    if (totalItems.length >= 2) {
+                        totalItems[totalItems.length - 1].querySelector('span:last-child').textContent = `$${discountedTotal.toLocaleString()}`;
+                    }
+                }
+
+                applyBtn?.addEventListener('click', async function() {
+                    const code = promoInput.value.trim();
+                    if (!code) {
+                        promoMsg.className = 'text-xs text-error';
+                        promoMsg.textContent = 'Ingresa un código';
+                        promoMsg.classList.remove('hidden');
+                        return;
+                    }
+                    try {
+                        applyBtn.disabled = true;
+                        applyBtn.textContent = 'Validando...';
+                        const promoData = await Promocodes.getByCode(code);
+                        if (!promoData) {
+                            promoMsg.className = 'text-xs text-error';
+                            promoMsg.textContent = 'Código no válido';
+                            promoMsg.classList.remove('hidden');
+                            applyBtn.disabled = false;
+                            applyBtn.textContent = 'Aplicar';
+                            return;
+                        }
+                        const isValid = promoData.isActive !== false && new Date(promoData.expiresAt) > new Date();
+                        if (!isValid) {
+                            promoMsg.className = 'text-xs text-error';
+                            promoMsg.textContent = 'Este código ha expirado o está inactivo';
+                            promoMsg.classList.remove('hidden');
+                            applyBtn.disabled = false;
+                            applyBtn.textContent = 'Aplicar';
+                            return;
+                        }
+                        if (promoData.maxUses && promoData.usesCount >= promoData.maxUses) {
+                            promoMsg.className = 'text-xs text-error';
+                            promoMsg.textContent = 'Este código ya no tiene usos disponibles';
+                            promoMsg.classList.remove('hidden');
+                            applyBtn.disabled = false;
+                            applyBtn.textContent = 'Aplicar';
+                            return;
+                        }
+                        const originalTotal = unitPrice * cantidad;
+                        if (promoData.minPurchase && originalTotal < parseFloat(promoData.minPurchase)) {
+                            promoMsg.className = 'text-xs text-error';
+                            promoMsg.textContent = `Compra mínima: $${parseFloat(promoData.minPurchase).toLocaleString()}`;
+                            promoMsg.classList.remove('hidden');
+                            applyBtn.disabled = false;
+                            applyBtn.textContent = 'Aplicar';
+                            return;
+                        }
+                        let discount = 0;
+                        if (promoData.discountType === 'PERCENTAGE') {
+                            discount = originalTotal * (parseFloat(promoData.discountValue) / 100);
+                        } else {
+                            discount = parseFloat(promoData.discountValue);
+                        }
+                        discount = Math.min(discount, originalTotal);
+                        document.getElementById('promo-code-applied').value = promoData.code;
+                        appliedPromo = { id: promoData.id, code: promoData.code, discount };
+                        promoDiscount.value = discount;
+                        promoMsg.className = 'text-xs text-primary font-bold';
+                        promoMsg.textContent = `¡Descuento aplicado! -$${discount.toLocaleString()}`;
+                        promoMsg.classList.remove('hidden');
+                        updateTotalWithPromo();
+                        applyBtn.disabled = false;
+                        applyBtn.textContent = '✓ Aplicado';
+                        applyBtn.classList.remove('bg-primary', 'hover:bg-[#007c91]');
+                        applyBtn.classList.add('bg-green-600', 'hover:bg-green-700');
+                    } catch (e) {
+                        promoMsg.className = 'text-xs text-error';
+                        promoMsg.textContent = 'Error al validar código';
+                        promoMsg.classList.remove('hidden');
+                        applyBtn.disabled = false;
+                        applyBtn.textContent = 'Aplicar';
+                    }
+                });
             } catch (err) {
                 console.error('Error loading event:', err);
             }
@@ -568,6 +673,7 @@
                 const orderData = {
                     userId: user.id,
                     eventId: eventId,
+                    promoCode: document.getElementById('promo-code-applied')?.value || null,
                     items: [{
                         eventId: eventId,
                         eventName: eventName,
@@ -593,7 +699,8 @@
 
                 btn.innerHTML = 'Creando pago...';
 
-                const totalAmount = unitPrice * cantidad;
+                const promoDiscount = parseFloat(document.getElementById('promo-discount-input')?.value || '0');
+                const totalAmount = Math.max(0, unitPrice * cantidad - promoDiscount);
 
                 currentIdempotencyKey = sessionStorage.getItem(`payment_key_${currentOrderId}`) || generateIdempotencyKey();
                 sessionStorage.setItem(`payment_key_${currentOrderId}`, currentIdempotencyKey);
