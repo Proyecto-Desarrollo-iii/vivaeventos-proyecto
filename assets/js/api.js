@@ -314,6 +314,40 @@ const analytics = {
     },
 };
 
+const promocodes = {
+    async getAll() {
+        const result = await api.get('/promocodes');
+        return result.data;
+    },
+
+    async getById(id) {
+        const result = await api.get(`/promocodes/${id}`);
+        return result.data;
+    },
+
+    async getByCode(code) {
+        const result = await api.get(`/promocodes/code/${encodeURIComponent(code)}`);
+        return result.data;
+    },
+
+    async create(data) {
+        return api.post('/promocodes', data);
+    },
+
+    async update(id, data) {
+        return api.put(`/promocodes/${id}`, data);
+    },
+
+    async delete(id) {
+        return api.delete(`/promocodes/${id}`);
+    },
+
+    async validate(code) {
+        const result = await api.get(`/promocodes/validate/${encodeURIComponent(code)}`);
+        return result.data;
+    }
+};
+
 window.API = api;
 window.Auth = auth;
 window.Events = events;
@@ -323,3 +357,4 @@ window.IssuedTickets = issuedTickets;
 window.Checkin = checkin;
 window.Payments = payments;
 window.Analytics = analytics;
+window.Promocodes = promocodes;
