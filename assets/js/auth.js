@@ -123,7 +123,9 @@ const AuthService = {
         }
 
         const role = (user.role || '').toUpperCase();
-        if (role === 'ADMIN' || role === 'ORGANIZER' || role === 'ORGANIZADOR') {
+        if (role === 'ADMIN') {
+            window.location.href = '/assets/DashboardManager.html';
+        } else if (role === 'ORGANIZER' || role === 'ORGANIZADOR') {
             window.location.href = '/assets/DashboardOrganizer.html';
         } else if (role === 'LOGISTICA') {
             window.location.href = '/assets/DashboardLogistica.html';

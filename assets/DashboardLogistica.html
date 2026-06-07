@@ -274,7 +274,7 @@
 
         // ====================== AUTH VALIDATION & INITIALIZATION ======================
         (function () {
-            if (window.AuthService && !AuthService.isAuthenticated()) {
+            if (window.AuthService && !AuthService.requireAuth(['LOGISTICA'])) {
                 window.location.href = '/auth/login.html';
                 return;
             }
