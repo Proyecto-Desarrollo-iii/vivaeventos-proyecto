@@ -766,6 +766,10 @@
         }
 
         document.addEventListener('DOMContentLoaded', function() {
+            if (window.AuthService && !AuthService.requireAuth(['ORGANIZER', 'ADMIN'])) {
+                return;
+            }
+
             const navLinks = document.querySelectorAll('.sidebar nav a[data-section]');
             const panels = {
                 dashboard: document.getElementById('dashboard-panel'),
