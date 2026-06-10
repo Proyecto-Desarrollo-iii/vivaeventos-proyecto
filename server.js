@@ -67,7 +67,7 @@ function createApp({ pool, checkinPool } = {}) {
         if (req.method === 'OPTIONS') {
             return res.sendStatus(204);
         }
-        console.log('[Request]', req.method, req.url);
+        console.log('[Request]', req.method, req.path);
         next();
     });
 
@@ -82,7 +82,7 @@ function createApp({ pool, checkinPool } = {}) {
             res.status(502).json({ error: 'Gateway no disponible' });
         },
         onProxyReq: (proxyReq, req, res) => {
-            console.log('[Proxy]', req.method, req.url, '->', GATEWAY + req.url);
+            console.log('[Proxy]', req.method, req.path);
         },
         onProxyRes: (proxyRes, req, res) => {
             const origin = req && req.headers && req.headers.origin;
@@ -90,7 +90,7 @@ function createApp({ pool, checkinPool } = {}) {
                 proxyRes.headers['access-control-allow-origin'] = origin;
                 proxyRes.headers['vary'] = 'Origin';
             }
-            console.log('[Proxy Response]', proxyRes.statusCode, req.method, req.url);
+            console.log('[Proxy Response]', proxyRes.statusCode, req.method, req.path);
         },
     });
 
