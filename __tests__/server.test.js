@@ -169,7 +169,7 @@ describe('vivaeventos-proyecto server', () => {
   });
 
   test('running server.js directly executes the module main branch without listening when skipped', () => {
-    const result = spawnSync('node', ['server.js'], {
+    const result = spawnSync(process.execPath, ['server.js'], {
       cwd: __dirname + '/..',
       env: { ...process.env, SKIP_SERVER_START: 'true' },
       encoding: 'utf8',
