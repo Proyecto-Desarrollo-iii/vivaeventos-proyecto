@@ -1,13 +1,10 @@
 const express = require('express');
-const https = require('https');
 const path = require('path');
-const fs = require('fs');
 const { Pool } = require('pg');
 const { createProxyMiddleware } = require('http-proxy-middleware');
 const os = require('os');
 
 const PORT = process.env.PORT || 5000;
-const SSL_PORT = 5443;
 const GATEWAY = process.env.GATEWAY_URL || 'http://localhost:8090';
 
 function getAllowedOrigins() {
@@ -53,20 +50,8 @@ function createPool(prefix) {
 }
 
 function createApp({ pool, checkinPool } = {}) {
-    const ticketsPool = pool || createPool('DB_TICKETS') || new Pool({
-        host: 'localhost',
-        port: 5433,
-        database: 'vivaeventos_tickets',
-        user: 'devdb',
-        password: 'a1b2c3d4',
-    });
-    const validationsPool = checkinPool || createPool('DB_CHECKIN') || new Pool({
-        host: 'localhost',
-        port: 5433,
-        database: 'vivaeventos_checkin',
-        user: 'devdb',
-        password: 'a1b2c3d4',
-    });
+    const ticketsPool = pool || createPool('DB_TICKETS');
+    const validationsPool = checkinPool || createPool('DB_CHECKIN');
 
     const app = express();
 
@@ -113,6 +98,9 @@ function createApp({ pool, checkinPool } = {}) {
 
     app.get('/api/validations/today', async (req, res) => {
         try {
+            if (!ticketsPool || !validationsPool) {
+                return res.status(500).json({ error: 'Database not configured' });
+            }
             const operator = req.query.operator || '';
             const ticketsSql = `SELECT v.id, v.qr_code, v.result,
                         v.validated_at AT TIME ZONE 'UTC' as validated_at,
@@ -192,7 +180,7 @@ function startServer(app = null) {
         console.log('           VivaEventos Frontend');
         console.log('==========================================');
         console.log('  HTTP:        http://localhost:' + PORT);
-        console.log('  HTTPS:       https://' + localIP + ':' + SSL_PORT);
+        console.log('  HTTPS:       (disabled)');
         console.log('  Gateway:     ' + GATEWAY);
         console.log('==========================================\n');
     });
@@ -208,9 +196,3 @@ module.exports = {
     createPool,
     startServer,
 };
-
-// HTTPS server disabled due to missing certificates
-// https.createServer({
-//     key: fs.readFileSync(path.join(__dirname, 'key.pem')),
-//     cert: fs.readFileSync(path.join(__dirname, 'cert.pem')),
-// }, createApp()).listen(SSL_PORT, '0.0.0.0');

@@ -388,7 +388,7 @@
                     try {
                         const paymentRes = await Payments.getByOrderId(order.id);
                         if (paymentRes.ok) paymentInfo = paymentRes.data;
-                    } catch (e) {}
+                    } catch (e) { console.warn('Payment info:', e); }
 
                     const paymentStatus = paymentInfo ? (paymentInfo.status || '').toUpperCase() : null;
 

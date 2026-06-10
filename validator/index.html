@@ -407,7 +407,7 @@
 
         async function stopScanner() {
             if (html5QrCode && isScanning) {
-                try { await html5QrCode.stop(); } catch (e) {}
+                try { await html5QrCode.stop(); } catch (e) { console.warn('Stop scanner:', e); }
                 isScanning = false;
                 toggleCameraBtn.innerHTML = '<span class="material-symbols-outlined" style="font-size:1.2rem;">videocam</span> Iniciar cámara';
                 scannerStatus.textContent = 'Cámara detenida';
@@ -435,7 +435,7 @@
                 gain.gain.value = 0.2;
                 osc.start();
                 osc.stop(audio.currentTime + 0.1);
-            } catch(e) {}
+            } catch(e) { console.error(e); }
             await validate();
         }
 

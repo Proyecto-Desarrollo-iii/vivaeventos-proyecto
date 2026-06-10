@@ -539,7 +539,7 @@
                 gain.gain.value = 0.2;
                 osc.start();
                 osc.stop(audio.currentTime + duration);
-            } catch(e){}
+            } catch(e){ console.error(e); }
         }
 
         // ====================== RENDERIZADO DINÁMICO DE INTERFACES ======================
@@ -648,7 +648,7 @@
 
         async function stopScanner() {
             if (html5QrCode && isScanning) {
-                try { await html5QrCode.stop(); } catch (e) {}
+                try { await html5QrCode.stop(); } catch (e) { console.warn('Stop scanner:', e); }
                 isScanning = false;
                 const toggleBtn = document.getElementById('toggle-camera');
                 toggleBtn.className = "flex items-center gap-2 border border-outline/30 px-4 py-1.5 rounded-full text-xs font-semibold bg-white text-on-surface-variant hover:border-primary hover:text-primary transition";

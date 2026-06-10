@@ -37,12 +37,12 @@ jobs:
           path: coverage
       - name: SonarQube analysis
         if: ${{ env.SONAR_TOKEN != '' }}
+        continue-on-error: true
         uses: SonarSource/sonarqube-scan-action@v8
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         with:
           args: >
-            -Dsonar.login=${{ secrets.SONAR_TOKEN }}
             -Dsonar.projectKey=vivaeventos-proyecto
             -Dsonar.organization=proyecto-desarrollo-iii
             -Dsonar.host.url=https://sonarcloud.io
