@@ -36,10 +36,11 @@ jobs:
           name: coverage-report
           path: coverage
       - name: SonarQube analysis
-        if: env.SONAR_TOKEN != ''
+        if: ${{ env.SONAR_TOKEN != '' }}
         uses: SonarSource/sonarqube-scan-action@v8
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         with:
-          sonarToken: ${{ secrets.SONAR_TOKEN }}
           args: >
             -Dsonar.login=${{ secrets.SONAR_TOKEN }}
             -Dsonar.projectKey=vivaeventos-proyecto
