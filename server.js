@@ -10,6 +10,24 @@ const PORT = process.env.PORT || 5000;
 const SSL_PORT = 5443;
 const GATEWAY = process.env.GATEWAY_URL || 'http://localhost:8090';
 
+function getAllowedOrigins() {
+    const configured = process.env.ALLOWED_ORIGINS;
+    if (configured) {
+        return configured.split(',').map((origin) => origin.trim()).filter(Boolean);
+    }
+    return [
+        'http://localhost:3000',
+        'http://127.0.0.1:3000',
+        'http://localhost:5000',
+        'http://127.0.0.1:5000',
+    ];
+}
+
+function isOriginAllowed(origin) {
+    if (!origin) return false;
+    return getAllowedOrigins().includes(origin);
+}
+
 function getLocalIP() {
     const interfaces = os.networkInterfaces();
     for (const name of Object.keys(interfaces)) {
@@ -53,37 +71,43 @@ function createApp({ pool, checkinPool } = {}) {
     const app = express();
 
     app.use((req, res, next) => {
-    res.header('Access-Control-Allow-Origin', '*');
-    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS, PATCH');
-    res.header('Access-Control-Allow-Headers', '*');
-    res.header('Access-Control-Expose-Headers', '*');
-    if (req.method === 'OPTIONS') {
-        return res.sendStatus(204);
-    }
-    console.log('[Request]', req.method, req.url);
-    next();
-});
+        const origin = req.headers.origin;
+        if (isOriginAllowed(origin)) {
+            res.header('Access-Control-Allow-Origin', origin);
+            res.header('Vary', 'Origin');
+        }
+        res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS, PATCH');
+        res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With, Accept, Origin');
+        res.header('Access-Control-Expose-Headers', 'Content-Length');
+        if (req.method === 'OPTIONS') {
+            return res.sendStatus(204);
+        }
+        console.log('[Request]', req.method, req.url);
+        next();
+    });
 
     app.use('/assets', express.static(path.join(__dirname, 'assets')));
 
     const apiProxy = createProxyMiddleware({
         target: GATEWAY,
         changeOrigin: true,
-        secure: false,
-    onError: (err, req, res) => {
-        console.error('[Proxy Error]', err.message);
-        res.status(502).json({ error: 'Gateway no disponible' });
-    },
-    onProxyReq: (proxyReq, req, res) => {
-        proxyReq.removeHeader('origin');
-        proxyReq.removeHeader('Origin');
-        console.log('[Proxy]', req.method, req.url, '->', GATEWAY + req.url);
-    },
-    onProxyRes: (proxyRes, req, res) => {
-        proxyRes.headers['access-control-allow-origin'] = '*';
-        console.log('[Proxy Response]', proxyRes.statusCode, req.method, req.url);
-    },
-});
+        secure: GATEWAY.startsWith('https://'),
+        onError: (err, req, res) => {
+            console.error('[Proxy Error]', err.message);
+            res.status(502).json({ error: 'Gateway no disponible' });
+        },
+        onProxyReq: (proxyReq, req, res) => {
+            console.log('[Proxy]', req.method, req.url, '->', GATEWAY + req.url);
+        },
+        onProxyRes: (proxyRes, req, res) => {
+            const origin = req && req.headers && req.headers.origin;
+            if (isOriginAllowed(origin)) {
+                proxyRes.headers['access-control-allow-origin'] = origin;
+                proxyRes.headers['vary'] = 'Origin';
+            }
+            console.log('[Proxy Response]', proxyRes.statusCode, req.method, req.url);
+        },
+    });
 
     app.use('/api/v1', apiProxy);
 

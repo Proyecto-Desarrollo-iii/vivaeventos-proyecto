@@ -12,6 +12,16 @@ const AuthService = {
         sessionStorage.removeItem(key);
     },
 
+    _safeJsonParse(value, fallback = null) {
+        if (!value) return fallback;
+        try {
+            return JSON.parse(value);
+        } catch (error) {
+            console.warn('Safe parse failed:', error);
+            return fallback;
+        }
+    },
+
     async login(email, password, remember) {
         const response = await fetch('/api/v1/auth/login', {
             method: 'POST',
@@ -87,7 +97,7 @@ const AuthService = {
 
     getUser() {
         const user = this._getItem('user');
-        return user ? JSON.parse(user) : null;
+        return user ? this._safeJsonParse(user, null) : null;
     },
 
     getToken() {

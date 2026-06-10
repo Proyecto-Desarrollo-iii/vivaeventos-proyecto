@@ -123,15 +123,20 @@ describe('vivaeventos-proyecto server', () => {
     expect(typeof proxyConfig.onProxyReq).toBe('function');
     expect(typeof proxyConfig.onProxyRes).toBe('function');
 
-    const req = { method: 'GET', url: '/test' };
+    const req = { method: 'GET', url: '/test', headers: { origin: 'http://localhost:3000' } };
     const res = { status: jest.fn().mockReturnThis(), json: jest.fn() };
     const next = jest.fn();
 
     proxyConfig.onError(new Error('boom'), req, res);
     expect(res.status).toHaveBeenCalledWith(502);
     expect(res.json).toHaveBeenCalledWith({ error: 'Gateway no disponible' });
+
     proxyConfig.onProxyReq({ removeHeader: jest.fn() }, req, res);
-    proxyConfig.onProxyRes({ headers: {} }, req, res);
+
+    const proxyRes = { headers: {}, statusCode: 200 };
+    proxyConfig.onProxyRes(proxyRes, req, res);
+    expect(proxyRes.headers['access-control-allow-origin']).toBe('http://localhost:3000');
+    expect(proxyRes.headers['vary']).toBe('Origin');
   });
 
   test('startServer uses app.listen without throwing', () => {

@@ -4,6 +4,16 @@ function getToken() {
     return localStorage.getItem('token') || sessionStorage.getItem('token');
 }
 
+function safeJsonParse(value, fallback = {}) {
+    if (!value) return fallback;
+    try {
+        return JSON.parse(value);
+    } catch (error) {
+        console.warn('safeJsonParse failed:', error);
+        return fallback;
+    }
+}
+
 const api = {
     async request(endpoint, options = {}) {
         const token = getToken();
@@ -33,8 +43,12 @@ const api = {
                 return { ok: false, status: 401, data: { error: 'Sesión expirada' } };
             }
 
-            const text = await response.text();
-            const data = text ? JSON.parse(text) : {};
+            let data = {};
+            try {
+                data = await response.json();
+            } catch (error) {
+                data = {};
+            }
 
             return { ok: response.ok, status: response.status, data };
         } catch (error) {
@@ -71,7 +85,7 @@ const api = {
 const auth = {
     getUser() {
         const user = localStorage.getItem('user') || sessionStorage.getItem('user');
-        return user ? JSON.parse(user) : null;
+        return user ? safeJsonParse(user, null) : null;
     },
 
     getToken() {

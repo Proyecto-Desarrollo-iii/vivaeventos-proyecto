@@ -208,7 +208,7 @@ async function loadEventForEdit(eventId) {
         if (container) container.innerHTML = '';
         let loadedSocial = [];
         if (event.socialLinks) {
-            try { loadedSocial = JSON.parse(event.socialLinks); } catch (e) {}
+            loadedSocial = safeJsonParse(event.socialLinks, []);
         }
         if (loadedSocial.length === 0) {
             if (event.instagramUrl) {
@@ -280,6 +280,16 @@ function showToast(message, type = 'info') {
         toast.style.transform = 'translateX(120%)';
         setTimeout(() => toast.remove(), 300);
     }, 4000);
+}
+
+function safeJsonParse(value, fallback = []) {
+    if (!value) return fallback;
+    try {
+        return JSON.parse(value);
+    } catch (error) {
+        console.warn('safeJsonParse failed:', error);
+        return fallback;
+    }
 }
 
 function escapeHtml(text) {
