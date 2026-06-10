@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">92.92% </span>
+                <span class="strong">91.83% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>92/99</span>
+                <span class='fraction'>90/98</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">70.37% </span>
+                <span class="strong">73.21% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>38/54</span>
+                <span class='fraction'>41/56</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">93.54% </span>
+                <span class="strong">92.39% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>87/93</span>
+                <span class='fraction'>85/92</span>
             </div>
         
             
@@ -261,33 +261,12 @@
 <a name='L196'></a><a href='#L196'>196</a>
 <a name='L197'></a><a href='#L197'>197</a>
 <a name='L198'></a><a href='#L198'>198</a>
-<a name='L199'></a><a href='#L199'>199</a>
-<a name='L200'></a><a href='#L200'>200</a>
-<a name='L201'></a><a href='#L201'>201</a>
-<a name='L202'></a><a href='#L202'>202</a>
-<a name='L203'></a><a href='#L203'>203</a>
-<a name='L204'></a><a href='#L204'>204</a>
-<a name='L205'></a><a href='#L205'>205</a>
-<a name='L206'></a><a href='#L206'>206</a>
-<a name='L207'></a><a href='#L207'>207</a>
-<a name='L208'></a><a href='#L208'>208</a>
-<a name='L209'></a><a href='#L209'>209</a>
-<a name='L210'></a><a href='#L210'>210</a>
-<a name='L211'></a><a href='#L211'>211</a>
-<a name='L212'></a><a href='#L212'>212</a>
-<a name='L213'></a><a href='#L213'>213</a>
-<a name='L214'></a><a href='#L214'>214</a>
-<a name='L215'></a><a href='#L215'>215</a>
-<a name='L216'></a><a href='#L216'>216</a>
-<a name='L217'></a><a href='#L217'>217</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
+<a name='L199'></a><a href='#L199'>199</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -335,19 +314,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">17x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">17x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">17x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -394,6 +361,9 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">17x</span>
 <span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -489,22 +459,13 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">const express = require('express');
-const https = require('https');
 const path = require('path');
-const fs = require('fs');
 const { Pool } = require('pg');
 const { createProxyMiddleware } = require('http-proxy-middleware');
 const os = require('os');
 &nbsp;
 const PORT = process.env.PORT || 5000;
-const SSL_PORT = 5443;
 const GATEWAY = process.env.GATEWAY_URL || 'http://localhost:8090';
 &nbsp;
 function getAllowedOrigins() {
@@ -550,20 +511,8 @@ function createPool(prefix) {
 }
 &nbsp;
 function createApp({ pool, checkinPool } = <span class="branch-0 cbranch-no" title="branch not covered" >{})</span> {
-    const ticketsPool = pool || <span class="branch-1 cbranch-no" title="branch not covered" >createPool('DB_TICKETS') </span>|| <span class="branch-2 cbranch-no" title="branch not covered" >new Pool({</span>
-        host: 'localhost',
-        port: 5433,
-        database: 'vivaeventos_tickets',
-        user: 'devdb',
-        password: 'a1b2c3d4',
-    });
-    const validationsPool = checkinPool || <span class="branch-1 cbranch-no" title="branch not covered" >createPool('DB_CHECKIN') </span>|| <span class="branch-2 cbranch-no" title="branch not covered" >new Pool({</span>
-        host: 'localhost',
-        port: 5433,
-        database: 'vivaeventos_checkin',
-        user: 'devdb',
-        password: 'a1b2c3d4',
-    });
+    const ticketsPool = pool || <span class="branch-1 cbranch-no" title="branch not covered" >createPool('DB_TICKETS');</span>
+    const validationsPool = checkinPool || <span class="branch-1 cbranch-no" title="branch not covered" >createPool('DB_CHECKIN');</span>
 &nbsp;
     const app = express();
 &nbsp;
@@ -610,6 +559,9 @@ function createApp({ pool, checkinPool } = <span class="branch-0 cbranch-no" tit
 &nbsp;
     app.get('/api/validations/today', async (req, res) =&gt; {
         try {
+            <span class="missing-if-branch" title="if path not taken" >I</span>if (!ticketsPool || !validationsPool) {
+<span class="cstat-no" title="statement not covered" >                return res.status(500).json({ error: 'Database not configured' });</span>
+            }
             const operator = req.query.operator || '';
             const ticketsSql = `SELECT v.id, v.qr_code, v.result,
                         v.validated_at AT TIME ZONE 'UTC' as validated_at,
@@ -689,7 +641,7 @@ function startServer(app = <span class="branch-0 cbranch-no" title="branch not c
         console.log('           VivaEventos Frontend');
         console.log('==========================================');
         console.log('  HTTP:        http://localhost:' + PORT);
-        console.log('  HTTPS:       https://' + localIP + ':' + SSL_PORT);
+        console.log('  HTTPS:       (disabled)');
         console.log('  Gateway:     ' + GATEWAY);
         console.log('==========================================\n');
     });
@@ -705,12 +657,6 @@ module.exports = {
     createPool,
     startServer,
 };
-&nbsp;
-// HTTPS server disabled due to missing certificates
-// https.createServer({
-//     key: fs.readFileSync(path.join(__dirname, 'key.pem')),
-//     cert: fs.readFileSync(path.join(__dirname, 'cert.pem')),
-// }, createApp()).listen(SSL_PORT, '0.0.0.0');
 &nbsp;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
@@ -718,7 +664,7 @@ module.exports = {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-06-10T08:22:28.450Z
+                at 2026-06-10T15:50:13.220Z
             </div>
         <script src="prettify.js"></script>
         <script>
