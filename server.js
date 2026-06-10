@@ -90,6 +90,7 @@ function createApp({ pool, checkinPool } = {}) {
             res.status(502).json({ error: 'Gateway no disponible' });
         },
         onProxyReq: (proxyReq, req, res) => {
+            proxyReq.removeHeader('origin');
             console.log('[Proxy]', req.method, req.path);
         },
         onProxyRes: (proxyRes, req, res) => {
