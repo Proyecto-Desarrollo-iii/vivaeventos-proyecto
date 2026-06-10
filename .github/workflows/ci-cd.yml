@@ -116,6 +116,8 @@ jobs:
           region: us-central1
           env_vars: |
             GATEWAY_URL=${{ secrets.GATEWAY_URL }}
+            ALLOWED_ORIGINS=${{ secrets.ALLOWED_ORIGINS }}
+            SELF_URL=${{ secrets.SELF_URL }}
             DB_TICKETS_HOST=${{ secrets.DB_HOST }}
             DB_TICKETS_PORT=5432
             DB_TICKETS_DATABASE=vivaeventos_tickets

@@ -22,7 +22,10 @@ function getAllowedOrigins() {
 
 function isOriginAllowed(origin) {
     if (!origin) return false;
-    return getAllowedOrigins().includes(origin);
+    if (getAllowedOrigins().includes(origin)) return true;
+    const selfUrl = process.env.SELF_URL;
+    if (selfUrl && origin === selfUrl) return true;
+    return false;
 }
 
 function getLocalIP() {
@@ -60,6 +63,11 @@ function createApp({ pool, checkinPool } = {}) {
         if (isOriginAllowed(origin)) {
             res.header('Access-Control-Allow-Origin', origin);
             res.header('Vary', 'Origin');
+        } else if (!origin) {
+            // Non-browser requests without an origin header
+        } else {
+            // Origin not allowed — still need to respond to preflight
+            // so the client gets a proper CORS error instead of a 403
         }
         res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS, PATCH');
         res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With, Accept, Origin');
